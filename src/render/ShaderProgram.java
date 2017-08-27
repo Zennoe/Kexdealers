@@ -1,4 +1,4 @@
-package shader;
+package render;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -63,7 +63,7 @@ public  abstract class ShaderProgram{
 		StringBuilder string = new StringBuilder();
 		BufferedReader br;
 		try{
-			br = new BufferedReader(new FileReader(new File("./render/shaders/" +fileName)));
+			br = new BufferedReader(new FileReader(new File("./src/render/" +fileName)));
 			String line;
 			while((line = br.readLine()) != null){
 				string.append(line);

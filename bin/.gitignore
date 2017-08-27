@@ -1,3 +1,8 @@
+/textures/
 /example/
-/ecs/
 /shader/
+/ecs/
+/terrain/
+/render/
+/wrapper/
+/utility/

@@ -1,4 +1,4 @@
-package ecs;
+package render;
 
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
@@ -12,12 +12,12 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
+import ecs.EntityController;
+import ecs.Transformable;
 import example.DirectionalLight;
 import example.Display;
-import example.EntityRenderer;
-import example.LatchOnCamera;
 import example.ResourceLoader;
-import example.TerrainRenderer;
+import terrain.TerrainRenderer;
 
 public class RenderSystem {
 
@@ -43,11 +43,13 @@ public class RenderSystem {
 		GL11.glEnable(GL30.GL_FRAMEBUFFER_SRGB);
 		// Wire frame mode: GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
 
-		@SuppressWarnings("unused")
-		LatchOnCamera camera = new LatchOnCamera(entityController);
+		camera = new LatchOnCamera(entityController);
 		
 		entityRenderer = new EntityRenderer();
-		terrainRenderer = new TerrainRenderer();
+		/*terrainRenderer = new TerrainRenderer(
+				resourceLoader.getMultiTexture(),
+				resourceLoader.getBlendMap()
+				);*/
 	}
 	
 	public void run(DirectionalLight sun){
@@ -101,9 +103,7 @@ public class RenderSystem {
 	private void renderScene(DirectionalLight sun){
 		prepareForRendering();
 		
-		/*terrainRenderer.shaderStart();
-		terrainRenderer.render(chunksToRender, camera, directionalLight, pointLightList);
-		terrainRenderer.shaderStop();*/
+		//terrainRenderer.render(resourceLoader, camera, sun, entityController.getPointLightComponents());
 		
 		entityRenderer.render(resourceLoader, camera, sun, entitiesToRender, entityController.getPointLightComponents());
 		// Swap buffer to make changes visible

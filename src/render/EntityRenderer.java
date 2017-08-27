@@ -1,4 +1,4 @@
-package example;
+package render;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -11,8 +11,8 @@ import org.lwjgl.opengl.GL30;
 import ecs.PointLightComponent;
 import ecs.Transformable;
 import example.AssetData;
+import example.DirectionalLight;
 import example.ResourceLoader;
-import shader.EntityShader;
 
 public class EntityRenderer {
 
@@ -27,6 +27,9 @@ public class EntityRenderer {
 			DirectionalLight globalLight,
 			HashMap<String, HashSet<Transformable>> entitiesToRender,
 			HashSet<PointLightComponent> pointLights){
+		if(camera == null){
+			System.out.println("shit");
+		}
 		shader.start();
 		shader.uploadViewPos(camera.getPosition());
 		shader.uploadDirectionalLight(globalLight);
