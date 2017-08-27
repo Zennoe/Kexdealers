@@ -2,7 +2,11 @@ package example;
 
 import static org.lwjgl.glfw.GLFW.glfwGetTime;
 
+import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
+
+import ecs.EntityController;
+import ecs.RenderSystem;
 
 
 
@@ -33,6 +37,19 @@ public class LinkStart implements Runnable{
 		Display display = new Display(1920, 1080);//1280, 720
 		display.create();
 		
+		// Managers
+		EntityController entityController = new EntityController();
+		ResourceLoader resourceLoader = new ResourceLoader();
+		
+		// Systems
+		RenderSystem renderSystem = new RenderSystem(entityController, resourceLoader);
+		
+		// Load a sun
+		Vector3f dayAmbient = new Vector3f(0.529f, 0.807f, 0.95f).mul(0.1f);
+		Vector3f dayDiffuse = new Vector3f(0.529f, 0.807f, 0.95f).mul(1.5f);
+		Vector3f daySpecular = new Vector3f(0.529f, 0.807f, 0.95f).mul(1.9f);
+		DirectionalLight sun = new DirectionalLight(new Vector3f(-0.2f, -1.0f, -0.3f), dayAmbient, dayDiffuse, daySpecular);
+
 		
 		// < The Loop >
 		double frameBegin;
@@ -41,6 +58,9 @@ public class LinkStart implements Runnable{
 			
 			// Update
 			GLFW.glfwPollEvents();
+			
+			// Render
+			renderSystem.run(sun);
 			
 			if(GLFW.glfwWindowShouldClose(Display.window)){
 				running = false;
