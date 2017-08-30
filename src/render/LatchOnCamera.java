@@ -73,8 +73,6 @@ public class LatchOnCamera {
 		cameraPosition.z = transformable.getPosition().z - offsetZ;
 		
 		yaw = (180 - theta) % 360;
-		
-		
 	}
 	
 	public void reactToInput(double mouseScroll, double mouseVerti){

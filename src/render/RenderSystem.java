@@ -25,8 +25,6 @@ public class RenderSystem {
 	
 	ResourceLoader resourceLoader;
 	
-	LatchOnCamera camera;
-	
 	EntityRenderer entityRenderer;
 	TerrainRenderer terrainRenderer;
 	
@@ -42,8 +40,6 @@ public class RenderSystem {
 		// Automatic Gamma-correction
 		GL11.glEnable(GL30.GL_FRAMEBUFFER_SRGB);
 		// Wire frame mode: GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
-
-		camera = new LatchOnCamera(entityController);
 		
 		entityRenderer = new EntityRenderer();
 		/*terrainRenderer = new TerrainRenderer(
@@ -52,13 +48,13 @@ public class RenderSystem {
 				);*/
 	}
 	
-	public void run(DirectionalLight sun){
+	public void run(LatchOnCamera camera, DirectionalLight sun){
 		// Do all the message processing
 		// ???
 		// Do other processing
 		
 		// render
-		renderScene(sun);
+		renderScene(camera, sun);
 	}
 	
 	public void materialize(int eID, String assetName){
@@ -100,7 +96,7 @@ public class RenderSystem {
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 	}
 	
-	private void renderScene(DirectionalLight sun){
+	private void renderScene(LatchOnCamera camera, DirectionalLight sun){
 		prepareForRendering();
 		
 		//terrainRenderer.render(resourceLoader, camera, sun, entityController.getPointLightComponents());

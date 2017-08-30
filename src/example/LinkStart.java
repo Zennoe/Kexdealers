@@ -6,6 +6,7 @@ import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 
 import ecs.EntityController;
+import render.LatchOnCamera;
 import render.RenderSystem;
 
 
@@ -53,7 +54,10 @@ public class LinkStart implements Runnable{
 		// Test model
 		int testEntity = entityController.allocEID();
 		renderSystem.materialize(testEntity, "player");
+		ControllerModule controller = new ControllerModule(testEntity);
 		
+		// Camera to look at test model
+		LatchOnCamera camera = new LatchOnCamera(entityController);
 		
 		// < The Loop >
 		double frameBegin;
@@ -63,8 +67,10 @@ public class LinkStart implements Runnable{
 			// Update
 			GLFW.glfwPollEvents();
 			
+			controller.run(camera, timeDelta);
+			
 			// Render
-			renderSystem.run(sun);
+			renderSystem.run(camera, sun);
 			
 			if(GLFW.glfwWindowShouldClose(Display.window)){
 				running = false;
