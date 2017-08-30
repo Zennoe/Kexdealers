@@ -49,7 +49,8 @@ public class LinkStart implements Runnable{
 		Vector3f dayAmbient = new Vector3f(0.529f, 0.807f, 0.95f).mul(0.1f);
 		Vector3f dayDiffuse = new Vector3f(0.529f, 0.807f, 0.95f).mul(1.5f);
 		Vector3f daySpecular = new Vector3f(0.529f, 0.807f, 0.95f).mul(1.9f);
-		DirectionalLight sun = new DirectionalLight(new Vector3f(-0.2f, -1.0f, -0.3f), dayAmbient, dayDiffuse, daySpecular);
+		//DirectionalLight sun = new DirectionalLight(new Vector3f(-0.2f, -1.0f, -0.3f), dayAmbient, dayDiffuse, daySpecular);
+		DirectionalLight sun = new DirectionalLight(new Vector3f(0, -1.0f, 0), dayAmbient, dayDiffuse, daySpecular);
 		
 		// Test model
 		int testEntity = entityController.allocEID();

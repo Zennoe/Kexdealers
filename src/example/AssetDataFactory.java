@@ -46,7 +46,7 @@ public class AssetDataFactory {
 	private Vector3f phongAmbient;
 	private Vector3f phongDiffuse;
 	private Vector3f phongSpecular;
-	private float specularExp;
+	private float specularExp = 0.5f;
 	
 	private float transparency;
 	
@@ -56,7 +56,7 @@ public class AssetDataFactory {
 		// Step 2
 		loadToVAO();
 		// Step 3
-		Material material = materialLoader.loadMaterial(assetName, 0);
+		Material material = materialLoader.loadMaterial(assetName, 1);
 		diffuseMap = material.getDiffuseID();
 		specularMap = material.getSpecularID();
 		

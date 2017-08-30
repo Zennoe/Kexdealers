@@ -56,8 +56,8 @@ public class Display {
 		}
 		// Set input callback methods for keyboard/mouse input etc
 		setInputCallbacks();
-		// Set window position
-		glfwSetWindowPos(window, 0, 0);
+		// Set window position - account for border width
+		glfwSetWindowPos(window, 1, 20);
 		// Set GLFW context. Vital for program to work.
 		glfwMakeContextCurrent(window);
 		// Enable V-Sync as FPS Limiter

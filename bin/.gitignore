@@ -1,2 +1,7 @@
-/render/
+/ecs/
 /example/
+/render/
+/terrain/
+/textures/
+/utility/
+/wrapper/
