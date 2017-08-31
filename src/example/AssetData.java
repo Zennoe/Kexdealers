@@ -2,26 +2,25 @@ package example;
 
 import org.joml.Vector3f;
 
+import textures.Material;
+import wrapper.RawMesh;
+
 public class AssetData {
 
-	private int vaoID;
-	private int vertexCount;
+	private RawMesh rawMesh;
 	
-	private int diffuseMap;
-	private int specularMap;
+	private Material material;
 	
 	private Vector3f phongAmbient;
 	private Vector3f phongDiffuse;
 	private Vector3f phongSpecular;
-	private float specularExp;
+	private float specularExp = 0.5f;
 	
 	private float transparency;
 	
-	public AssetData(int vaoID, int vertexCount, int diffuseMap, int specularMap){
-		this.vaoID = vaoID;
-		this.vertexCount = vertexCount;
-		this.diffuseMap = diffuseMap;
-		this.specularMap = specularMap;
+	public AssetData(RawMesh rawMesh, Material material){
+		this.rawMesh = rawMesh;
+		this.material = material;
 	}
 	
 	public AssetData setPhongData(Vector3f ambient, Vector3f diffuse, Vector3f specular, float specExp){
@@ -37,12 +36,8 @@ public class AssetData {
 		return this;
 	}
 	
-	public int getVAOID(){
-		return vaoID;
-	}
-	
-	public int getVertexCount(){
-		return vertexCount;
+	public RawMesh getRawMesh(){
+		return rawMesh;
 	}
 
 	public Vector3f getPhongAmbient(){
@@ -61,12 +56,8 @@ public class AssetData {
 		return specularExp;
 	}
 	
-	public int getDiffuseMap(){
-		return diffuseMap;
-	}
-	
-	public int getSpecularMap(){
-		return specularMap;
+	public Material getMaterial(){
+		return material;
 	}
 	
 	public float getTransparency(){

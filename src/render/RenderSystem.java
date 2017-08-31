@@ -42,10 +42,7 @@ public class RenderSystem {
 		// Wire frame mode: GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
 		
 		entityRenderer = new EntityRenderer();
-		/*terrainRenderer = new TerrainRenderer(
-				resourceLoader.getMultiTexture(),
-				resourceLoader.getBlendMap()
-				);*/
+		terrainRenderer = new TerrainRenderer();
 	}
 	
 	public void run(LatchOnCamera camera, DirectionalLight sun){
@@ -99,7 +96,7 @@ public class RenderSystem {
 	private void renderScene(LatchOnCamera camera, DirectionalLight sun){
 		prepareForRendering();
 		
-		//terrainRenderer.render(resourceLoader, camera, sun, entityController.getPointLightComponents());
+		terrainRenderer.render(resourceLoader, camera, sun, entityController.getPointLightComponents());
 		
 		entityRenderer.render(resourceLoader, camera, sun, entitiesToRender, entityController.getPointLightComponents());
 		// Swap buffer to make changes visible

@@ -4,32 +4,30 @@ import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
-import wrapper.RawModel;
+import wrapper.RawMesh;
 import utility.MathUtil;
 
-public class TerrainTile {
+public class TerrainMesh {
 
-	private float x, z;
-	private int tileSize = 128;
-	private RawModel terrainModel;
+	private int size;
+	private RawMesh rawMesh;
 	
 	private Matrix4f transformation;
 	
 	// Heights for access in collision 
 	private float[][] heights;
 	
-	public TerrainTile(RawModel terrainModel, float[][] heights, int gridX, int gridZ){
-		this.terrainModel = terrainModel;
+	public TerrainMesh(RawMesh terrainMesh, float[][] heights, int size){
+		this.rawMesh = terrainMesh;
 		this.heights = heights;
-		this.x = gridX;
-		this.z = gridZ;
+		this.size = size;
 		
 		transformation = new Matrix4f();
 	}
 	
 	public Matrix4f getModelMatrix(){
 		transformation.identity()
-			.translate(x, 0.0f, z)
+			.translate(0.0f, 0.0f, 0.0f)
 			.rotateX(0.0f)
 			.rotateY(0.0f)
 			.rotateZ(0.0f)
@@ -38,8 +36,8 @@ public class TerrainTile {
 		return transformation;
 	}
 	
-	public RawModel getRawModel(){
-		return terrainModel;
+	public RawMesh getRawMesh(){
+		return rawMesh;
 	}
 	
 	public float getHeightAtPoint(float x, float z){
@@ -48,9 +46,10 @@ public class TerrainTile {
 		float terrainX = x;
 		float terrainZ = z;
 		// Vertex level grid!
-		float gridSquareSize = tileSize / (heights.length - 1);
+		float gridSquareSize = size / (heights.length - 1);
 		int gridX = (int) Math.floor(terrainX / gridSquareSize);
 		int gridZ = (int) Math.floor(terrainZ / gridSquareSize);
+		// check if within boundary
 		boolean one = gridX >= heights.length - 1;
 		boolean two = gridZ >= heights.length - 1;
 		boolean three = gridX < 0;

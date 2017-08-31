@@ -1,4 +1,4 @@
-package example;
+package loaders;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;

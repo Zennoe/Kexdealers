@@ -11,22 +11,15 @@ import ecs.PointLightComponent;
 import example.DirectionalLight;
 import example.ResourceLoader;
 import render.LatchOnCamera;
-import terrain.TerrainTile;
 import textures.MultiTexture;
 import textures.Texture;
-import wrapper.RawModel;
+import wrapper.RawMesh;
 
 public class TerrainRenderer {
 
 	private TerrainShader shader;
 	
-	private MultiTexture multiTexture;
-	private Texture blendMap;
-	
-	public TerrainRenderer(MultiTexture multiTexture, Texture blendMap){
-		this.multiTexture = multiTexture;
-		this.blendMap = blendMap;
-		
+	public TerrainRenderer(){
 		shader = new TerrainShader();
 		shader.start();
 		shader.connectMultiTexture();
@@ -41,34 +34,43 @@ public class TerrainRenderer {
 		shader.uploadDirectionalLight(globalLight);
 		shader.uploadPointLights(pointLights);
 		
-		// Shortcut code to reduce to one single terrain tile until LOD is done
-		HashSet<TerrainTile> terrainTiles = new HashSet<TerrainTile>();
-		terrainTiles.add(resourceLoader.getTerrainTile());
-		// -end Shortcut
-		for(TerrainTile terrainTile : terrainTiles){
-			prepareTerrainTile(terrainTile);
-			
-			shader.uploadMVP(terrainTile.getModelMatrix(), camera.getViewMatrix(), camera.getProjectionMatrix());
-			
-			GL11.glDrawElements(GL11.GL_TRIANGLES, terrainTile.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
-			
-			unbindTerrainTile();
-		}
+		Terrain terrain = resourceLoader.getTerrain();
+		
+		prepareTerrain(terrain);
+		
+		shader.uploadMVP(terrain.getModelMatrix(), camera.getViewMatrix(), camera.getProjectionMatrix());
+		GL11.glDrawElements(GL11.GL_TRIANGLES, terrain.getRawMesh().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
+		
+		unbindTerrain();
 	}
 	
-	private void prepareTerrainTile(TerrainTile terrainTile){
-		RawModel rawModel = terrainTile.getRawModel();
-		GL30.glBindVertexArray(rawModel.getVaoID());
+	private void prepareTerrain(Terrain terrain){
+		// bind RawMesh
+		RawMesh rawMesh = terrain.getRawMesh();
+		GL30.glBindVertexArray(rawMesh.getVaoID());
 		GL20.glEnableVertexAttribArray(0);
 		GL20.glEnableVertexAttribArray(1);
 		GL20.glEnableVertexAttribArray(2);
 		
-		multiTexture.bind();
+		// bind MultiTexture
+		MultiTexture multiTexture = terrain.getMultiTexture();
+		GL13.glActiveTexture(GL13.GL_TEXTURE0);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, multiTexture.getDefaultID());
+		GL13.glActiveTexture(GL13.GL_TEXTURE1);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, multiTexture.getRID());
+		GL13.glActiveTexture(GL13.GL_TEXTURE2);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, multiTexture.getGID());
+		GL13.glActiveTexture(GL13.GL_TEXTURE3);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, multiTexture.getBID());
+		// bind blendMap
+		Texture blendMap = terrain.getBlendMap();
 		GL13.glActiveTexture(GL13.GL_TEXTURE4);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, blendMap.getTextureID());
 	}
 	
-	private void unbindTerrainTile(){
+	private void unbindTerrain(){
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+		
 		GL20.glDisableVertexAttribArray(0);
 		GL20.glDisableVertexAttribArray(1);
 		GL20.glDisableVertexAttribArray(2);

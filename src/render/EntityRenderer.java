@@ -27,9 +27,6 @@ public class EntityRenderer {
 			DirectionalLight globalLight,
 			HashMap<String, HashSet<Transformable>> entitiesToRender,
 			HashSet<PointLightComponent> pointLights){
-		if(camera == null){
-			System.out.println("shit");
-		}
 		shader.start();
 		shader.uploadViewPos(camera.getPosition());
 		shader.uploadDirectionalLight(globalLight);
@@ -42,7 +39,7 @@ public class EntityRenderer {
 			HashSet<Transformable> transformations = entitiesToRender.get(appearance);
 			for(Transformable transformation : transformations){
 				shader.uploadMVP(transformation.getTransformation(), camera.getViewMatrix(), camera.getProjectionMatrix());
-				GL11.glDrawElements(GL11.GL_TRIANGLES, data.getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
+				GL11.glDrawElements(GL11.GL_TRIANGLES, data.getRawMesh().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
 			}
 			unbindEntityAppearance(data);
 		}
@@ -53,15 +50,15 @@ public class EntityRenderer {
 	
 	public void bindEntityAppearance(AssetData data){
 		// Bind VAO
-		GL30.glBindVertexArray(data.getVAOID());
+		GL30.glBindVertexArray(data.getRawMesh().getVaoID());
 		GL20.glEnableVertexAttribArray(0);
 		GL20.glEnableVertexAttribArray(1);
 		GL20.glEnableVertexAttribArray(2);
 		// Bind textures
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, data.getDiffuseMap());
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, data.getMaterial().getDiffuseID());
 		GL13.glActiveTexture(GL13.GL_TEXTURE1);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, data.getSpecularMap());
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, data.getMaterial().getSpecularID());
 		// Upload Phong-Shading data
 		shader.uploadMaterial(data.getPhongSpecularExponent());
 	}
