@@ -2,11 +2,15 @@ package example;
 
 import static org.lwjgl.glfw.GLFW.glfwGetTime;
 
+import java.util.HashSet;
+
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 
 import ecs.EntityController;
+import ecs.Transformable;
 import render.RenderSystem;
+import terrain.Terrain;
 
 
 
@@ -73,7 +77,7 @@ public class LinkStart implements Runnable{
 			GLFW.glfwPollEvents();
 			
 			player.update((float)timeDelta);
-			
+			gravity(entityController, resourceLoader);
 			// Render
 			renderSystem.run(fppCamera, sun);
 			
@@ -87,4 +91,16 @@ public class LinkStart implements Runnable{
 		
 		display.destroy();
 	}
+	
+	private void gravity(EntityController entityController, ResourceLoader resourceLoader){
+		
+		HashSet<Transformable> transformables = entityController.getTransformables();
+		Terrain terrain = resourceLoader.getTerrain();
+		for(Transformable transformable : transformables){
+			Vector3f correctedPos = transformable.getPosition();
+			correctedPos.set(correctedPos.x, terrain.getHeightAtPoint(correctedPos.x, correctedPos.z), correctedPos.z);
+			transformable.setPosition(correctedPos);
+		}
+	}
+	
 }
