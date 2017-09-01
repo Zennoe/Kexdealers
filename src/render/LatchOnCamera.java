@@ -12,7 +12,7 @@ public class LatchOnCamera {
 	
 	private EntityController entityController;
 	// Input parameters for the projection matrix
-	private float FOV = 70.0f;
+	private float FOV = 50.0f;
 	private float nearPlane = 0.01f;
 	private float farPlane = 1000.0f;
 	private float aspectRatio = Display.width / Display.height;
@@ -22,10 +22,8 @@ public class LatchOnCamera {
 	@SuppressWarnings("unused")
 	private float pitch, yaw, roll;
 	
-	private float distanceFromTarget = 30.0f;
+	private float distanceFromTarget = 20.0f;
 	private float verticalOffset = 8.0f;
-	
-	private float renderDistance = 512.0f;
 	
 	private Matrix4f viewMatrix;
 	private Matrix4f projectionMatrix;	
@@ -35,7 +33,7 @@ public class LatchOnCamera {
 
 		// Calculate projection matrix
 		viewMatrix = new Matrix4f();
-		projectionMatrix = new Matrix4f().setPerspective((float) Math.toRadians(FOV), aspectRatio, nearPlane, farPlane);
+		projectionMatrix = new Matrix4f().setPerspective((float) Math.toRadians(FOV), aspectRatio * 2, nearPlane, farPlane);
 	}
 	
 	public Matrix4f getViewMatrix(){
@@ -54,10 +52,6 @@ public class LatchOnCamera {
 	public Vector3f getPosition(){
 		return cameraPosition;
 	}
-	
-	public float getRenderDistance(){
-		return renderDistance;
-	}
 
 	public void lookAt(int eID){
 		Transformable transformable = entityController.getTransformable(eID);
@@ -72,12 +66,14 @@ public class LatchOnCamera {
 		cameraPosition.x = transformable.getPosition().x - offsetX;
 		cameraPosition.z = transformable.getPosition().z - offsetZ;
 		
-		yaw = (180 - theta) % 360;
+		//yaw = (180 - theta) % 360;
 	}
 	
-	public void reactToInput(double mouseScroll, double mouseVerti){
+	public void reactToInput(double mouseScroll, double mouseVerti, double mouseHoriz){
 		distanceFromTarget -= (float) (mouseScroll * 0.5f);
 		pitch += (float) (mouseVerti * 0.07f);
+		// ====== new line to unlock yaw rotation for testing
+		yaw += (float) (mouseHoriz * 0.07f);
 		if(pitch > 89){
 			pitch = 89;
 		}else if(pitch < -89){

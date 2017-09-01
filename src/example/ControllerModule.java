@@ -32,7 +32,7 @@ public class ControllerModule {
 		oldMouseX = Display.mouseX;
 		oldMouseY = Display.mouseY;
 		
-		camera.reactToInput(mouseScroll, mouseY);
+		camera.reactToInput(mouseScroll, mouseY, mouseX);
 		camera.lookAt(controlledEntity);
 	}
 	

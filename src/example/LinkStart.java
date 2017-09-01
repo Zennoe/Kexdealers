@@ -6,6 +6,7 @@ import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 
 import ecs.EntityController;
+import ecs.Transformable;
 import render.LatchOnCamera;
 import render.RenderSystem;
 
@@ -58,6 +59,8 @@ public class LinkStart implements Runnable{
 		// Test model
 		int testEntity = entityController.allocEID();
 		renderSystem.materialize(testEntity, "player");
+		Transformable testT = entityController.getTransformable(testEntity);
+		testT.setRotY(45.0f);
 		ControllerModule controller = new ControllerModule(testEntity);
 		
 		// Camera to look at test model
