@@ -11,7 +11,7 @@ public class FPPCamera {
 	
 	
 	private float FOV = 70.0f;
-	private float nearPlane = 0.01f;
+	private float nearPlane = 0.001f;
 	private float farPlane = 1000.0f;
 	private float aspectRatio = Display.width / Display.height;
 	
@@ -31,9 +31,7 @@ public class FPPCamera {
 			.identity()
 			.rotate(viewDir)
 			.translate(cameraPosition.negate(negCamPos));
-		
 		return viewMatrix;
-		
 	}
 	
 	public Matrix4f getProjectionMatrix(){
