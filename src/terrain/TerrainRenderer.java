@@ -9,8 +9,8 @@ import org.lwjgl.opengl.GL30;
 
 import ecs.PointLightComponent;
 import example.DirectionalLight;
+import example.FPPCamera;
 import example.ResourceLoader;
-import render.LatchOnCamera;
 import textures.MultiTexture;
 import textures.Texture;
 import wrapper.RawMesh;
@@ -27,7 +27,7 @@ public class TerrainRenderer {
 	}
 	
 	public void render(ResourceLoader resourceLoader,
-			LatchOnCamera camera,
+			FPPCamera camera,
 			DirectionalLight globalLight,
 			HashSet<PointLightComponent> pointLights){
 		shader.start();

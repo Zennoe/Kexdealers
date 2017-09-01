@@ -12,6 +12,7 @@ import ecs.PointLightComponent;
 import ecs.Transformable;
 import example.AssetData;
 import example.DirectionalLight;
+import example.FPPCamera;
 import example.ResourceLoader;
 
 public class EntityRenderer {
@@ -23,7 +24,7 @@ public class EntityRenderer {
 	}
 	
 	public void render(ResourceLoader resourceLoader,
-			LatchOnCamera camera,
+			FPPCamera camera,
 			DirectionalLight globalLight,
 			HashMap<String, HashSet<Transformable>> entitiesToRender,
 			HashSet<PointLightComponent> pointLights){

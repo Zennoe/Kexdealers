@@ -25,9 +25,12 @@ public class Display {
 	public static boolean ctrlMod = false;
 	public static boolean altMod = false;
 	
-	public static double mouseScroll = 0;
-	public static double mouseX = 0;
-	public static double mouseY = 0;
+	private static double mouseScroll = 0;
+	private static double mouseX = 0;
+	private static double mouseY = 0;
+	private static double oldMouseScroll = 0;
+	private static double oldMouseX = 0;
+	private static double oldMouseY = 0;
 	
 	public Display(int width, int height){
 		Display.width = width;
@@ -124,5 +127,24 @@ public class Display {
 			mouseY = ypos;
 		});
 	}
+	
+	public static double getMouseScroll(){
+		double sc = mouseScroll - oldMouseScroll;
+		oldMouseScroll = mouseScroll;
+		return sc;
+	}
+	
+	public static double getMouseX(){
+		double mx = mouseX - oldMouseX;
+		oldMouseX = mouseX;
+		return mx;
+	}
+	
+	public static double getMouseY(){
+		double my = mouseY - oldMouseY;
+		oldMouseY = mouseY;
+		return my;
+	}
+
 }
 

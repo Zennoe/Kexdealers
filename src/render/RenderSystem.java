@@ -16,6 +16,7 @@ import ecs.EntityController;
 import ecs.Transformable;
 import example.DirectionalLight;
 import example.Display;
+import example.FPPCamera;
 import example.ResourceLoader;
 import terrain.TerrainRenderer;
 
@@ -45,7 +46,7 @@ public class RenderSystem {
 		terrainRenderer = new TerrainRenderer();
 	}
 	
-	public void run(LatchOnCamera camera, DirectionalLight sun){
+	public void run(FPPCamera camera, DirectionalLight sun){
 		// Do all the message processing
 		// ???
 		// Do other processing
@@ -93,7 +94,7 @@ public class RenderSystem {
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 	}
 	
-	private void renderScene(LatchOnCamera camera, DirectionalLight sun){
+	private void renderScene(FPPCamera camera, DirectionalLight sun){
 		prepareForRendering();
 		
 		terrainRenderer.render(resourceLoader, camera, sun, entityController.getPointLightComponents());
