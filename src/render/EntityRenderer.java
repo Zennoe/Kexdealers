@@ -39,6 +39,7 @@ public class EntityRenderer {
 			
 			HashSet<Transformable> transformations = entitiesToRender.get(appearance);
 			for(Transformable transformation : transformations){
+				System.out.println(transformation.getRotY());
 				shader.uploadMVP(transformation.getTransformation(), camera.getViewMatrix(), camera.getProjectionMatrix());
 				GL11.glDrawElements(GL11.GL_TRIANGLES, data.getRawMesh().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
 			}

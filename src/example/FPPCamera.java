@@ -7,7 +7,7 @@ import org.joml.Vector3f;
 public class FPPCamera {
 	
 	private Vector3f cameraPosition = new Vector3f();
-	private float yaw = 0.0f;
+	private float yaw = 180.0f;
 	private float pitch = 0.0f;
 	private Quaternionf viewDir = new Quaternionf();
 	
@@ -23,15 +23,15 @@ public class FPPCamera {
 	public FPPCamera(){
 		
 		viewMatrix = new Matrix4f();
-		projectionMatrix = new Matrix4f();//.setPerspective((float) Math.toRadians(FOV), aspectRatio * 2, nearPlane, farPlane);
+		projectionMatrix = new Matrix4f();
 	}
 	
 	public Matrix4f getViewMatrix(){
 		viewMatrix
 			.identity()
-			//.rotate(viewDir)
-			.rotateY(yaw)
-			.rotateX(pitch)
+			.rotate(viewDir)
+			//.rotateY((float) Math.toRadians(yaw))
+			//.rotateX((float) Math.toRadians(pitch))
 			.translate(cameraPosition.negate(negCamPos));
 		return viewMatrix;
 	}
@@ -52,7 +52,7 @@ public class FPPCamera {
 	}
 	
 	public void rotate(float angleX, float angleY, float angleZ){
-		viewDir.rotate(angleX, angleY, angleZ);
+		viewDir.rotateLocal(angleX, angleY, angleZ);
 	}
 	
 	public void rotateYaw(float angle){
@@ -64,7 +64,7 @@ public class FPPCamera {
 	}
 	
 	public void changeFOV(float fov){
-		FOV += fov;
+		FOV -= fov;
 	}
 	
 }

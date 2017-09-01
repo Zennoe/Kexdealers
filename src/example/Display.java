@@ -28,7 +28,6 @@ public class Display {
 	private static double mouseScroll = 0;
 	private static double mouseX = 0;
 	private static double mouseY = 0;
-	private static double oldMouseScroll = 0;
 	private static double oldMouseX = 0;
 	private static double oldMouseY = 0;
 	
@@ -129,9 +128,8 @@ public class Display {
 	}
 	
 	public static double getMouseScroll(){
-		double sc = mouseScroll - oldMouseScroll;
-		oldMouseScroll = mouseScroll;
-		sc = mouseScroll;
+		double sc = mouseScroll;
+		mouseScroll = 0;
 		return sc;
 	}
 	
