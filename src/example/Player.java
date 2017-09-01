@@ -9,7 +9,7 @@ import ecs.Transformable;
 public class Player {
 	
 	private FPPCamera camera;
-	private Vector3f cameraOffset = new Vector3f(3.0f, 15.0f, 0.0f);
+	private Vector3f cameraOffset = new Vector3f(0.0f, 15.0f, 0.0f);
 	
 	private EntityController entityController;
 	
@@ -54,7 +54,7 @@ public class Player {
 		//newCamPos.y = 0.0f;
 		camera.setPosition(newCamPos);
 		
-		camera.changeFOV((float) (0.1f * Display.getMouseScroll() * delta));
+		camera.changeFOV((float) (-100.0f * Display.getMouseScroll() * delta));
 		
 	}
 }

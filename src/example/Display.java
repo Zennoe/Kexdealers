@@ -131,6 +131,7 @@ public class Display {
 	public static double getMouseScroll(){
 		double sc = mouseScroll - oldMouseScroll;
 		oldMouseScroll = mouseScroll;
+		sc = mouseScroll;
 		return sc;
 	}
 	
