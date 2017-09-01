@@ -30,6 +30,9 @@ public class ResourceLoader {
 	
 	public ResourceLoader(){
 		// preload keys
+		assets.put("lowPolyTree", null);
+		pointerCounter.put("lowPolyTree", 0);
+		
 		assets.put("player", null);
 		pointerCounter.put("player", 0);
 		

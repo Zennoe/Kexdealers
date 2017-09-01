@@ -54,12 +54,15 @@ public class LinkStart implements Runnable{
 		String[] drgb = {"mud", "path", "grass3", "flowerGrass"};
 		resourceLoader.loadTerrain(256, 32, "heightMap256", drgb, "blendMap256");
 		
-		// Test model
-		int testEntity = entityController.allocEID();
-		renderSystem.materialize(testEntity, "player");
+		// Entities
+		int treeID = entityController.allocEID();
+		renderSystem.materialize(treeID, "lowPolyTree");
+		
+		int playerID = entityController.allocEID();
+		renderSystem.materialize(playerID, "player");
 		
 		FPPCamera fppCamera = new FPPCamera();
-		Player player = new Player(fppCamera, entityController, testEntity);
+		Player player = new Player(fppCamera, entityController, playerID);
 		
 		// < The Loop >
 		double frameBegin;
