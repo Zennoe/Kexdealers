@@ -9,7 +9,7 @@ import ecs.Transformable;
 public class Player {
 	
 	private FPPCamera camera;
-	private Vector3f cameraOffset = new Vector3f(-10.0f, 15.0f, 0.0f);
+	private Vector3f cameraOffset = new Vector3f(0.0f, 15.0f, 0.0f);
 	
 	private EntityController entityController;
 	
@@ -26,14 +26,14 @@ public class Player {
 		
 		// Rotation
 		float yaw = (float) Math.toRadians(Display.getMouseX() * 5.0f * delta);
-		float pitch = (float) Math.toRadians(-Display.getMouseY() * 5.0f * delta);
+		float pitch = (float) Math.toRadians(Display.getMouseY() * 5.0f * delta);
 		transformable.rotate(0.0f, (float) Math.toDegrees(-yaw), 0.0f);
-		cameraOffset.rotateY((float) Math.toDegrees(yaw));
+		//cameraOffset.rotateY((float) Math.toDegrees(yaw));
 		//System.out.println(transformable.getRotY());
 
 		// Translation
 		// Move the player around horizontally.
-		Vector3f scaledDirVec = transformable.getDirectionVector().mul(delta * 10.0f);
+		Vector3f scaledDirVec = transformable.getDirectionVector().mul(delta * 20.0f);
 		if(Display.pressedKeys[GLFW.GLFW_KEY_W]){
 			transformable.increasePosition(scaledDirVec);
 		}
@@ -48,9 +48,8 @@ public class Player {
 		}
 		
 		// Camera update
-		//camera.rotateYaw(yaw);
-		//camera.rotatePitch(pitch);
-		camera.rotate(-pitch, yaw, 0.0f);
+		camera.rotateYaw(yaw);
+		camera.rotatePitch(pitch);
 		Vector3f newCamPos = new Vector3f(transformable.getPosition());
 		newCamPos.add(cameraOffset, newCamPos);
 		//newCamPos.y = 0.0f;
