@@ -50,8 +50,8 @@ public class LinkStart implements Runnable{
 		
 		// Load a sun
 		Vector3f dayAmbient = new Vector3f(0.529f, 0.807f, 0.95f).mul(0.1f);
-		Vector3f dayDiffuse = new Vector3f(0.529f, 0.807f, 0.95f).mul(1.5f);
-		Vector3f daySpecular = new Vector3f(0.529f, 0.807f, 0.95f).mul(1.9f);
+		Vector3f dayDiffuse = new Vector3f(0.529f, 0.807f, 0.95f).mul(0.8f);
+		Vector3f daySpecular = new Vector3f(0.529f, 0.807f, 0.95f).mul(1.3f);
 		DirectionalLight sun = new DirectionalLight(new Vector3f(-0.2f, -1.0f, -0.3f), dayAmbient, dayDiffuse, daySpecular);
 		
 		// Load a nice sky
@@ -67,6 +67,18 @@ public class LinkStart implements Runnable{
 		
 		int playerID = entityController.allocEID();
 		renderSystem.materialize(playerID, "player");
+		
+		int lampID = entityController.allocEID();
+		renderSystem.materialize(lampID, "lamp");
+		Transformable lampTransformable = entityController.getTransformable(lampID);
+		lampTransformable.increasePosition(new Vector3f(20, 0, 100));
+		Vector3f lampAmbient = new Vector3f(0.900f, 0.200f, 0.600f).mul(0.1f);
+		Vector3f lampDiffuse = new Vector3f(0.900f, 0.200f, 0.600f).mul(40.5f);
+		Vector3f lampSpecular = new Vector3f(0.900f, 0.200f, 0.600f).mul(10.9f);
+		entityController.addPointLightComponent(lampID,
+				new Vector3f(20, 10, 100), 
+				lampAmbient, lampDiffuse, lampSpecular, 
+				new Vector3f(new Vector3f(1f, 0.1f, 0.002f)));
 		
 		FPPCamera fppCamera = new FPPCamera();
 		Player player = new Player(fppCamera, entityController, playerID);

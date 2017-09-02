@@ -41,6 +41,9 @@ public class ResourceLoader {
 		assets.put("player", null);
 		pointerCounter.put("player", 0);
 		
+		assets.put("lamp", null);
+		pointerCounter.put("lamp", 0);
+		
 		// create tools
 		materialLoader = new MaterialLoader();
 		cubeMapLoader = new CubeMapLoader();
