@@ -54,7 +54,7 @@ public class ResourceLoader {
 					modelData.getTextureCoords(), 
 					modelData.getNormals());
 			// random hardcoded default value for shininess = 1
-			Material material = materialLoader.loadMaterial(assetName, 1);
+			Material material = materialLoader.loadMaterial(assetName, 1.0f);
 			AssetData newAsset = new AssetData(rawMesh, material);
 			assets.put(assetName, newAsset);
 		}
