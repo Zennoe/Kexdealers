@@ -23,6 +23,7 @@ public class SkyboxRenderer {
 		shader.loadViewMatrix(camera.getViewMatrix());
 		
 		Skybox skybox = resourceLoader.getSkybox();
+		shader.loadModelMatrix(skybox.getModelMatrix());
 		
 		bindSkybox(skybox);
 		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, skybox.getMesh().getVertexCount());

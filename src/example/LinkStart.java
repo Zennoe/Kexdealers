@@ -55,7 +55,7 @@ public class LinkStart implements Runnable{
 		DirectionalLight sun = new DirectionalLight(new Vector3f(-0.2f, -1.0f, -0.3f), dayAmbient, dayDiffuse, daySpecular);
 		
 		// Load a nice sky
-		resourceLoader.loadSkybox(500.0f, "skybox");
+		resourceLoader.loadSkybox(1200.0f, "night");
 		
 		// Load a terrain
 		String[] drgb = {"mud", "path", "grass3", "flowerGrass"};
@@ -81,6 +81,7 @@ public class LinkStart implements Runnable{
 			
 			player.update((float)timeDelta);
 			gravity(entityController, resourceLoader);
+			resourceLoader.getSkybox().updateRotation((float)timeDelta);
 			// Render
 			renderSystem.run(fppCamera, sun);
 			

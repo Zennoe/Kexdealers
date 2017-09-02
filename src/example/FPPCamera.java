@@ -12,7 +12,7 @@ public class FPPCamera {
 	
 	private float FOV = 70.0f;
 	private float nearPlane = 0.001f;
-	private float farPlane = 1000.0f;
+	private float farPlane = 3000.0f;
 	private float aspectRatio = Display.width / Display.height;
 	
 	private Vector3f negCamPos = new Vector3f();
