@@ -18,6 +18,7 @@ import example.DirectionalLight;
 import example.Display;
 import example.FPPCamera;
 import example.ResourceLoader;
+import skybox.SkyboxRenderer;
 import terrain.TerrainRenderer;
 
 public class RenderSystem {
@@ -28,6 +29,7 @@ public class RenderSystem {
 	
 	EntityRenderer entityRenderer;
 	TerrainRenderer terrainRenderer;
+	SkyboxRenderer skyboxRenderer;
 	
 	private HashMap<String, HashSet<Transformable>> entitiesToRender = new HashMap<>(); // All the currently active transforms for one asset
 	
@@ -44,6 +46,7 @@ public class RenderSystem {
 		
 		entityRenderer = new EntityRenderer();
 		terrainRenderer = new TerrainRenderer();
+		skyboxRenderer = new SkyboxRenderer();
 	}
 	
 	public void run(FPPCamera camera, DirectionalLight sun){
@@ -100,6 +103,9 @@ public class RenderSystem {
 		terrainRenderer.render(resourceLoader, camera, sun, entityController.getPointLightComponents());
 		
 		entityRenderer.render(resourceLoader, camera, sun, entitiesToRender, entityController.getPointLightComponents());
+		
+		skyboxRenderer.render(resourceLoader, camera);
+		
 		// Swap buffer to make changes visible
 		GLFW.glfwSwapBuffers(Display.window);
 	}

@@ -34,6 +34,16 @@ public class ModelLoader {
 		return new RawMesh(vaoID, indices.length);
 	}
 	
+	// Variable dimension loader
+	public RawMesh loadToVAO(float[] positions, int dimensions){
+		int vaoID = createVAO();
+		// Store vertices
+		storeInVBO(0, dimensions, positions);
+		
+		unbindVAO();
+		return new RawMesh(vaoID, positions.length / dimensions);
+	}
+	
 	private int createVAO(){
 		int vaoID = GL30.glGenVertexArrays();
 		vaos.add(vaoID);

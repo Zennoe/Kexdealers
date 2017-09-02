@@ -37,7 +37,7 @@ public class LinkStart implements Runnable{
 	@Override
 	public void run(){
 		
-		// "Visuals"
+		// Window creation
 		Display display = new Display(1920, 1080);//1280, 720
 		display.create();
 		
@@ -53,6 +53,9 @@ public class LinkStart implements Runnable{
 		Vector3f dayDiffuse = new Vector3f(0.529f, 0.807f, 0.95f).mul(1.5f);
 		Vector3f daySpecular = new Vector3f(0.529f, 0.807f, 0.95f).mul(1.9f);
 		DirectionalLight sun = new DirectionalLight(new Vector3f(-0.2f, -1.0f, -0.3f), dayAmbient, dayDiffuse, daySpecular);
+		
+		// Load a nice sky
+		resourceLoader.loadSkybox(500.0f, "skybox");
 		
 		// Load a terrain
 		String[] drgb = {"mud", "path", "grass3", "flowerGrass"};

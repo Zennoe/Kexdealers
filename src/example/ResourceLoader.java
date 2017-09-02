@@ -2,10 +2,12 @@ package example;
 
 import java.util.HashMap;
 
+import loaders.CubeMapLoader;
 import loaders.MaterialLoader;
 import loaders.ModelLoader;
 import loaders.OBJLoader;
 import loaders.TerrainMeshLoader;
+import skybox.Skybox;
 import terrain.Terrain;
 import terrain.TerrainMesh;
 import textures.Material;
@@ -17,6 +19,7 @@ import wrapper.RawMesh;
 public class ResourceLoader {
 	
 	private MaterialLoader materialLoader;
+	private CubeMapLoader cubeMapLoader;
 	
 	private ModelLoader modelLoader;
 	private TerrainMeshLoader terrainMeshLoader;
@@ -28,6 +31,8 @@ public class ResourceLoader {
 	
 	private Terrain terrain = null;
 	
+	private Skybox skybox = null;
+	
 	public ResourceLoader(){
 		// preload keys
 		assets.put("lowPolyTree", null);
@@ -38,6 +43,7 @@ public class ResourceLoader {
 		
 		// create tools
 		materialLoader = new MaterialLoader();
+		cubeMapLoader = new CubeMapLoader();
 		modelLoader = new ModelLoader();
 		terrainMeshLoader = new TerrainMeshLoader(modelLoader);
 		objLoader = new OBJLoader();
@@ -101,4 +107,77 @@ public class ResourceLoader {
 		// blah blah delete stuff
 		terrain = null;
 	}
+	
+	// grab an already loaded Skybox
+	public Skybox getSkybox(){
+		return skybox;
+	}
+	
+	// There can only ever be one skybox active and loaded for now
+	public Skybox loadSkybox(float size, String skyboxName){
+		// unload whatever Terrain was loaded before
+		unloadTerrain();
+		// build cube vertices
+		float[] vertices = {        
+		    -size,  size, -size,
+		    -size, -size, -size,
+		    size, -size, -size,
+		     size, -size, -size,
+		     size,  size, -size,
+		    -size,  size, -size,
+
+		    -size, -size,  size,
+		    -size, -size, -size,
+		    -size,  size, -size,
+		    -size,  size, -size,
+		    -size,  size,  size,
+		    -size, -size,  size,
+
+		     size, -size, -size,
+		     size, -size,  size,
+		     size,  size,  size,
+		     size,  size,  size,
+		     size,  size, -size,
+		     size, -size, -size,
+
+		    -size, -size,  size,
+		    -size,  size,  size,
+		     size,  size,  size,
+		     size,  size,  size,
+		     size, -size,  size,
+		    -size, -size,  size,
+
+		    -size,  size, -size,
+		     size,  size, -size,
+		     size,  size,  size,
+		     size,  size,  size,
+		    -size,  size,  size,
+		    -size,  size, -size,
+
+		    -size, -size, -size,
+		    -size, -size,  size,
+		     size, -size, -size,
+		     size, -size, -size,
+		    -size, -size,  size,
+		     size, -size,  size
+		};
+		// build texture file paths
+		String[] rltBoBaF = {
+				skyboxName + "_right",
+				skyboxName + "_left",
+				skyboxName + "_top",
+				skyboxName + "_bottom",
+				skyboxName + "_back",
+				skyboxName + "_front",
+		};
+		// loader mesh and textures
+		skybox = new Skybox(modelLoader.loadToVAO(vertices, 3), cubeMapLoader.loadCubeMap(rltBoBaF));
+		return skybox;
+	}
+	
+	public void unloadSkybox(){
+		// blah blah delete stuff
+		skybox = null;
+	}
+	
 }

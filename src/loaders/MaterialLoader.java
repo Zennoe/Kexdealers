@@ -22,24 +22,24 @@ public class MaterialLoader {
 	private ArrayList<Integer> textures = new ArrayList<>();
 	
 	public Material loadMaterial(String filename, float shininess){
-		Texture2D diffuse = loadMaterialMap(filename +"_diffuse", true);
-		Texture2D specular = loadMaterialMap(filename +"_specular", false);
+		Texture2D diffuse = loadTexture2D(filename +"_diffuse", true);
+		Texture2D specular = loadTexture2D(filename +"_specular", false);
 		return new Material(diffuse.getID(), specular.getID(), shininess, diffuse.getWidth(), diffuse.getHeight());
 	}
 	
 	public MultiTexture loadMultiTexture(String defaultTexture, String rTex, String gTex, String bTex){
-		Texture2D def = loadMaterialMap(defaultTexture, true);
-		Texture2D r = loadMaterialMap(rTex, true);
-		Texture2D g = loadMaterialMap(gTex, true);
-		Texture2D b = loadMaterialMap(bTex, true);
+		Texture2D def = loadTexture2D(defaultTexture, true);
+		Texture2D r = loadTexture2D(rTex, true);
+		Texture2D g = loadTexture2D(gTex, true);
+		Texture2D b = loadTexture2D(bTex, true);
 		return new MultiTexture(def.getID(), r.getID(), g.getID(), b.getID());
 	}
 	
 	public Texture loadBlendMap(String filename){
-		return new Texture(loadMaterialMap(filename, false).getID());
+		return new Texture(loadTexture2D(filename, false).getID());
 	}
 	
-	private Texture2D loadMaterialMap(String filename, boolean gammaCorrected){
+	private Texture2D loadTexture2D(String filename, boolean gammaCorrected){
 		IntBuffer width = BufferUtils.createIntBuffer(1);
 		IntBuffer height = BufferUtils.createIntBuffer(1);
 		IntBuffer comp = BufferUtils.createIntBuffer(1);
