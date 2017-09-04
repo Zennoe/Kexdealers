@@ -55,7 +55,7 @@ public class LinkStart implements Runnable{
 		DirectionalLight sun = new DirectionalLight(new Vector3f(-0.2f, -1.0f, -0.3f), dayAmbient, dayDiffuse, daySpecular);
 		
 		// Load a nice sky
-		resourceLoader.loadSkybox(1200.0f, "night");
+		resourceLoader.loadSkybox(1200.0f, "plains");
 		
 		// Load a terrain
 		String[] drgb = {"mud", "path", "grass3", "flowerGrass"};
