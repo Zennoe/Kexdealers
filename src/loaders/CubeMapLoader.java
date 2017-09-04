@@ -44,7 +44,7 @@ public class CubeMapLoader {
 	}
 	
 	private ByteBuffer stbImageLoad(String filename, IntBuffer width, IntBuffer height, IntBuffer comp){
-		ByteBuffer data = STBImage.stbi_load("res/" +filename +".png", width, height, comp, 4);
+		ByteBuffer data = STBImage.stbi_load("res/skybox/" +filename +".png", width, height, comp, 4);
 		if(data == null){
 			System.err.println(STBImage.stbi_failure_reason() +" -> " +filename);
 		}
