@@ -58,7 +58,7 @@ public class LinkStart implements Runnable{
 		resourceLoader.loadSkybox(1200.0f, "plains");
 		
 		// Load a terrain
-		String[] drgb = {"mud", "path", "grass3", "flowerGrass"};
+		String[] drgb = {"mud", "39", "grass3", "moist_dirt"};
 		resourceLoader.loadTerrain(256, 32, "heightMap256", drgb, "blendMap256");
 		
 		// Entities
