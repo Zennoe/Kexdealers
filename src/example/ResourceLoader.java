@@ -2,6 +2,8 @@ package example;
 
 import java.util.HashMap;
 
+import org.joml.Vector3f;
+
 import loaders.CubeMapLoader;
 import loaders.MaterialLoader;
 import loaders.ModelLoader;
@@ -32,6 +34,8 @@ public class ResourceLoader {
 	private Terrain terrain = null;
 	
 	private Skybox skybox = null;
+	
+	private DirectionalLight sun = null;
 	
 	public ResourceLoader(){
 		// preload keys
@@ -98,7 +102,13 @@ public class ResourceLoader {
 		// build TerrainMesh
 		TerrainMesh terrainMesh = terrainMeshLoader.loadTerrainMesh(heightMap, maxHeight, size);
 		// build MultiTexture
-		MultiTexture multiTexture = materialLoader.loadMultiTexture(drgb[0], drgb[1], drgb[2], drgb[3]);
+		String d = "_diffuse";
+		String n = "_normal";
+		String[] drgb_n = {drgb[0] + d, drgb[1] + d, drgb[2] + d, drgb[3] + d, 
+				drgb[0] + n, drgb[1] + n, drgb[2] + n, drgb[3] + n, 
+		};
+		MultiTexture multiTexture = materialLoader.loadMultiTexture(drgb_n[0], drgb_n[1], drgb_n[2], drgb_n[3], 
+				drgb_n[4], drgb_n[5], drgb_n[6], drgb_n[7]);
 		// load blendMap
 		Texture blendMapTexture = materialLoader.loadBlendMap(blendMap);
 		// bundle together and return
@@ -181,6 +191,19 @@ public class ResourceLoader {
 	public void unloadSkybox(){
 		// blah blah delete stuff
 		skybox = null;
+	}
+	
+	public DirectionalLight loadSun(Vector3f directionInverse, Vector3f ambient, Vector3f diffuse, Vector3f specular){
+		sun = new DirectionalLight(directionInverse, ambient, diffuse, specular);
+		return sun;
+	}
+	
+	public DirectionalLight getSun(){
+		return sun;
+	}
+	
+	public void unloadSun(){
+		sun = null;
 	}
 	
 }

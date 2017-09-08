@@ -27,12 +27,19 @@ public class MaterialLoader {
 		return new Material(diffuse.getID(), specular.getID(), shininess, diffuse.getWidth(), diffuse.getHeight());
 	}
 	
-	public MultiTexture loadMultiTexture(String defaultTexture, String rTex, String gTex, String bTex){
-		Texture2D def = loadTexture2D(defaultTexture, true);
+	public MultiTexture loadMultiTexture(String defTexture, String rTex, String gTex, String bTex,
+			String defTextureN, String rTexN, String gTexN, String bTexN){
+		Texture2D def = loadTexture2D(defTexture, true);
 		Texture2D r = loadTexture2D(rTex, true);
 		Texture2D g = loadTexture2D(gTex, true);
 		Texture2D b = loadTexture2D(bTex, true);
-		return new MultiTexture(def.getID(), r.getID(), g.getID(), b.getID());
+		// Normal Maps
+		Texture2D def_n = loadTexture2D(defTextureN, false);
+		Texture2D r_n = loadTexture2D(rTexN, false);
+		Texture2D g_n = loadTexture2D(gTexN, false);
+		Texture2D b_n = loadTexture2D(bTexN, false);
+		return new MultiTexture(def.getID(), r.getID(), g.getID(), b.getID(),
+				def_n.getID(), r_n.getID(), g_n.getID(), b_n.getID());
 	}
 	
 	public Texture loadBlendMap(String filename){

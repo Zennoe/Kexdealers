@@ -14,7 +14,6 @@ import org.lwjgl.opengl.GL30;
 
 import ecs.EntityController;
 import ecs.Transformable;
-import example.DirectionalLight;
 import example.Display;
 import example.FPPCamera;
 import example.ResourceLoader;
@@ -49,13 +48,13 @@ public class RenderSystem {
 		skyboxRenderer = new SkyboxRenderer();
 	}
 	
-	public void run(FPPCamera camera, DirectionalLight sun){
+	public void run(FPPCamera camera){
 		// Do all the message processing
 		// ???
 		// Do other processing
 		
 		// render
-		renderScene(camera, sun);
+		renderScene(camera);
 	}
 	
 	public void materialize(int eID, String assetName){
@@ -97,12 +96,12 @@ public class RenderSystem {
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 	}
 	
-	private void renderScene(FPPCamera camera, DirectionalLight sun){
+	private void renderScene(FPPCamera camera){
 		prepareForRendering();
 		
-		terrainRenderer.render(resourceLoader, camera, sun, entityController.getPointLightComponents());
+		terrainRenderer.render(resourceLoader, camera, entityController.getPointLightComponents());
 		
-		entityRenderer.render(resourceLoader, camera, sun, entitiesToRender, entityController.getPointLightComponents());
+		entityRenderer.render(resourceLoader, camera, entitiesToRender, entityController.getPointLightComponents());
 		
 		skyboxRenderer.render(resourceLoader, camera);
 		

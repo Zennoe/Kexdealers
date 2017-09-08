@@ -16,7 +16,15 @@ public class EntityController {
 	private HashMap<Integer, Transformable> transformable = new HashMap<>();
 	private HashMap<Integer, PointLightComponent> pointLightComponent = new HashMap<>();
 	
+	// --- dereference ALL EC data ---
 	
+	public void wipeComplete(){
+		entities.clear();
+		
+		renderable.clear();
+		transformable.clear();
+		pointLightComponent.clear();
+	}
 	
 	// --- eID de-/allocation ---
 	
@@ -32,6 +40,20 @@ public class EntityController {
 		entities.put(i, comps);
 		addTransformable(i);
 		return i;
+	}
+	
+	public boolean directAllocEID(int eID){
+		if(entities.get(eID) != null){
+			return false;
+		}else{
+			// Initialize the entity 
+			// Transformable must always exist for each entity.
+			ArrayList<String> comps = new ArrayList<String>();
+			comps.add("transformable");
+			entities.put(eID, comps);
+			addTransformable(eID);
+			return true;
+		}
 	}
 	
 	public void freeEID(int eID){
@@ -57,7 +79,7 @@ public class EntityController {
 	
 	public PointLightComponent addPointLightComponent(int eID, Vector3f position, Vector3f ambient, Vector3f diffuse, Vector3f specular, Vector3f attenuation){
 		entities.get(eID).add("pointlightcomponent");
-		PointLightComponent comp = new PointLightComponent(position, ambient, diffuse, specular, attenuation);
+		PointLightComponent comp = new PointLightComponent(eID, position, ambient, diffuse, specular, attenuation);
 		pointLightComponent.put(eID, comp);
 		return comp;
 	}

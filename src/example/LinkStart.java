@@ -48,40 +48,12 @@ public class LinkStart implements Runnable{
 		// Systems
 		RenderSystem renderSystem = new RenderSystem(entityController, resourceLoader);
 		
-		// Load a sun
-		Vector3f dayAmbient = new Vector3f(0.529f, 0.807f, 0.95f).mul(0.1f);
-		Vector3f dayDiffuse = new Vector3f(0.529f, 0.807f, 0.95f).mul(0.8f);
-		Vector3f daySpecular = new Vector3f(0.529f, 0.807f, 0.95f).mul(1.3f);
-		DirectionalLight sun = new DirectionalLight(new Vector3f(-0.2f, -1.0f, -0.3f), dayAmbient, dayDiffuse, daySpecular);
+		InstanceLoader instanceLoader = new InstanceLoader(entityController, resourceLoader, renderSystem);
 		
-		// Load a nice sky
-		resourceLoader.loadSkybox(1200.0f, "plains");
-		
-		// Load a terrain
-		String[] drgb = {"mud", "39", "grass3", "moist_dirt"};
-		resourceLoader.loadTerrain(256, 32, "heightMap256", drgb, "blendMap256");
-		
-		// Entities
-		int treeID = entityController.allocEID();
-		renderSystem.materialize(treeID, "lowPolyTree");
-		
-		int playerID = entityController.allocEID();
-		renderSystem.materialize(playerID, "player");
-		
-		int lampID = entityController.allocEID();
-		renderSystem.materialize(lampID, "lamp");
-		Transformable lampTransformable = entityController.getTransformable(lampID);
-		lampTransformable.increasePosition(new Vector3f(20, 0, 100));
-		Vector3f lampAmbient = new Vector3f(0.900f, 0.200f, 0.600f).mul(0.1f);
-		Vector3f lampDiffuse = new Vector3f(0.900f, 0.200f, 0.600f).mul(40.5f);
-		Vector3f lampSpecular = new Vector3f(0.900f, 0.200f, 0.600f).mul(10.9f);
-		entityController.addPointLightComponent(lampID,
-				new Vector3f(20, 10, 100), 
-				lampAmbient, lampDiffuse, lampSpecular, 
-				new Vector3f(new Vector3f(1f, 0.1f, 0.002f)));
+		instanceLoader.loadInstanceFromLocal("./res/floatingTestingIsland.txt");
 		
 		FPPCamera fppCamera = new FPPCamera();
-		Player player = new Player(fppCamera, entityController, playerID);
+		Player player = new Player(fppCamera, entityController, 2); //look into file to choose the correct one :S
 		
 		// < The Loop >
 		double frameBegin;
@@ -95,7 +67,7 @@ public class LinkStart implements Runnable{
 			gravity(entityController, resourceLoader);
 			resourceLoader.getSkybox().updateRotation((float)timeDelta);
 			// Render
-			renderSystem.run(fppCamera, sun);
+			renderSystem.run(fppCamera);
 			
 			if(GLFW.glfwWindowShouldClose(Display.window)){
 				running = false;

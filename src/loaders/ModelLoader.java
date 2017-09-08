@@ -34,6 +34,22 @@ public class ModelLoader {
 		return new RawMesh(vaoID, indices.length);
 	}
 	
+	// Normal mapped loader - WIP
+	public RawMesh loadToVAO(float[] positions, int[] indices, float[] textureCoords, float[] normals, float[] tangents){
+		int vaoID = createVAO();
+		// Store vertices
+		storeInVBO(0, 3, positions);
+		// Store indices
+		storeInEBO(indices);
+		// Store textureCoords
+		storeInVBO(1, 2, textureCoords);
+		// Store normals
+		storeInVBO(2, 3, normals);
+		
+		unbindVAO();
+		return new RawMesh(vaoID, indices.length);
+	}
+	
 	// Variable dimension loader
 	public RawMesh loadToVAO(float[] positions, int dimensions){
 		int vaoID = createVAO();

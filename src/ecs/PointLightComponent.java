@@ -4,18 +4,26 @@ import org.joml.Vector3f;
 
 public class PointLightComponent {
 
+	private int eID;
+	
 	private Vector3f position;
 	private Vector3f ambient;
 	private Vector3f diffuse;
 	private Vector3f specular;
 	private Vector3f attenuation;
 	
-	public PointLightComponent(Vector3f position, Vector3f ambient, Vector3f diffuse, Vector3f specular, Vector3f attenuation){
+	public PointLightComponent(int eID, Vector3f position, Vector3f ambient, Vector3f diffuse, Vector3f specular, Vector3f attenuation){
+		this.eID = eID;
+		
 		this.position = position;
 		this.ambient = ambient;
 		this.diffuse = diffuse;
 		this.specular = specular;
 		this.attenuation = attenuation;
+	}
+	
+	public int getEID(){
+		return eID;
 	}
 
 	public Vector3f getPosition(){

@@ -11,7 +11,6 @@ import org.lwjgl.opengl.GL30;
 import ecs.PointLightComponent;
 import ecs.Transformable;
 import example.AssetData;
-import example.DirectionalLight;
 import example.FPPCamera;
 import example.ResourceLoader;
 
@@ -25,12 +24,11 @@ public class EntityRenderer {
 	
 	public void render(ResourceLoader resourceLoader,
 			FPPCamera camera,
-			DirectionalLight globalLight,
 			HashMap<String, HashSet<Transformable>> entitiesToRender,
 			HashSet<PointLightComponent> pointLights){
 		shader.start();
 		shader.uploadViewPos(camera.getPosition());
-		shader.uploadDirectionalLight(globalLight);
+		shader.uploadDirectionalLight(resourceLoader.getSun());
 		shader.uploadPointLights(pointLights);
 		
 		for(String appearance : entitiesToRender.keySet()){
