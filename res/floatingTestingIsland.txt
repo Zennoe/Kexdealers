@@ -4,15 +4,15 @@ SKYBOX{1200.0f/starfield}
 >c param: size - altitude - heightMap - blendMap - defTex - rTex - gTex - bTex
 TERRAIN{256/32/heightMap256/blendMap256/mud/planks/grass3/moist_dirt}
 >c param: directionInverse - ambient - diffuse - specular
-SUN{-0.2/-1/-0.3/0.629/0.707/0.95/2.629/0.707/0.95/0.629/0.707/0.95}
+SUN{-0.2/-1/-0.3/0.629/0.707/0.95/1.629/0.707/0.95/0.629/0.707/0.95}
 ENTITIES{0/1/2}
->c tree
-TRANSFORMABLE{eID=0}{0/0/0/0/0/0/1}
-RENDERABLE{eID=0}{lowPolyTree}
->c lamp
-TRANSFORMABLE{eID=1}{20/0/100/0/0/0/1}
-RENDERABLE{eID=1}{lamp}
-POINTLIGHTCOMPONENT{eID=1}{20/10/100/0.9/0.2/0.6/0.9/0.2/0.6/0.9/0.2/0.6/1/0.1/0.002}
 >c player
-TRANSFORMABLE{eID=2}{30/0/30/0/0/0/1}
-RENDERABLE{eID=2}{player}
+TRANSFORMABLE{eID=0}{30/0/30/0/0/0/1}
+RENDERABLE{eID=0}{player}
+>c tree
+TRANSFORMABLE{eID=1}{10/0/10/0/0/0/1}
+RENDERABLE{eID=1}{lowPolyTree}
+>c lamp
+TRANSFORMABLE{eID=2}{20/0/100/0/0/0/1}
+RENDERABLE{eID=2}{lamp}
+POINTLIGHTCOMPONENT{eID=2}{20/10/100/1.5/1.2/1.9/1.5/1.2/1.9/1.5/1.2/1.9/1/0.1/0.003}

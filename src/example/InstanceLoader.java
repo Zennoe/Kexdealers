@@ -123,7 +123,7 @@ public class InstanceLoader {
 	
 	public int extractEID(String input){
 		String substring = input.substring(
-				input.indexOf("=") + 1, 
+				input.indexOf("eID=") + 4, 
 				input.indexOf("}"));
 		
 		return Integer.valueOf(substring);
@@ -149,7 +149,7 @@ public class InstanceLoader {
 	}
 	
 	private String[] getDataFragments(String line){
-		// -2 to account for zero-indexing and to cut away the trailing "}"
+		// -1 to cut away the trailing "}"
 		String inner = line.substring(line.lastIndexOf("{") + 1, line.length() - 1);
 		return inner.split("/");
 	}

@@ -53,7 +53,7 @@ public class LinkStart implements Runnable{
 		instanceLoader.loadInstanceFromLocal("./res/floatingTestingIsland.txt");
 		
 		FPPCamera fppCamera = new FPPCamera();
-		Player player = new Player(fppCamera, entityController, 2); //look into file to choose the correct one :S
+		Player player = new Player(fppCamera, entityController, 0); //look into file to choose the correct one :S
 		
 		// < The Loop >
 		double frameBegin;
