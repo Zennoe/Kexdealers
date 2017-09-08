@@ -48,8 +48,8 @@ public class LinkStart implements Runnable{
 		// Systems
 		RenderSystem renderSystem = new RenderSystem(entityController, resourceLoader);
 		
+		// Load an instance from local
 		InstanceLoader instanceLoader = new InstanceLoader(entityController, resourceLoader, renderSystem);
-		
 		instanceLoader.loadInstanceFromLocal("./res/floatingTestingIsland.txt");
 		
 		FPPCamera fppCamera = new FPPCamera();

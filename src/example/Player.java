@@ -31,7 +31,7 @@ public class Player {
 
 		// Translation
 		// Move the player around horizontally.
-		Vector3f scaledDirVec = transformable.getDirectionVector().mul(delta * 20.0f);
+		Vector3f scaledDirVec = transformable.getDirectionVector().mul(delta * 30.0f);
 		if(Display.pressedKeys[GLFW.GLFW_KEY_W]){
 			transformable.increasePosition(scaledDirVec);
 		}

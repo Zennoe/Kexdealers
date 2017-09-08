@@ -43,7 +43,7 @@ void main(){
 	
 	vec4 blendMapColor = texture(multiTexture.blendMap, pass_texCoords);
 	float defaultAmount = 1 - (blendMapColor.r + blendMapColor.g + blendMapColor.b);
-	vec2 tiledCoords = pass_texCoords * 10.0;
+	vec2 tiledCoords = pass_texCoords * 60.0;
 	vec4 defaultColor = texture(multiTexture.defaultDiffuse, tiledCoords) * defaultAmount;
 	vec4 rColor = texture(multiTexture.rDiffuse, tiledCoords) * blendMapColor.r;
 	vec4 gColor = texture(multiTexture.gDiffuse, tiledCoords) * blendMapColor.g;
