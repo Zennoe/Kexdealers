@@ -1,35 +1,32 @@
 package example;
 
-import java.io.BufferedInputStream;
+import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 
-import commands.DecoderCommand;
-import commands.RenderComponentDecoder;
-import commands.TransformComponentDecoder;
+import decodeCommands.DecoderCommand;
+import decodeCommands.RenderComponentDecoder;
+import decodeCommands.TransformComponentDecoder;
 import ecs.Component;
 import ecs.EntityController;
 
-public class Delegator {
+public class DecodeDelegator {
 	
-	// Read documentation for mapping. Populated in constructor.
-	private HashMap<Byte, Integer> msgLengthLookUp;
 	private HashMap<Byte, DecoderCommand> commands;
 	
 	private EntityController entityController;
 	
-	public Delegator(EntityController entityController) {
-		// Populate the look up tables
-		msgLengthLookUp.put((byte) 0x01, 12);
-		msgLengthLookUp.put((byte) 0x02, 1);
-		// ---
+	public DecodeDelegator(EntityController entityController) {
+		// Populate the look up table
+		commands = new HashMap<>();
 		commands.put((byte) 0x01, new TransformComponentDecoder());
 		commands.put((byte) 0x02, new RenderComponentDecoder());
 		
 		this.entityController = entityController;
 	}
 	
-	public void delegate(BufferedInputStream stream) {
+	public void delegate(InputStream rawStream) {
 		
 		/*
 		 * fetch next message.
@@ -39,22 +36,22 @@ public class Delegator {
 		 * 	so the command object knows how many more messages to expect. Also pass along input stream.
 		 * 3) pass the entity ID and the component object from the returning command to the ECS
 		 * 4) await next start byte 
-		 * 	Should next message not by a start byte, dump it to error console at warning priority. -> 4)
+		 * 	Should next message not by a start byte, dump it to error console. -> 4)
 		 */
-		try {
+		try (DataInputStream stream = new DataInputStream(rawStream)) {
 			while(true) {
 				// 0x00 signals a new block transmission
-				if(stream.read() == 0x00) {
-					// read and validate eID from next message
-					int nextEID = stream.read();
-					// read and validate cType from next message
-					byte cType = (byte) stream.read();
+				if(stream.readByte() == 0x00) {
+					// read eID from next message
+					int nextEID = stream.readInt();
+					// read cType from next message
+					byte cType = (byte) stream.readByte();
 					// delegate to command object and catch the returned component object
-					Component comp = commands.get(cType).decode(stream, msgLengthLookUp);
+					Component comp = commands.get(cType).decode(stream);
 					// hand the component over to the ECS
 					entityController.addComponentOfType(nextEID, "unknown", comp);// API PROBLEM HERE  (Component type not known)
 				}else {
-					System.err.println("Delegator received unexpected data");
+					System.err.println("DecodeDelegator received unexpected data");
 				}
 			}
 		}catch(IOException x) {
