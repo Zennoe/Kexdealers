@@ -3,7 +3,7 @@ package ecs;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
-public class Transformable {
+public class Transformable extends Component{
 	
 	private int eID;
 	
@@ -33,6 +33,10 @@ public class Transformable {
 	
 	public int getEID(){
 		return eID;
+	}
+	
+	public void setEID(int eID) {
+		this.eID = eID;
 	}
 	
 	public Vector3f getPosition() {

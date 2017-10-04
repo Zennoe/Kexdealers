@@ -1,0 +1,93 @@
+#version 330 core
+
+#define MAX_POINT_LIGHTS 4
+
+struct MultiTexture{
+	sampler2D defaultDiffuse;
+	sampler2D rDiffuse;
+	sampler2D gDiffuse;
+	sampler2D bDiffuse;
+	sampler2D blendMap;
+};
+
+struct DirLight{
+	vec3 direction;
+	
+	vec3 ambient;
+	vec3 diffuse;
+};
+
+struct PointLight{
+	vec3 position;
+	
+	vec3 attenuation;
+	vec3 ambient;
+	vec3 diffuse;
+};
+
+in vec2 pass_texCoords;
+in vec3 surfaceNormal;
+in vec3 fragPos;
+
+out vec4 out_Color;
+
+uniform MultiTexture multiTexture;
+uniform DirLight dirLight;
+uniform PointLight pointLights[MAX_POINT_LIGHTS];
+
+// Function prototypes
+vec3 calcDirLight(vec4 totalColor, DirLight light, vec3 normal);
+vec3 calcPointLight(vec4 totalColor, PointLight light, vec3 normal, vec3 fragPos);
+
+void main(){
+	
+	vec4 blendMapColor = texture(multiTexture.blendMap, pass_texCoords);
+	float defaultAmount = 1 - (blendMapColor.r + blendMapColor.g + blendMapColor.b);
+	vec2 tiledCoords = pass_texCoords * 60.0;
+	vec4 defaultColor = texture(multiTexture.defaultDiffuse, tiledCoords) * defaultAmount;
+	vec4 rColor = texture(multiTexture.rDiffuse, tiledCoords) * blendMapColor.r;
+	vec4 gColor = texture(multiTexture.gDiffuse, tiledCoords) * blendMapColor.g;
+	vec4 bColor = texture(multiTexture.bDiffuse, tiledCoords) * blendMapColor.b;
+	
+	vec4 totalColor = defaultColor + rColor + gColor + bColor;
+	
+	// Properties
+	vec3 unitNormal = normalize(surfaceNormal);
+	// Directional lighting
+	vec3 result = calcDirLight(totalColor, dirLight, unitNormal);
+	// Point lights
+	for(int i = 0; i < 4; i++){
+		result += calcPointLight(totalColor, pointLights[i], unitNormal, fragPos);
+	}
+	
+	out_Color = vec4(result, 1.0);
+}
+
+vec3 calcDirLight(vec4 totalColor, DirLight light, vec3 normal){
+	
+	vec3 lightDir = normalize(-light.direction);
+	// Diffuse shading
+	float diffuse = max(dot(normal, lightDir), 0.0);
+	// Combine results
+	vec3 ambientResult = light.ambient * vec3(totalColor);
+	vec3 diffuseResult = light.diffuse * diffuse * vec3(totalColor);
+	
+	return (ambientResult + diffuseResult);
+}
+
+vec3 calcPointLight(vec4 totalColor, PointLight light, vec3 normal, vec3 fragPos){
+	
+	vec3 lightDir = normalize(light.position - fragPos);
+    // Diffuse shading
+    float diffuse = max(dot(normal, lightDir), 0.0);
+    // Attenuation
+    float distance = length(light.position - fragPos);
+    float attenuation = 1.0f / (light.attenuation.x + (light.attenuation.y * distance) + (light.attenuation.z * (distance * distance)));
+    // Combine results
+    vec3 ambientResult = light.ambient * vec3(totalColor);
+	vec3 diffuseResult = light.diffuse * diffuse * vec3(totalColor);
+    ambientResult *= attenuation;
+    diffuseResult *= attenuation;
+    
+	return (ambientResult + diffuseResult);
+}

@@ -1,6 +1,6 @@
 package ecs;
 
-public class Renderable {
+public class Renderable  extends Component{
 	
 	private int eID;
 	
@@ -13,6 +13,10 @@ public class Renderable {
 	
 	public int getEID(){
 		return eID;
+	}
+	
+	public void setEID(int eID) {
+		this.eID = eID;
 	}
 	
 	public String getAssetName(){

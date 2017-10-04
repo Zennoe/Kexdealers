@@ -6,25 +6,15 @@ import java.util.HashSet;
 
 import org.joml.Vector3f;
 
-import ecs.PointLightComponent;
-
 public class EntityController {
 
 	private HashMap<Integer, ArrayList<String>> entities = new HashMap<>();
 
-	private HashMap<Integer, Renderable> renderable = new HashMap<>();
 	private HashMap<Integer, Transformable> transformable = new HashMap<>();
+	private HashMap<Integer, Renderable> renderable = new HashMap<>();
 	private HashMap<Integer, PointLightComponent> pointLightComponent = new HashMap<>();
 	
-	// --- dereference ALL EC data ---
 	
-	public void wipeComplete(){
-		entities.clear();
-		
-		renderable.clear();
-		transformable.clear();
-		pointLightComponent.clear();
-	}
 	
 	// --- eID de-/allocation ---
 	
@@ -42,20 +32,6 @@ public class EntityController {
 		return i;
 	}
 	
-	public boolean directAllocEID(int eID){
-		if(entities.get(eID) != null){
-			return false;
-		}else{
-			// Initialize the entity 
-			// Transformable must always exist for each entity.
-			ArrayList<String> comps = new ArrayList<String>();
-			comps.add("transformable");
-			entities.put(eID, comps);
-			addTransformable(eID);
-			return true;
-		}
-	}
-	
 	public void freeEID(int eID){
 		entities.get(eID).clear();
 		entities.put(eID, null);
@@ -63,17 +39,17 @@ public class EntityController {
 	
 	// --- ADDERS ---
 	
-	public Renderable addRenderable(int eID, String assetName){
-		entities.get(eID).add("renderable");
-		Renderable comp = new Renderable(eID, assetName);
-		renderable.put(eID, comp);
-		return comp;
-	}
-	
 	public Transformable addTransformable(int eID){// Should exist anyways.
 		entities.get(eID).add("transformable");
 		Transformable comp = new Transformable(eID);
 		transformable.put(eID, comp);
+		return comp;
+	}
+	
+	public Renderable addRenderable(int eID, String assetName){
+		entities.get(eID).add("renderable");
+		Renderable comp = new Renderable(eID, assetName);
+		renderable.put(eID, comp);
 		return comp;
 	}
 	
@@ -84,21 +60,43 @@ public class EntityController {
 		return comp;
 	}
 	
+	public void addComponentOfType(int eID, String type, Component component) {
+		component.setEID(eID);
+		switch (type){
+			case "transformable": transformable.put(eID, (Transformable) component); break;
+			case "renderable": renderable.put(eID, (Renderable) component); break;
+			case "pointlightcomponent": pointLightComponent.put(eID, (PointLightComponent) component); break;
+		}
+	}
+	
 	// --- REMOVERS ---
 	
-	public void removeRenderable(int eID){
-		entities.get(eID).remove("renderable");
-		renderable.remove(eID);
-	}
-	
-	public void removeTransformable(int eID){// Will probably crash the engine
+	public Transformable removeTransformable(int eID){// Will probably crash the engine
 		entities.get(eID).remove("transformable");
-		transformable.remove(eID);
+		return transformable.remove(eID);
 	}
 	
-	public void removePointLightComponent(int eID){
+	public Renderable removeRenderable(int eID){
+		entities.get(eID).remove("renderable");
+		return renderable.remove(eID);
+	}
+	
+	public PointLightComponent removePointLightComponent(int eID){
 		entities.get(eID).remove("pointlightcomponent");
-		pointLightComponent.remove(eID);
+		return pointLightComponent.remove(eID);
+	}
+	
+	public Component removeComponentOfType(int eID, String type) {
+		if(!hasComponent(eID, type)) {
+			return null;
+		}else {
+			switch (type){
+				case "transformable": return removeTransformable(eID);
+				case "renderable": return removeRenderable(eID);
+				case "pointlightcomponent": return removePointLightComponent(eID);
+				default: return null;
+			}
+		}
 	}
 	
 	// --- GETTERS ---
@@ -127,9 +125,50 @@ public class EntityController {
 		return new HashSet<PointLightComponent>(pointLightComponent.values());
 	}
 	
+	public Component getComponentOfType(int eID, String type) {
+		if(!hasComponent(eID, type)) {
+			return null;
+		}else {
+			switch (type){
+				case "transformable": return getTransformable(eID);
+				case "renderable": return getRenderable(eID);
+				case "pointlightcomponent": return getPointLightComponent(eID);
+				default: return null;
+			}
+		}
+	}
+	
 	// --- QUERY ---
 	
 	public boolean hasComponent(int eID, String type){
 		return entities.get(eID).contains(type);
 	}
+	
+	// --- EXCHANGE ---
+	
+	public Entity emitEntity(int eID) {
+		// copy and delete components
+		ArrayList<String> componentTypes = entities.get(eID);
+		Entity entity = new Entity(eID);
+		for(int i = 0; i < componentTypes.size(); i++) {
+			entity.addComponent(
+					componentTypes.get(i), 
+					removeComponentOfType(eID, componentTypes.get(i)));
+		}
+		// free eID
+		freeEID(eID);
+		return entity;
+	}
+	
+	public void integrateEntity(Entity entity) {
+		int newEID = allocEID();
+		ArrayList<String> componentTypes = entity.getComposition();
+		for(int i = 0; i < componentTypes.size(); i++) {
+			addComponentOfType(
+					newEID, 
+					componentTypes.get(i), 
+					entity.getComponentOfType(componentTypes.get(i)));
+		}
+	}
+	
 }
