@@ -37,6 +37,14 @@ public class EntityController {
 		entities.put(eID, null);
 	}
 	
+	public void directAllocEID(int eID) {
+		// Initialize the entity 
+		// Transformable must always exist for each entity.
+		ArrayList<String> comps = new ArrayList<String>();
+		comps.add("transformable");
+		entities.put(eID, comps);
+		addTransformable(eID);
+	}
 	// --- ADDERS ---
 	
 	public Transformable addTransformable(int eID){// Should exist anyways.
