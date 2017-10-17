@@ -1,0 +1,31 @@
+INSTANCE
+>c param: size - imageSet
+SKYBOX{1200.0f/starfield}
+>c param: size - altitude - heightMap - blendMap - defTex - rTex - gTex - bTex
+TERRAIN{1024/32/heightMap1024/blendMap1024/mud/planks/grass3/path}
+>c param: directionInverse - ambient - diffuse - specular
+SUN{-0.2/-1/-0.3/0.629/0.707/0.95/1.629/0.707/0.95/0.629/0.707/0.95}
+ENTITIES{0/1/2/3/4/5/6/7}
+>c player
+>c param: position - rotation - scale
+TRANSFORMABLE{eID=0}{500/0/400/0/0/0/1}
+RENDERABLE{eID=0}{player}
+>c lamp
+TRANSFORMABLE{eID=1}{660/0/500/0/0/0/1.8}
+RENDERABLE{eID=1}{lamp}
+>c param: position - ambient - diffuse - specular - attenuation
+POINTLIGHTCOMPONENT{eID=1}{660/30/500/1.5/1.2/1.9/1.5/1.2/1.9/1.5/1.2/1.9/1/0.1/0.003}
+>c trees
+TRANSFORMABLE{eID=2}{723/0/554/0/0/0/2.5}
+RENDERABLE{eID=2}{lowPolyTree}
+TRANSFORMABLE{eID=3}{720/0/310/0/0/0/2.5}
+RENDERABLE{eID=3}{lowPolyTree}
+TRANSFORMABLE{eID=4}{500/0/682/0/0/0/2.5}
+RENDERABLE{eID=4}{lowPolyTree}
+TRANSFORMABLE{eID=5}{250/0/295/0/0/0/2.5}
+RENDERABLE{eID=5}{lowPolyTree}
+TRANSFORMABLE{eID=6}{242/0/544/0/0/0/2.5}
+RENDERABLE{eID=6}{lowPolyTree}
+TRANSFORMABLE{eID=7}{540/0/180/0/0/0/2.5}
+RENDERABLE{eID=7}{lowPolyTree}
+
