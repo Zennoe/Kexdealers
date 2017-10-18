@@ -19,5 +19,16 @@
 	<classpathentry kind="lib" path="lib/natives/lwjgl-opengl-natives-windows.jar"/>
 	<classpathentry kind="lib" path="lib/jars/lwjgl-stb.jar"/>
 	<classpathentry kind="lib" path="lib/natives/lwjgl-stb-natives-windows.jar"/>
+	<classpathentry kind="lib" path="lib/docs/lwjgl-stb-javadoc.jar"/>
+	<classpathentry kind="lib" path="lib/natives/lwjgl-glfw-natives-linux.jar"/>
+	<classpathentry kind="lib" path="lib/natives/lwjgl-glfw-natives-macos.jar"/>
+	<classpathentry kind="lib" path="lib/natives/lwjgl-natives-linux.jar"/>
+	<classpathentry kind="lib" path="lib/natives/lwjgl-natives-macos.jar"/>
+	<classpathentry kind="lib" path="lib/natives/lwjgl-openal-natives-linux.jar"/>
+	<classpathentry kind="lib" path="lib/natives/lwjgl-openal-natives-macos.jar"/>
+	<classpathentry kind="lib" path="lib/natives/lwjgl-opengl-natives-linux.jar"/>
+	<classpathentry kind="lib" path="lib/natives/lwjgl-opengl-natives-macos.jar"/>
+	<classpathentry kind="lib" path="lib/natives/lwjgl-stb-natives-linux.jar"/>
+	<classpathentry kind="lib" path="lib/natives/lwjgl-stb-natives-macos.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
