@@ -2,6 +2,13 @@ package example;
 
 import static org.lwjgl.glfw.GLFW.glfwGetTime;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.ConnectException;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.HashSet;
 
 import org.joml.Vector3f;
@@ -54,6 +61,26 @@ public class LinkStart implements Runnable{
 		
 		FPPCamera fppCamera = new FPPCamera();
 		Player player = new Player(fppCamera, entityController, 0); //look into file to choose the correct one :S
+		
+		// testing block
+		String username = "123";
+		try {
+			System.out.println("connecting");
+			Socket socket = new Socket("localhost", 2222);
+			System.out.println("connected");
+			// User name verification
+			DataOutputStream outputStream = new DataOutputStream(socket.getOutputStream());
+			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			System.out.println(bufferedReader.readLine());
+			outputStream.writeChars(username +"\n");
+		}catch (ConnectException x) {
+			System.err.println("Firewall blocking or no server listening");
+		}catch (UnknownHostException e) {
+			e.printStackTrace();
+		}catch (IOException e) {
+			e.printStackTrace();
+		}
+		// ---
 		
 		// < The Loop >
 		double frameBegin;
