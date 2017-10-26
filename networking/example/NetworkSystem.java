@@ -38,7 +38,7 @@ public class NetworkSystem {
 		}catch (ConnectException x) {
 			System.err.println("Firewall blocking or no server listening");
 		}catch (UnknownHostException e) {
-			e.printStackTrace();
+			System.err.println("Server address unknown: " +e.getMessage());
 		}catch (IOException e) {
 			e.printStackTrace();
 		}
