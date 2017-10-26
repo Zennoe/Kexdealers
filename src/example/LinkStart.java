@@ -63,7 +63,7 @@ public class LinkStart implements Runnable{
 		Player player = new Player(fppCamera, entityController, 0); //look into file to choose the correct one :S
 		
 		// testing block
-		String username = "123";
+		String username = "kekzdealer";
 		try {
 			System.out.println("connecting");
 			Socket socket = new Socket("localhost", 2222);
@@ -73,6 +73,10 @@ public class LinkStart implements Runnable{
 			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			System.out.println(bufferedReader.readLine());
 			outputStream.writeChars(username +"\n");
+			
+			bufferedReader.close();
+			outputStream.close();
+			socket.close();
 		}catch (ConnectException x) {
 			System.err.println("Firewall blocking or no server listening");
 		}catch (UnknownHostException e) {
