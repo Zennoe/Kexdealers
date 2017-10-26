@@ -2,13 +2,6 @@ package example;
 
 import static org.lwjgl.glfw.GLFW.glfwGetTime;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.ConnectException;
-import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.HashSet;
 
 import org.joml.Vector3f;
@@ -25,6 +18,9 @@ public class LinkStart implements Runnable{
 
 	private Thread gameloop = null;
 	private boolean running = false;
+	
+	// online == false -> run in local mode
+	private boolean online = true;
 	
 	private static int targetFPS = 120;
 	public static double timeDelta = 1000 / targetFPS;
@@ -54,37 +50,28 @@ public class LinkStart implements Runnable{
 		
 		// Systems
 		RenderSystem renderSystem = new RenderSystem(entityController, resourceLoader);
+		NetworkSystem networkSystem = new NetworkSystem();
 		
-		// Load an instance from local
+		// Local mode: Load a local instance
+		// Online mode: Connect to a server and request an instance from there.
+		//				Should the connection fail, fall back to local mode.
 		InstanceLoader instanceLoader = new InstanceLoader(entityController, resourceLoader, renderSystem);
-		instanceLoader.loadInstanceFromLocal("./res/floatingTestingIsland.txt");
+		if(online) {		
+			online = networkSystem.connectToServer("localhost", 2222, "kekzdealer");
+			if(!online) {
+				System.out.println("Connection to server failed. Falling back to offline-mode");
+			}else {
+				networkSystem.loadInstanceFromServer(instanceLoader);
+			}
+		}
+		if(!online) {
+			instanceLoader.loadInstanceFromLocal("./res/floatingTestingIsland.txt");
+		}
 		
 		FPPCamera fppCamera = new FPPCamera();
 		Player player = new Player(fppCamera, entityController, 0); //look into file to choose the correct one :S
 		
-		// testing block
-		String username = "kekzdealer";
-		try {
-			System.out.println("connecting");
-			Socket socket = new Socket("localhost", 2222);
-			System.out.println("connected");
-			// User name verification
-			DataOutputStream outputStream = new DataOutputStream(socket.getOutputStream());
-			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			System.out.println(bufferedReader.readLine());
-			outputStream.writeChars(username +"\n");
-			
-			bufferedReader.close();
-			outputStream.close();
-			socket.close();
-		}catch (ConnectException x) {
-			System.err.println("Firewall blocking or no server listening");
-		}catch (UnknownHostException e) {
-			e.printStackTrace();
-		}catch (IOException e) {
-			e.printStackTrace();
-		}
-		// ---
+		
 		
 		// < The Loop >
 		double frameBegin;
