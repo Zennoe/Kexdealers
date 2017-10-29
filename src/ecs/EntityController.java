@@ -168,6 +168,17 @@ public class EntityController {
 		return entity;
 	}
 	
+	public Entity copyEntity(int eID) {
+		ArrayList<String> componentTypes = entities.get(eID);
+		Entity entity = new Entity(eID);
+		for(int i = 0; i < componentTypes.size(); i++) {
+			entity.addComponent(
+					componentTypes.get(i), 
+					getComponentOfType(eID, componentTypes.get(i)));
+		}
+		return entity;
+	}
+	
 	public void integrateEntity(Entity entity) {
 		int newEID = allocEID();
 		ArrayList<String> componentTypes = entity.getComposition();

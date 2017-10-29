@@ -2,7 +2,6 @@ package example;
 
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 
 import decodeCommands.DecoderCommand;
@@ -26,8 +25,7 @@ public class DecodeDelegator {
 		this.entityController = entityController;
 	}
 	
-	public void delegate(InputStream rawStream) {
-		
+	public void delegate(DataInputStream stream) throws IOException{
 		/*
 		 * fetch next message.
 		 * if message is 0x00 => start of block
@@ -38,24 +36,18 @@ public class DecodeDelegator {
 		 * 4) await next start byte 
 		 * 	Should next message not by a start byte, dump it to error console. -> 4)
 		 */
-		try (DataInputStream stream = new DataInputStream(rawStream)) {
-			while(true) {
-				// 0x00 signals a new block transmission
-				if(stream.readByte() == 0x00) {
-					// read eID from next message
-					int nextEID = stream.readInt();
-					// read cType from next message
-					byte cType = (byte) stream.readByte();
-					// delegate to command object and catch the returned component object
-					Component comp = commands.get(cType).decode(stream);
-					// hand the component over to the ECS
-					entityController.addComponentOfType(nextEID, "unknown", comp);// API PROBLEM HERE  (Component type not known)
-				}else {
-					System.err.println("DecodeDelegator received unexpected data");
-				}
-			}
-		}catch(IOException x) {
-			x.printStackTrace();
+		// 0x00 signals a new block transmission
+		if(stream.readByte() == 0x00) {
+			// read eID from next message
+			int nextEID = stream.readInt();
+			// read cType from next message
+			byte cType = (byte) stream.readByte();
+			// delegate to command object and catch the returned component object
+			Component comp = commands.get(cType).decode(stream);
+			// hand the component over to the ECS
+			entityController.addComponentOfType(nextEID, "unknown", comp);// API PROBLEM HERE  (Component type not known)
+		}else {
+			System.err.println("DecodeDelegator received unexpected data");
 		}
 
 	}
