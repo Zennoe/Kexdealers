@@ -88,7 +88,7 @@ public class NetworkSystem implements Runnable{
 			running = false;
 			this.wait();
 		}catch(InterruptedException x) {
-			System.err.println("Error while disconnecting from server (while waiting for network_system to exit)");
+			System.err.println("Error while disconnecting from server (interrupted while waiting for network_system to exit)");
 			x.printStackTrace();
 		}
 		try {

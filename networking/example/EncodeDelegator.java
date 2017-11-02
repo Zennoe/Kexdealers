@@ -20,8 +20,9 @@ public class EncodeDelegator {
 		commands.put("transformable", new TransformComponentEncoder());
 		// ---
 		cTypeTable = new HashMap<>();
-		cTypeTable.put("transformable", (byte) 0x01);
-		cTypeTable.put("renderable", (byte) 0x02);
+		cTypeTable.put("transformable", 		(byte) 0x01);
+		cTypeTable.put("renderable", 			(byte) 0x02);
+		cTypeTable.put("pointlightcomponent", 	(byte) 0x03);
 	}
 	
 	public void delegate(OutputStream rawStream, String cType, Component comp) {

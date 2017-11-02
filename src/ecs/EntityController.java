@@ -14,8 +14,6 @@ public class EntityController {
 	private HashMap<Integer, Renderable> renderable = new HashMap<>();
 	private HashMap<Integer, PointLightComponent> pointLightComponent = new HashMap<>();
 	
-	
-	
 	// --- eID de-/allocation ---
 	
 	public int allocEID(){

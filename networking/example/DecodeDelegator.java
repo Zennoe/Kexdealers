@@ -14,6 +14,8 @@ public class DecodeDelegator {
 	
 	private HashMap<Byte, DecoderCommand> commands;
 	
+	private HashMap<Byte, String> cTypeTable;
+	
 	private EntityController entityController;
 	
 	public DecodeDelegator(EntityController entityController) {
@@ -21,6 +23,11 @@ public class DecodeDelegator {
 		commands = new HashMap<>();
 		commands.put((byte) 0x01, new TransformComponentDecoder());
 		commands.put((byte) 0x02, new RenderComponentDecoder());
+		
+		cTypeTable = new HashMap<>();
+		cTypeTable.put((byte) 0x01, "transformable");
+		cTypeTable.put((byte) 0x02, "renderable");
+		cTypeTable.put((byte) 0x03, "pointlightcomponent");
 		
 		this.entityController = entityController;
 	}
@@ -45,7 +52,7 @@ public class DecodeDelegator {
 			// delegate to command object and catch the returned component object
 			Component comp = commands.get(cType).decode(stream);
 			// hand the component over to the ECS
-			entityController.addComponentOfType(nextEID, "unknown", comp);// API PROBLEM HERE  (Component type not known)
+			entityController.addComponentOfType(nextEID, cTypeTable.get(cType), comp);
 		}else {
 			System.err.println("DecodeDelegator received unexpected data");
 		}
