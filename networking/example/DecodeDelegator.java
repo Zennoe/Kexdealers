@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import decodeCommands.DecoderCommand;
+import decodeCommands.PointLightComponentDecoder;
 import decodeCommands.RenderComponentDecoder;
 import decodeCommands.TransformComponentDecoder;
 import ecs.Component;
@@ -23,6 +24,7 @@ public class DecodeDelegator {
 		commands = new HashMap<>();
 		commands.put((byte) 0x01, new TransformComponentDecoder());
 		commands.put((byte) 0x02, new RenderComponentDecoder());
+		commands.put((byte) 0x03, new PointLightComponentDecoder());
 		
 		cTypeTable = new HashMap<>();
 		cTypeTable.put((byte) 0x01, "transformable");
@@ -44,7 +46,8 @@ public class DecodeDelegator {
 		 * 	Should next message not by a start byte, dump it to error console. -> 4)
 		 */
 		// 0x00 signals a new block transmission
-		if(stream.readByte() == 0x00) {
+		byte control_byte = stream.readByte();
+		if(control_byte == 0x00) {
 			// read eID from next message
 			int nextEID = stream.readInt();
 			// read cType from next message
@@ -53,6 +56,14 @@ public class DecodeDelegator {
 			Component comp = commands.get(cType).decode(stream);
 			// hand the component over to the ECS
 			entityController.addComponentOfType(nextEID, cTypeTable.get(cType), comp);
+			
+		}else if(control_byte == 0x01) {
+			// read eID from next message
+			int nextEID = stream.readInt();
+			// allocate new entity on the ECS
+			entityController.directAllocEID(nextEID);
+			// let the reader continue so it can read the components
+			
 		}else {
 			System.err.println("DecodeDelegator received unexpected data");
 		}

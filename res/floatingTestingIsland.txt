@@ -1,6 +1,6 @@
 INSTANCE
 >c param: size - imageSet
-SKYBOX{1200.0f/starfield}
+SKYBOX{1200.0f/plains}
 >c param: size - altitude - heightMap - blendMap - defTex - rTex - gTex - bTex
 TERRAIN{1024/32/heightMap1024/blendMap1024/mud/planks/grass3/path}
 >c param: directionInverse - ambient - diffuse - specular
