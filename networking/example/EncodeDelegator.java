@@ -7,8 +7,9 @@ import java.util.HashMap;
 
 import ecs.Component;
 import encodeCommands.EncoderCommand;
+import encodeCommands.PointLightComponentEncoder;
 import encodeCommands.TransformComponentEncoder;
-
+// CLIENT SIDE
 public class EncodeDelegator {
 	
 	private HashMap<String, EncoderCommand> commands;
@@ -18,6 +19,8 @@ public class EncodeDelegator {
 		// Populate the look up table
 		commands = new HashMap<>();
 		commands.put("transformable", new TransformComponentEncoder());
+		//commands.put("renderable", new RenderComponentEncoder());
+		commands.put("pointlightcomponent", new PointLightComponentEncoder());
 		// ---
 		cTypeTable = new HashMap<>();
 		cTypeTable.put("transformable", 		(byte) 0x01);
