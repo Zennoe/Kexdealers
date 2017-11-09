@@ -4,17 +4,10 @@ import org.joml.Vector3f;
 
 public class DirectionalLight {
 	
-	private Vector3f direction;
-	private Vector3f ambient;
-	private Vector3f diffuse;
-	private Vector3f specular;
-	
-	public DirectionalLight(Vector3f direction, Vector3f ambient, Vector3f diffuse, Vector3f specular){
-		this.direction = direction;
-		this.ambient = ambient;
-		this.diffuse = diffuse;
-		this.specular = specular;
-	}
+	private Vector3f direction = new Vector3f(0.0f, -1.0f, 0.0f);
+	private Vector3f ambient = new Vector3f(1.0f, 1.0f, 1.0f);
+	private Vector3f diffuse = new Vector3f(1.0f, 1.0f, 1.0f);
+	private Vector3f specular = new Vector3f(1.0f, 1.0f, 1.0f);
 	
 	public Vector3f getDirection(){
 		return direction;
