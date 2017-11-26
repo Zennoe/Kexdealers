@@ -6,7 +6,7 @@ import java.util.HashSet;
 
 import org.joml.Vector3f;
 
-public class EntityController {
+public class SynchronizedEntityController {
 
 	private HashMap<Integer, ArrayList<String>> entities = new HashMap<>();
 
@@ -14,58 +14,84 @@ public class EntityController {
 	private HashMap<Integer, Renderable> renderable = new HashMap<>();
 	private HashMap<Integer, PointLightComponent> pointLightComponent = new HashMap<>();
 	
+	private Object entity_lock = new Object();
+	private Object transformable_lock = new Object();
+	private Object renderable_lock = new Object();
+	private Object pointlightcomponent_lock = new Object();
+	
 	// --- eID de-/allocation ---
 	
 	public int allocEID(){
-		int i = 0;
-		while(entities.get(i) != null){
-			i++;
+		synchronized(entity_lock) {
+			int i = 0;
+			while(entities.get(i) != null){
+				i++;
+			}
+			// Initialize the entity 
+			// Transformable must always exist for each entity.
+			ArrayList<String> comps = new ArrayList<String>();
+			comps.add("transformable");
+			entities.put(i, comps);
+			addTransformable(i);
+			return i;
 		}
-		// Initialize the entity 
-		// Transformable must always exist for each entity.
-		ArrayList<String> comps = new ArrayList<String>();
-		comps.add("transformable");
-		entities.put(i, comps);
-		addTransformable(i);
-		return i;
 	}
 	
 	public void freeEID(int eID){
-		entities.get(eID).clear();
-		entities.put(eID, null);
+		synchronized(entity_lock) {
+			for(String comp : entities.get(eID)) {
+				removeComponentOfType(eID, comp);
+			}
+			entities.put(eID, null);
+		}
 	}
 	
 	public void directAllocEID(int eID) {
-		// Initialize the entity 
-		// Transformable must always exist for each entity.
-		ArrayList<String> comps = new ArrayList<String>();
-		comps.add("transformable");
-		entities.put(eID, comps);
-		addTransformable(eID);
+		synchronized(entity_lock) {
+			// Initialize the entity 
+			// Transformable must always exist for each entity.
+			ArrayList<String> comps = new ArrayList<String>();
+			comps.add("transformable");
+			entities.put(eID, comps);
+			addTransformable(eID);
+		}
 	}
 	// --- ADDERS ---
 	
 	public Transformable addTransformable(int eID){// Should exist anyways.
-		entities.get(eID).add("transformable");
-		Transformable comp = new Transformable(eID);
-		transformable.put(eID, comp);
-		return comp;
+		synchronized(entity_lock) {
+			entities.get(eID).add("transformable");
+		}
+		synchronized(transformable_lock) {
+			Transformable comp = new Transformable(eID);
+			transformable.put(eID, comp);
+			return comp;
+		}
 	}
 	
 	public Renderable addRenderable(int eID, String assetName){
-		entities.get(eID).add("renderable");
-		Renderable comp = new Renderable(eID, assetName);
-		renderable.put(eID, comp);
-		return comp;
+		synchronized(entity_lock) {
+			entities.get(eID).add("renderable");
+		}
+		synchronized(renderable_lock) {
+			Renderable comp = new Renderable(eID, assetName);
+			renderable.put(eID, comp);
+			return comp;
+		}
 	}
 	
 	public PointLightComponent addPointLightComponent(int eID, Vector3f position, Vector3f ambient, Vector3f diffuse, Vector3f specular, Vector3f attenuation){
-		entities.get(eID).add("pointlightcomponent");
-		PointLightComponent comp = new PointLightComponent(eID, position, ambient, diffuse, specular, attenuation);
-		pointLightComponent.put(eID, comp);
-		return comp;
+		synchronized(entity_lock) {
+			entities.get(eID).add("pointlightcomponent");
+		}
+		synchronized(pointlightcomponent_lock) {
+			PointLightComponent comp = new PointLightComponent(eID, position, ambient, diffuse, specular, attenuation);
+			pointLightComponent.put(eID, comp);
+			return comp;
+		}
 	}
 	
+	// TODO remove all initialization parameters on addComponent methods
 	public void addComponentOfType(int eID, String type, Component component) {
 		component.setEID(eID);
 		switch (type){
@@ -78,20 +104,27 @@ public class EntityController {
 	// --- REMOVERS ---
 	
 	public Transformable removeTransformable(int eID){// Will probably crash the engine
-		entities.get(eID).remove("transformable");
-		return transformable.remove(eID);
+		synchronized(transformable_lock) {
+			entities.get(eID).remove("transformable");
+			return transformable.remove(eID);
+		}
 	}
 	
 	public Renderable removeRenderable(int eID){
-		entities.get(eID).remove("renderable");
-		return renderable.remove(eID);
+		synchronized (renderable_lock) {
+			entities.get(eID).remove("renderable");
+			return renderable.remove(eID);
+		}
 	}
 	
 	public PointLightComponent removePointLightComponent(int eID){
-		entities.get(eID).remove("pointlightcomponent");
-		return pointLightComponent.remove(eID);
+		synchronized (pointlightcomponent_lock) {
+			entities.get(eID).remove("pointlightcomponent");
+			return pointLightComponent.remove(eID);
+		}
 	}
 	
+	// Should be fine as long as delegated methods are synchronized?
 	public Component removeComponentOfType(int eID, String type) {
 		if(!hasComponent(eID, type)) {
 			return null;
@@ -108,29 +141,42 @@ public class EntityController {
 	// --- GETTERS ---
 	
 	public Transformable getTransformable(int eID){
-		return transformable.get(eID);
+		synchronized (transformable_lock) {
+			return transformable.get(eID);
+		}
 	}
 	
 	public HashSet<Transformable> getTransformables(){
-		return new HashSet<Transformable>(transformable.values());
+		synchronized (transformable_lock) {
+			return new HashSet<Transformable>(transformable.values());
+		}
 	}
 	
 	public Renderable getRenderable(int eID){
-		return renderable.get(eID);
+		synchronized (renderable_lock) {
+			return renderable.get(eID);
+		}
 	}
 	
 	public HashSet<Renderable> getRenderables(){
-		return new HashSet<Renderable>(renderable.values());
+		synchronized (renderable_lock) {
+			return new HashSet<Renderable>(renderable.values());
+		}
 	}
 	
 	public PointLightComponent getPointLightComponent(int eID){
-		return pointLightComponent.get(eID);
+		synchronized (pointlightcomponent_lock) {
+			return pointLightComponent.get(eID);
+		}
 	}
 	
 	public HashSet<PointLightComponent> getPointLightComponents(){
-		return new HashSet<PointLightComponent>(pointLightComponent.values());
+		synchronized (pointlightcomponent_lock) {
+			return new HashSet<PointLightComponent>(pointLightComponent.values());
+		}
 	}
 	
+	// Should be fine as long as delegated methods are synchronized?
 	public Component getComponentOfType(int eID, String type) {
 		if(!hasComponent(eID, type)) {
 			return null;
@@ -143,7 +189,7 @@ public class EntityController {
 			}
 		}
 	}
-	
+	// ------------------------------------------------------------------ done until here
 	// --- QUERY ---
 	
 	public boolean hasComponent(int eID, String type){

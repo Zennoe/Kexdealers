@@ -19,6 +19,9 @@ public class LinkStart implements Runnable{
 	private Thread gameloop = null;
 	private boolean running = false;
 	
+	// online == false -> run in local mode
+	private boolean online = true;
+	
 	private static int targetFPS = 120;
 	public static double timeDelta = 1000 / targetFPS;
 	
@@ -30,7 +33,7 @@ public class LinkStart implements Runnable{
 	
 	public void start(){
 		running = true;
-		gameloop = new Thread(this, "Game Loop");
+		gameloop = new Thread(this, "game_loop");
 		gameloop.start();
 	}
 	
@@ -47,13 +50,35 @@ public class LinkStart implements Runnable{
 		
 		// Systems
 		RenderSystem renderSystem = new RenderSystem(entityController, resourceLoader);
+		NetworkSystem networkSystem = new NetworkSystem(entityController);
 		
-		// Load an instance from local
+		// Local mode: Load a local instance
+		// Online mode: Connect to a server and request an instance from there.
+		//				Should the connection fail, fall back to local mode.
 		InstanceLoader instanceLoader = new InstanceLoader(entityController, resourceLoader, renderSystem);
-		instanceLoader.loadInstanceFromLocal("./res/floatingTestingIsland.txt");
+		if(online) {		
+			online = networkSystem.connectToServer("localhost", 2222, "kekzdealer");
+			if(!online) {
+				System.out.println("Connection to server failed. Falling back to offline-mode");
+			}else {
+				// Run NetworkSystem on a new thread so reading data from server can happen asynchronously
+				Thread netSysThread = new Thread(networkSystem, "network_system");
+				netSysThread.start();
+				networkSystem.loadInstanceFromServer(instanceLoader);
+				// THIS IS ONLY FOR TESTING SO THERE IS SOME DATA UNTIL ABOVE METHOD IS DONE
+				instanceLoader.loadInstanceFromLocal("./res/floatingTestingIsland.txt");
+			}
+		}
+		if(!online) {
+			instanceLoader.loadInstanceFromLocal("./res/floatingTestingIsland.txt");
+		}
 		
+		int playerID = 0; //look into file to choose the correct one :S
 		FPPCamera fppCamera = new FPPCamera();
-		Player player = new Player(fppCamera, entityController, 0); //look into file to choose the correct one :S
+		Player player = new Player(fppCamera, entityController, playerID);
+		
+		
+		
 		
 		// < The Loop >
 		double frameBegin;
@@ -63,9 +88,14 @@ public class LinkStart implements Runnable{
 			// Update
 			GLFW.glfwPollEvents();
 			
+			if(online) {
+				networkSystem.sendPlayerData(playerID);
+			}
+			
 			player.update((float)timeDelta);
 			gravity(entityController, resourceLoader);
 			resourceLoader.getSkybox().updateRotation((float)timeDelta);
+			
 			// Render
 			renderSystem.run(fppCamera);
 			
@@ -78,6 +108,9 @@ public class LinkStart implements Runnable{
 		}
 		
 		display.destroy();
+		if(online) {
+			networkSystem.disconnectFromServer();
+		}
 	}
 	
 	private void gravity(EntityController entityController, ResourceLoader resourceLoader){

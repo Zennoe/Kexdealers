@@ -1,12 +1,7 @@
-/decodeCommands/
-/ecs/
 /encodeCommands/
+/ecs/
+/decodeCommands/
 /example/
-/loaders/
 /render/
-/skybox/
-/terrain/
-/textures/
-/utility/
-/water/
-/wrapper/
+/blendMap1024_.png
+/heightMap1024_.png

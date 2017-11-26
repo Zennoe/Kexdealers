@@ -35,7 +35,7 @@ public class ResourceLoader {
 	
 	private Skybox skybox = null;
 	
-	private DirectionalLight sun = null;
+	private DirectionalLight sun = new DirectionalLight();
 	
 	public ResourceLoader(){
 		// preload keys
@@ -194,7 +194,11 @@ public class ResourceLoader {
 	}
 	
 	public DirectionalLight loadSun(Vector3f directionInverse, Vector3f ambient, Vector3f diffuse, Vector3f specular){
-		sun = new DirectionalLight(directionInverse, ambient, diffuse, specular);
+		sun = new DirectionalLight()
+				.setDirection(directionInverse)
+				.setAmbient(ambient)
+				.setDiffuse(diffuse)
+				.setSpecular(specular);
 		return sun;
 	}
 	
@@ -203,7 +207,7 @@ public class ResourceLoader {
 	}
 	
 	public void unloadSun(){
-		sun = null;
+		sun = new DirectionalLight();
 	}
 	
 }

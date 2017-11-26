@@ -23,4 +23,8 @@ public class Renderable  extends Component{
 		return assetName;
 	}
 	
+	public void setAssetName(String assetName) {
+		this.assetName = assetName;
+	}
+	
 }

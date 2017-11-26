@@ -2,10 +2,10 @@ package example;
 
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 
 import decodeCommands.DecoderCommand;
+import decodeCommands.PointLightComponentDecoder;
 import decodeCommands.RenderComponentDecoder;
 import decodeCommands.TransformComponentDecoder;
 import ecs.Component;
@@ -15,6 +15,8 @@ public class DecodeDelegator {
 	
 	private HashMap<Byte, DecoderCommand> commands;
 	
+	private HashMap<Byte, String> cTypeTable;
+	
 	private EntityController entityController;
 	
 	public DecodeDelegator(EntityController entityController) {
@@ -22,12 +24,17 @@ public class DecodeDelegator {
 		commands = new HashMap<>();
 		commands.put((byte) 0x01, new TransformComponentDecoder());
 		commands.put((byte) 0x02, new RenderComponentDecoder());
+		commands.put((byte) 0x03, new PointLightComponentDecoder());
+		
+		cTypeTable = new HashMap<>();
+		cTypeTable.put((byte) 0x01, "transformable");
+		cTypeTable.put((byte) 0x02, "renderable");
+		cTypeTable.put((byte) 0x03, "pointlightcomponent");
 		
 		this.entityController = entityController;
 	}
 	
-	public void delegate(InputStream rawStream) {
-		
+	public void delegate(DataInputStream stream) throws IOException{
 		/*
 		 * fetch next message.
 		 * if message is 0x00 => start of block
@@ -38,24 +45,27 @@ public class DecodeDelegator {
 		 * 4) await next start byte 
 		 * 	Should next message not by a start byte, dump it to error console. -> 4)
 		 */
-		try (DataInputStream stream = new DataInputStream(rawStream)) {
-			while(true) {
-				// 0x00 signals a new block transmission
-				if(stream.readByte() == 0x00) {
-					// read eID from next message
-					int nextEID = stream.readInt();
-					// read cType from next message
-					byte cType = (byte) stream.readByte();
-					// delegate to command object and catch the returned component object
-					Component comp = commands.get(cType).decode(stream);
-					// hand the component over to the ECS
-					entityController.addComponentOfType(nextEID, "unknown", comp);// API PROBLEM HERE  (Component type not known)
-				}else {
-					System.err.println("DecodeDelegator received unexpected data");
-				}
-			}
-		}catch(IOException x) {
-			x.printStackTrace();
+		// 0x00 signals a new block transmission
+		byte control_byte = stream.readByte();
+		if(control_byte == 0x00) {
+			// read eID from next message
+			int nextEID = stream.readInt();
+			// read cType from next message
+			byte cType = (byte) stream.readByte();
+			// delegate to command object and catch the returned component object
+			Component comp = commands.get(cType).decode(stream);
+			// hand the component over to the ECS
+			entityController.addComponentOfType(nextEID, cTypeTable.get(cType), comp);
+			
+		}else if(control_byte == 0x01) {
+			// read eID from next message
+			int nextEID = stream.readInt();
+			// allocate new entity on the ECS
+			entityController.directAllocEID(nextEID);
+			// let the reader continue so it can read the components
+			
+		}else {
+			System.err.println("DecodeDelegator received unexpected data");
 		}
 
 	}
