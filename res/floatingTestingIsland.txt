@@ -1,11 +1,10 @@
-INSTANCE
 >c param: size - imageSet
-SKYBOX{1200.0f/plains}
+SKYBOX{1200.0f/starfield}
 >c param: size - altitude - heightMap - blendMap - defTex - rTex - gTex - bTex
 TERRAIN{1024/32/heightMap1024/blendMap1024/mud/planks/grass3/path}
 >c param: directionInverse - ambient - diffuse - specular
 SUN{-0.2/-1/-0.3/0.529/0.607/0.85/1.429/0.607/0.85/0.529/0.607/0.85}
-ENTITIES{0/1/2/3/4/5/6/7}
+ENTITIES{0/1/2/3/4/5/6/7/8}
 >c player
 >c param: position - rotation - scale
 TRANSFORMABLE{eID=0}{500/0/400/0/0/0/1}
@@ -28,4 +27,7 @@ TRANSFORMABLE{eID=6}{242/0/544/0/0/0/2.5}
 RENDERABLE{eID=6}{lowPolyTree}
 TRANSFORMABLE{eID=7}{540/0/180/0/0/0/2.5}
 RENDERABLE{eID=7}{lowPolyTree}
-
+>c audio test entity
+TRANSFORMABLE{eID=8}{450/20/350/0/0/0/1}
+POINTLIGHTCOMPONENT{eID=8}{450/20/350/1.5/10.0/1.9/1.5/10.0/1.9/1.5/10.0/1.9/0.5/0.1/0.005}
+AUDIOSOURCECOMPONTENT{eID=8}{<scream>}

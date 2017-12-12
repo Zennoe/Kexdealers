@@ -2,11 +2,15 @@ package example;
 
 import static org.lwjgl.glfw.GLFW.glfwGetTime;
 
+import java.io.IOException;
 import java.util.HashSet;
+
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 
+import audio.AudioSystem;
 import ecs.EntityController;
 import ecs.Transformable;
 import render.RenderSystem;
@@ -51,6 +55,18 @@ public class LinkStart implements Runnable{
 		// Systems
 		RenderSystem renderSystem = new RenderSystem(entityController, resourceLoader);
 		NetworkSystem networkSystem = new NetworkSystem(entityController);
+		AudioSystem audioSystem = new AudioSystem(entityController, resourceLoader);
+		try {
+			audioSystem.loadSoundFile("scream", "./res/sound/shout_04.wav");
+		} catch (UnsupportedAudioFileException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			audioSystem.cleanUp();
+		}
 		
 		// Local mode: Load a local instance
 		// Online mode: Connect to a server and request an instance from there.
@@ -98,6 +114,7 @@ public class LinkStart implements Runnable{
 			
 			// Render
 			renderSystem.run(fppCamera);
+			audioSystem.run();
 			
 			if(GLFW.glfwWindowShouldClose(Display.window)){
 				running = false;
