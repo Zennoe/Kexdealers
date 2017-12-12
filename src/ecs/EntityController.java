@@ -13,6 +13,7 @@ public class EntityController {
 	private HashMap<Integer, Transformable> transformable = new HashMap<>();
 	private HashMap<Integer, Renderable> renderable = new HashMap<>();
 	private HashMap<Integer, PointLightComponent> pointLightComponent = new HashMap<>();
+	private HashMap<Integer, AudioSourceComponent> audioSourceComponent = new HashMap<>();
 	
 	// --- eID de-/allocation ---
 	
@@ -66,12 +67,20 @@ public class EntityController {
 		return comp;
 	}
 	
+	public AudioSourceComponent addAudioSourceComponent(int eID, String assetName) {
+		entities.get(eID).add("audiosourcecomponent");
+		AudioSourceComponent comp = new AudioSourceComponent(eID, assetName);
+		audioSourceComponent.put(eID, comp);
+		return comp;
+	}
+	
 	public void addComponentOfType(int eID, String type, Component component) {
 		component.setEID(eID);
 		switch (type){
 			case "transformable": transformable.put(eID, (Transformable) component); break;
 			case "renderable": renderable.put(eID, (Renderable) component); break;
 			case "pointlightcomponent": pointLightComponent.put(eID, (PointLightComponent) component); break;
+			case "audiosourcecomponent": audioSourceComponent.put(eID, (AudioSourceComponent) component); break;
 		}
 	}
 	
@@ -92,6 +101,11 @@ public class EntityController {
 		return pointLightComponent.remove(eID);
 	}
 	
+	public AudioSourceComponent removeAudioSourceComponent(int eID) {
+		entities.get(eID).remove("audiosourcecomponent");
+		return audioSourceComponent.remove(eID);
+	}
+	
 	public Component removeComponentOfType(int eID, String type) {
 		if(!hasComponent(eID, type)) {
 			return null;
@@ -100,6 +114,7 @@ public class EntityController {
 				case "transformable": return removeTransformable(eID);
 				case "renderable": return removeRenderable(eID);
 				case "pointlightcomponent": return removePointLightComponent(eID);
+				case "audiosourcecomponent": return removeAudioSourceComponent(eID);
 				default: return null;
 			}
 		}
@@ -131,6 +146,14 @@ public class EntityController {
 		return new HashSet<PointLightComponent>(pointLightComponent.values());
 	}
 	
+	public AudioSourceComponent getAudioSourceComponent(int eID) {
+		return audioSourceComponent.get(eID);
+	}
+	
+	public HashSet<AudioSourceComponent> getAudioSourceComponents(){
+		return new HashSet<AudioSourceComponent>(audioSourceComponent.values());
+	}
+	
 	public Component getComponentOfType(int eID, String type) {
 		if(!hasComponent(eID, type)) {
 			return null;
@@ -139,6 +162,7 @@ public class EntityController {
 				case "transformable": return getTransformable(eID);
 				case "renderable": return getRenderable(eID);
 				case "pointlightcomponent": return getPointLightComponent(eID);
+				case "audiosourcecomponent": return getAudioSourceComponent(eID);
 				default: return null;
 			}
 		}
