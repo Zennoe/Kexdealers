@@ -30,5 +30,10 @@
 	<classpathentry kind="lib" path="lib/natives/lwjgl-opengl-natives-macos.jar"/>
 	<classpathentry kind="lib" path="lib/natives/lwjgl-stb-natives-linux.jar"/>
 	<classpathentry kind="lib" path="lib/natives/lwjgl-stb-natives-macos.jar"/>
+	<classpathentry kind="lib" path="lib/jars/lwjgl-assimp.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="Kexdealers/lib/natives"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

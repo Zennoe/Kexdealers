@@ -22,13 +22,13 @@ import terrain.TerrainRenderer;
 
 public class RenderSystem {
 
-	EntityController entityController;
+	private EntityController entityController;
 	
-	ResourceLoader resourceLoader;
+	private ResourceLoader resourceLoader;
 	
-	EntityRenderer entityRenderer;
-	TerrainRenderer terrainRenderer;
-	SkyboxRenderer skyboxRenderer;
+	private EntityRenderer entityRenderer;
+	private TerrainRenderer terrainRenderer;
+	private SkyboxRenderer skyboxRenderer;
 	
 	private HashMap<String, HashSet<Transformable>> entitiesToRender = new HashMap<>(); // All the currently active transforms for one asset
 	
@@ -59,7 +59,8 @@ public class RenderSystem {
 	
 	public void materialize(int eID, String assetName){
 		// Generate a new Renderable for <eID>
-		entityController.addRenderable(eID, assetName);
+		entityController.addRenderable(eID);
+		entityController.getRenderable(eID).setAssetName(assetName);
 		// Sort in the new reference for instanced rendering
 		if(entitiesToRender.get(assetName) == null){
 			entitiesToRender.put(assetName, new HashSet<Transformable>());

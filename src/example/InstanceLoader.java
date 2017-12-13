@@ -71,11 +71,12 @@ public class InstanceLoader {
 			float rotY = Float.valueOf(frags[4]);
 			float rotZ = Float.valueOf(frags[5]);
 			float scale = Float.valueOf(frags[6]);
-			transformable.setPosition(position);
-			transformable.setRotX(rotX);
-			transformable.setRotY(rotY);
-			transformable.setRotZ(rotZ);
-			transformable.setScale(scale);
+			transformable
+				.setPosition(position)
+				.setRotX(rotX)
+				.setRotY(rotY)
+				.setRotZ(rotZ)
+				.setScale(scale);
 		}
 		// - Renderable
 		ArrayList<String> renderableData = getAllLinesWith("RENDERABLE", lines);
@@ -94,7 +95,20 @@ public class InstanceLoader {
 			Vector3f diffuse = new Vector3f(Float.valueOf(frags[6]), Float.valueOf(frags[7]), Float.valueOf(frags[8]));
 			Vector3f specular = new Vector3f(Float.valueOf(frags[9]), Float.valueOf(frags[10]), Float.valueOf(frags[11]));
 			Vector3f attenuation = new Vector3f(Float.valueOf(frags[12]), Float.valueOf(frags[13]), Float.valueOf(frags[14]));
-			entityController.addPointLightComponent(eID, position, ambient, diffuse, specular, attenuation);
+			entityController.addPointLightComponent(eID);// BUILDER PATTERN! Have it return the result
+			entityController.getPointLightComponent(eID)
+				.setPosition(position)
+				.setAmbient(ambient)
+				.setDiffuse(diffuse)
+				.setSpecular(specular)
+				.setAttenuation(attenuation);
+		}
+		// - AudioSourceComponent
+		ArrayList<String> audioSourceComponentData = getAllLinesWith("AUDIOSOURCECOMPONENT", lines);
+		for(String dataSet : audioSourceComponentData) {
+			int eID = extractEID(dataSet);
+			frags = getDataFragments(dataSet);
+			entityController.addAudioSourceComponent(eID, frags[0]);
 		}
 		// - AudioSourceComponent
         ArrayList<String> audioSourceComponentData = getAllLinesWith("AUDIOSOURCECOMPONENT", lines);

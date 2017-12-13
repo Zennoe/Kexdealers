@@ -6,9 +6,8 @@ public class Renderable  extends Component{
 	
 	private String assetName = "default";
 	
-	public Renderable(int eID, String assetName){
+	public Renderable(int eID){
 		this.eID = eID;
-		this.assetName = assetName;
 	}
 	
 	public int getEID(){
