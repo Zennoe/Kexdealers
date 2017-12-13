@@ -59,7 +59,8 @@ public class RenderSystem {
 	
 	public void materialize(int eID, String assetName){
 		// Generate a new Renderable for <eID>
-		entityController.addRenderable(eID, assetName);
+		entityController.addRenderable(eID);
+		entityController.getRenderable(eID).setAssetName(assetName);
 		// Sort in the new reference for instanced rendering
 		if(entitiesToRender.get(assetName) == null){
 			entitiesToRender.put(assetName, new HashSet<Transformable>());

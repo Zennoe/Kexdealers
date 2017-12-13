@@ -77,7 +77,6 @@ public class LinkStart implements Runnable{
 		FPPCamera fppCamera = new FPPCamera();
 		Player player = new Player(fppCamera, entityController, playerID);
 		
-		Importer importer:
 		
 		
 		// < The Loop >

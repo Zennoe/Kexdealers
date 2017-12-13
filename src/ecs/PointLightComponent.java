@@ -6,20 +6,14 @@ public class PointLightComponent extends Component{
 
 	private int eID;
 	
-	private Vector3f position;
-	private Vector3f ambient;
-	private Vector3f diffuse;
-	private Vector3f specular;
-	private Vector3f attenuation;
+	private Vector3f position = new Vector3f();
+	private Vector3f ambient = new Vector3f();
+	private Vector3f diffuse = new Vector3f();
+	private Vector3f specular = new Vector3f();
+	private Vector3f attenuation = new Vector3f();
 	
-	public PointLightComponent(int eID, Vector3f position, Vector3f ambient, Vector3f diffuse, Vector3f specular, Vector3f attenuation){
+	public PointLightComponent(int eID){
 		this.eID = eID;
-		
-		this.position = position;
-		this.ambient = ambient;
-		this.diffuse = diffuse;
-		this.specular = specular;
-		this.attenuation = attenuation;
 	}
 	
 	public int getEID(){

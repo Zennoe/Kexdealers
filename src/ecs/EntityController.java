@@ -55,16 +55,16 @@ public class EntityController {
 		return comp;
 	}
 	
-	public Renderable addRenderable(int eID, String assetName){
+	public Renderable addRenderable(int eID){
 		entities.get(eID).add("renderable");
-		Renderable comp = new Renderable(eID, assetName);
+		Renderable comp = new Renderable(eID);
 		renderable.put(eID, comp);
 		return comp;
 	}
 	
-	public PointLightComponent addPointLightComponent(int eID, Vector3f position, Vector3f ambient, Vector3f diffuse, Vector3f specular, Vector3f attenuation){
+	public PointLightComponent addPointLightComponent(int eID){
 		entities.get(eID).add("pointlightcomponent");
-		PointLightComponent comp = new PointLightComponent(eID, position, ambient, diffuse, specular, attenuation);
+		PointLightComponent comp = new PointLightComponent(eID);
 		pointLightComponent.put(eID, comp);
 		return comp;
 	}
