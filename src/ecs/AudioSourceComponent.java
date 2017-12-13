@@ -9,6 +9,9 @@ public class AudioSourceComponent extends Component{
 
 	private float al_gain = 1.0f;
 	private float al_pitch = 1.0f;
+	private float al_rolloff_factor = 1.0f;
+	private float al_reference_distance = 3.0f;
+	private float al_max_distance = 50.0f;
 	private Vector3f al_position = new Vector3f(0,0,0);
 	private Vector3f al_direction = new Vector3f(0,0,0);
 	private Vector3f al_velocity = new Vector3f(0,0,0);
@@ -101,5 +104,29 @@ public class AudioSourceComponent extends Component{
 
 	public void setAl_resource_name(String al_resource_name) {
 		this.al_resource_name = al_resource_name;
+	}
+
+	public float getAl_rolloff_factor() {
+		return al_rolloff_factor;
+	}
+
+	public void setAl_rolloff_factor(float al_rolloff_factor) {
+		this.al_rolloff_factor = al_rolloff_factor;
+	}
+
+	public float getAl_reference_distance() {
+		return al_reference_distance;
+	}
+
+	public void setAl_reference_distance(float al_reference_distance) {
+		this.al_reference_distance = al_reference_distance;
+	}
+
+	public float getAl_max_distance() {
+		return al_max_distance;
+	}
+
+	public void setAl_max_distance(float al_max_distance) {
+		this.al_max_distance = al_max_distance;
 	}
 }

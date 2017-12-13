@@ -11,6 +11,7 @@ import org.lwjgl.openal.AL10;
 import org.lwjgl.openal.ALC;
 import org.lwjgl.openal.ALC10;
 import org.lwjgl.openal.ALCCapabilities;
+import org.lwjgl.openal.EXTLinearDistance;
 import org.lwjgl.openal.EXTThreadLocalContext;
 import org.lwjgl.system.MemoryUtil;
 
@@ -52,10 +53,15 @@ public class AudioSystem {
         EXTThreadLocalContext.alcSetThreadContext(context);
         
         AL.createCapabilities(deviceCaps);
+        AL10.alDistanceModel(EXTLinearDistance.AL_LINEAR_DISTANCE_CLAMPED);
         
-        // I SHOULDN'T BE HERE
+        // I SHOULDN'T BE HERE -->
         try {
-			loadSoundFile("scream", "/audio/shout_04.wav");
+			loadSoundFile("shout04", "/audio/shout_04.wav");
+			loadSoundFile("shout03", "/audio/shout_03.wav");
+			loadSoundFile("shout02", "/audio/shout_02.wav");
+			loadSoundFile("shout01", "/audio/shout_01.wav");
+			loadSoundFile("disappointment_02", "/audio/disappointment_02.wav");
 		} catch (UnsupportedAudioFileException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -65,6 +71,7 @@ public class AudioSystem {
 			e.printStackTrace();
 			cleanUp();
 		}
+        // <-- UNTIL HERE
 	}
 	
 	public void run() {
@@ -77,9 +84,10 @@ public class AudioSystem {
 			
 			if (comp.getAl_resource_name() == null) {
 				// no playing resource set. skip component
-				comp.setAl_resource_name("scream"); // REMOVE ME
+				comp.setAl_resource_name("disappointment_02");
 				continue;
 			}
+			
 			
 			if (AL10.alGetSourcei(comp.getAl_id(), AL10.AL_SOURCE_STATE) != AL10.AL_PLAYING) {
 				// reset source

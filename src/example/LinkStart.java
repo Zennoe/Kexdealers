@@ -112,8 +112,8 @@ public class LinkStart implements Runnable{
 			// FPS: System.out.println((int) (Math.floor(1000 / timeDelta)) / 1000);
 		}
 		
-		display.destroy();
 		audioSystem.cleanUp();
+		display.destroy();
 		if(online) {
 			networkSystem.disconnectFromServer();
 		}
