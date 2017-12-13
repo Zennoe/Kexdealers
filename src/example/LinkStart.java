@@ -83,6 +83,19 @@ public class LinkStart implements Runnable{
 		FPPCamera fppCamera = new FPPCamera();
 		Player player = new Player(fppCamera, entityController, playerID);
 		
+		// load some example audio files
+        try {
+			audioSystem.loadSoundFile("shout04", "/audio/shout_04.wav");
+			audioSystem.loadSoundFile("disappointment_02", "/audio/disappointment_02.wav");
+		} catch (UnsupportedAudioFileException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			audioSystem.cleanUp();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			audioSystem.cleanUp();
+		}
 		
 		// < The Loop >
 		double frameBegin;
@@ -102,7 +115,7 @@ public class LinkStart implements Runnable{
 			
 			// Render
 			renderSystem.run(fppCamera);
-			audioSystem.run();
+			audioSystem.run(fppCamera);
 			
 			if(GLFW.glfwWindowShouldClose(Display.window)){
 				running = false;

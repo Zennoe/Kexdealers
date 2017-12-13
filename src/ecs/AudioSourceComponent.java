@@ -1,7 +1,5 @@
 package ecs;
 
-import org.joml.Vector3f;
-
 public class AudioSourceComponent extends Component{
 	
 	private int al_id = -1;
@@ -12,10 +10,9 @@ public class AudioSourceComponent extends Component{
 	private float al_rolloff_factor = 1.0f;
 	private float al_reference_distance = 3.0f;
 	private float al_max_distance = 50.0f;
-	private Vector3f al_position = new Vector3f(0,0,0);
-	private Vector3f al_direction = new Vector3f(0,0,0);
-	private Vector3f al_velocity = new Vector3f(0,0,0);
 	private boolean al_looping = true;
+	private boolean cmd_start = false;
+	private boolean cmd_stop = false;
 	
 	// ecs
 	private int eID;
@@ -56,30 +53,6 @@ public class AudioSourceComponent extends Component{
 
 	public void setAl_pitch(float al_pitch) {
 		this.al_pitch = al_pitch;
-	}
-
-	public Vector3f getAl_position() {
-		return al_position;
-	}
-
-	public void setAl_position(Vector3f al_position) {
-		this.al_position = al_position;
-	}
-
-	public Vector3f getAl_direction() {
-		return al_direction;
-	}
-
-	public void setAl_direction(Vector3f al_direction) {
-		this.al_direction = al_direction;
-	}
-
-	public Vector3f getAl_velocity() {
-		return al_velocity;
-	}
-
-	public void setAl_velocity(Vector3f al_velocity) {
-		this.al_velocity = al_velocity;
 	}
 
 	public boolean isAl_looping() {
@@ -128,5 +101,21 @@ public class AudioSourceComponent extends Component{
 
 	public void setAl_max_distance(float al_max_distance) {
 		this.al_max_distance = al_max_distance;
+	}
+
+	public boolean isCmd_start() {
+		return cmd_start;
+	}
+
+	public void setCmd_start(boolean cmd_start) {
+		this.cmd_start = cmd_start;
+	}
+
+	public boolean isCmd_stop() {
+		return cmd_stop;
+	}
+
+	public void setCmd_stop(boolean cmd_stop) {
+		this.cmd_stop = cmd_stop;
 	}
 }

@@ -110,13 +110,6 @@ public class InstanceLoader {
 			frags = getDataFragments(dataSet);
 			entityController.addAudioSourceComponent(eID, frags[0]);
 		}
-		// - AudioSourceComponent
-        ArrayList<String> audioSourceComponentData = getAllLinesWith("AUDIOSOURCECOMPONENT", lines);
-        for(String dataSet : audioSourceComponentData) {
-            int eID = extractEID(dataSet);
-            frags = getDataFragments(dataSet);
-            entityController.addAudioSourceComponent(eID, frags[0]);
-        }
 	}
 	
 	public void loadInstanceFromServer(String fromServer){

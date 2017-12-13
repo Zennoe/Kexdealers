@@ -6,6 +6,7 @@ import java.nio.IntBuffer;
 import java.util.HashMap;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
+import org.joml.Vector3f;
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.AL10;
 import org.lwjgl.openal.ALC;
@@ -17,6 +18,7 @@ import org.lwjgl.system.MemoryUtil;
 
 import ecs.AudioSourceComponent;
 import ecs.EntityController;
+import example.FPPCamera;
 import example.ResourceLoader;
 
 public class AudioSystem {
@@ -54,61 +56,54 @@ public class AudioSystem {
         
         AL.createCapabilities(deviceCaps);
         AL10.alDistanceModel(EXTLinearDistance.AL_LINEAR_DISTANCE_CLAMPED);
-        
-        // I SHOULDN'T BE HERE -->
-        try {
-			loadSoundFile("shout04", "/audio/shout_04.wav");
-			loadSoundFile("shout03", "/audio/shout_03.wav");
-			loadSoundFile("shout02", "/audio/shout_02.wav");
-			loadSoundFile("shout01", "/audio/shout_01.wav");
-			loadSoundFile("disappointment_02", "/audio/disappointment_02.wav");
-		} catch (UnsupportedAudioFileException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			cleanUp();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			cleanUp();
-		}
-        // <-- UNTIL HERE
 	}
 	
-	public void run() {
+	public void run(FPPCamera fppcamera) {
 		for (AudioSourceComponent comp : entityController.getAudioSourceComponents()) {
 			if (comp.getAl_id() < 0) {
-				// component was not initialised! fixing it now
+				// component was previously not initialised! fixing it now
 				comp.setAl_id(AL10.alGenSources());
-				System.out.println("Comp was initialised with ID " + comp.getAl_id());
+				System.out.println("AudioSourceComp of entity " + comp.getEID() + 
+									" was initialised with AL_ID " + comp.getAl_id());
 			}
 			
+			comp.setCmd_start(true); // REMOVE ME I'm a hack
+			
+			// if no playing resource has been set; skip entity
 			if (comp.getAl_resource_name() == null) {
-				// no playing resource set. skip component
-				comp.setAl_resource_name("disappointment_02");
+				comp.setAl_resource_name("disappointment_02"); // REMOVE ME
 				continue;
 			}
 			
-			
-			if (AL10.alGetSourcei(comp.getAl_id(), AL10.AL_SOURCE_STATE) != AL10.AL_PLAYING) {
+			// change source state if requested by user
+			if (comp.isCmd_start()) {
+				comp.setCmd_start(false);
+				
 				// reset source
 				AL10.alSourceRewind(comp.getAl_id());
 				AL10.alSourcei(comp.getAl_id(), AL10.AL_BUFFER, sound_buffers.get(comp.getAl_resource_name()).getBufferID());
 				
-				// update params
+				// let play source
+				AL10.alSourcePlay(comp.getAl_id());
+			}
+			if (comp.isCmd_stop()) {
+				comp.setCmd_stop(false);
+				
+				AL10.alSourceStop(comp.getAl_id());
+			}
+			
+			// if the audio is playing, update its attributes
+			if (AL10.alGetSourcei(comp.getAl_id(), AL10.AL_SOURCE_STATE) == AL10.AL_PLAYING) {
 				AL10.alSourcef(comp.getAl_id(), AL10.AL_GAIN, comp.getAl_gain());
 				AL10.alSourcef(comp.getAl_id(), AL10.AL_PITCH, comp.getAl_pitch());
-				AL10.alSource3f(comp.getAl_id(), AL10.AL_POSITION, comp.getAl_position().x, comp.getAl_position().y, comp.getAl_position().z);
-				/*
-				AL10.alSource3f(comp.getAl_id(), AL10.AL_POSITION, entityController.getTransformable(comp.getEID()).getPosition().x, 
-																	entityController.getTransformable(comp.getEID()).getPosition().y,
-																	entityController.getTransformable(comp.getEID()).getPosition().z);
-																	*/
-				AL10.alSource3f(comp.getAl_id(), AL10.AL_DIRECTION, comp.getAl_direction().x, comp.getAl_direction().y, comp.getAl_position().z);
-				AL10.alSource3f(comp.getAl_id(), AL10.AL_VELOCITY, comp.getAl_velocity().x, comp.getAl_velocity().y, comp.getAl_velocity().z);
 				AL10.alSourcei(comp.getAl_id(), AL10.AL_LOOPING, comp.isAl_looping() ? AL10.AL_TRUE : AL10.AL_FALSE);
 				
-				// play source
-				AL10.alSourcePlay(comp.getAl_id());
+				Vector3f al_pos = AudioTransformsHelper.comp_to_AudioPos(entityController.getTransformable(comp.getEID()),
+																		 fppcamera.getViewMatrix());
+				System.out.println("AL_Pos of entity " + comp.getEID() + " is: " + al_pos.toString());
+				AL10.alSource3f(comp.getAl_id(), AL10.AL_POSITION, al_pos.x, al_pos.y, al_pos.z);
+				AL10.alSource3f(comp.getAl_id(), AL10.AL_DIRECTION, 0, 0, 0); // TODO IMPLEMENTATION
+				AL10.alSource3f(comp.getAl_id(), AL10.AL_VELOCITY, 0, 0, 0); // TODO IMPLEMENTATION
 			}
 		}
 	}
@@ -122,8 +117,8 @@ public class AudioSystem {
 		// close all sound buffers
 		for (String bu : sound_buffers.keySet()) {
 			sound_buffers.get(bu).dtor();
-			sound_buffers.remove(bu);
 		}
+		sound_buffers.clear();
 		
 		// properly quit OpenAL
 		ALC10.alcMakeContextCurrent(al_context);
