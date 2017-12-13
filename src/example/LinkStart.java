@@ -24,7 +24,7 @@ public class LinkStart implements Runnable{
 	private boolean running = false;
 	
 	// online == false -> run in local mode
-	private boolean online = true;
+	private boolean online = false;
 	
 	private static int targetFPS = 120;
 	public static double timeDelta = 1000 / targetFPS;
