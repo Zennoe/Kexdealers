@@ -14,6 +14,8 @@ public class EntityController {
 	private HashMap<Integer, Renderable> renderable = new HashMap<>();
 	private HashMap<Integer, PointLightComponent> pointLightComponent = new HashMap<>();
 	private HashMap<Integer, AudioSourceComponent> audioSourceComponent = new HashMap<>();
+	private HashMap<Integer, FPPCameraComponent> fppCameraComponent = new HashMap<>();
+	private HashMap<Integer, PlayerControllerComponent> playerControllerComponent = new HashMap<>();
 	
 	// --- eID de-/allocation ---
 	
@@ -74,6 +76,20 @@ public class EntityController {
 		return comp;
 	}
 	
+	public FPPCameraComponent addFPPCameraComponent(int eID) {
+		entities.get(eID).add("fppcameracomponent");
+		FPPCameraComponent comp = new FPPCameraComponent();
+		fppCameraComponent.put(eID, comp);
+		return comp;
+	}
+	
+	public PlayerControllerComponent addPlayerControllerComponent(int eID) {
+		entities.get(eID).add("playercontrollercomponent");
+		PlayerControllerComponent comp = new PlayerControllerComponent();
+		playerControllerComponent.put(eID, comp);
+		return comp;
+	}
+	
 	public void addComponentOfType(int eID, String type, Component component) {
 		component.setEID(eID);
 		switch (type){
@@ -81,6 +97,8 @@ public class EntityController {
 			case "renderable": renderable.put(eID, (Renderable) component); break;
 			case "pointlightcomponent": pointLightComponent.put(eID, (PointLightComponent) component); break;
 			case "audiosourcecomponent": audioSourceComponent.put(eID, (AudioSourceComponent) component); break;
+			case "fppcameracomponent": fppCameraComponent.put(eID, (FPPCameraComponent) component); break;
+			case "playercontrollercomponent": playerControllerComponent.put(eID, (PlayerControllerComponent) component); break;
 		}
 	}
 	
@@ -106,6 +124,16 @@ public class EntityController {
 		return audioSourceComponent.remove(eID);
 	}
 	
+	public FPPCameraComponent removeFPPCameraComponent(int eID) {
+		entities.get(eID).remove("fppcameracomponent");
+		return fppCameraComponent.remove(eID);
+	}
+	
+	public PlayerControllerComponent removePlayerControllerComponent(int eID) {
+		entities.get(eID).remove("playercontrollercomponent");
+		return playerControllerComponent.remove(eID);
+	}
+	
 	public Component removeComponentOfType(int eID, String type) {
 		if(!hasComponent(eID, type)) {
 			return null;
@@ -115,6 +143,8 @@ public class EntityController {
 				case "renderable": return removeRenderable(eID);
 				case "pointlightcomponent": return removePointLightComponent(eID);
 				case "audiosourcecomponent": return removeAudioSourceComponent(eID);
+				case "fppcameracomponent": return removeFPPCameraComponent(eID);
+				case "playercontrollercomponent": return removePlayerControllerComponent(eID);
 				default: return null;
 			}
 		}
@@ -154,6 +184,22 @@ public class EntityController {
 		return new HashSet<AudioSourceComponent>(audioSourceComponent.values());
 	}
 	
+	public FPPCameraComponent getFPPCameraComponent(int eID) {
+		return fppCameraComponent.get(eID);
+	}
+	
+	public HashSet<FPPCameraComponent> getFPPCameraComponents(){
+		return new HashSet<FPPCameraComponent>(fppCameraComponent.values());
+	}
+	
+	public PlayerControllerComponent getPlayerControllerComponent(int eID) {
+		return playerControllerComponent.get(eID);
+	}
+	
+	public HashSet<PlayerControllerComponent> getPlayerControllerComponents(){
+		return new HashSet<PlayerControllerComponent>(playerControllerComponent.values());
+	}
+	
 	public Component getComponentOfType(int eID, String type) {
 		if(!hasComponent(eID, type)) {
 			return null;
@@ -163,6 +209,8 @@ public class EntityController {
 				case "renderable": return getRenderable(eID);
 				case "pointlightcomponent": return getPointLightComponent(eID);
 				case "audiosourcecomponent": return getAudioSourceComponent(eID);
+				case "fppcameracomponent": return getFPPCameraComponent(eID);
+				case "playercontrollercomponent": return getPlayerControllerComponent(eID);
 				default: return null;
 			}
 		}
