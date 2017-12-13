@@ -96,7 +96,13 @@ public class InstanceLoader {
 			Vector3f attenuation = new Vector3f(Float.valueOf(frags[12]), Float.valueOf(frags[13]), Float.valueOf(frags[14]));
 			entityController.addPointLightComponent(eID, position, ambient, diffuse, specular, attenuation);
 		}
-		
+		// - AudioSourceComponent
+        ArrayList<String> audioSourceComponentData = getAllLinesWith("AUDIOSOURCECOMPONENT", lines);
+        for(String dataSet : audioSourceComponentData) {
+            int eID = extractEID(dataSet);
+            frags = getDataFragments(dataSet);
+            entityController.addAudioSourceComponent(eID, frags[0]);
+        }
 	}
 	
 	public void loadInstanceFromServer(String fromServer){

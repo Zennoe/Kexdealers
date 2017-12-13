@@ -3,10 +3,7 @@ package audio;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 import org.lwjgl.openal.AL;
@@ -33,7 +30,6 @@ public class AudioSystem {
 	
 	// user objects
 	private HashMap<String, AudioResource> sound_buffers = new HashMap<>();
-	private HashMap<String, AudioSource> audio_players = new HashMap<>();
 
 	public AudioSystem(EntityController entityController, ResourceLoader resourceLoader) {
 		this.entityController = entityController;
@@ -56,19 +52,32 @@ public class AudioSystem {
         EXTThreadLocalContext.alcSetThreadContext(context);
         
         AL.createCapabilities(deviceCaps);
+        
+        // I SHOULDN'T BE HERE
+        try {
+			loadSoundFile("scream", "/audio/shout_04.wav");
+		} catch (UnsupportedAudioFileException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			cleanUp();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			cleanUp();
+		}
 	}
 	
 	public void run() {
-		
 		for (AudioSourceComponent comp : entityController.getAudioSourceComponents()) {
-			
 			if (comp.getAl_id() < 0) {
 				// component was not initialised! fixing it now
 				comp.setAl_id(AL10.alGenSources());
+				System.out.println("Comp was initialised with ID " + comp.getAl_id());
 			}
 			
 			if (comp.getAl_resource_name() == null) {
 				// no playing resource set. skip component
+				comp.setAl_resource_name("scream"); // REMOVE ME
 				continue;
 			}
 			
@@ -81,6 +90,11 @@ public class AudioSystem {
 				AL10.alSourcef(comp.getAl_id(), AL10.AL_GAIN, comp.getAl_gain());
 				AL10.alSourcef(comp.getAl_id(), AL10.AL_PITCH, comp.getAl_pitch());
 				AL10.alSource3f(comp.getAl_id(), AL10.AL_POSITION, comp.getAl_position().x, comp.getAl_position().y, comp.getAl_position().z);
+				/*
+				AL10.alSource3f(comp.getAl_id(), AL10.AL_POSITION, entityController.getTransformable(comp.getEID()).getPosition().x, 
+																	entityController.getTransformable(comp.getEID()).getPosition().y,
+																	entityController.getTransformable(comp.getEID()).getPosition().z);
+																	*/
 				AL10.alSource3f(comp.getAl_id(), AL10.AL_DIRECTION, comp.getAl_direction().x, comp.getAl_direction().y, comp.getAl_position().z);
 				AL10.alSource3f(comp.getAl_id(), AL10.AL_VELOCITY, comp.getAl_velocity().x, comp.getAl_velocity().y, comp.getAl_velocity().z);
 				AL10.alSourcei(comp.getAl_id(), AL10.AL_LOOPING, comp.isAl_looping() ? AL10.AL_TRUE : AL10.AL_FALSE);

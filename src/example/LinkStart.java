@@ -56,17 +56,7 @@ public class LinkStart implements Runnable{
 		RenderSystem renderSystem = new RenderSystem(entityController, resourceLoader);
 		NetworkSystem networkSystem = new NetworkSystem(entityController);
 		AudioSystem audioSystem = new AudioSystem(entityController, resourceLoader);
-		try {
-			audioSystem.loadSoundFile("scream", "./res/sound/shout_04.wav");
-		} catch (UnsupportedAudioFileException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			audioSystem.cleanUp();
-		}
+		
 		
 		// Local mode: Load a local instance
 		// Online mode: Connect to a server and request an instance from there.
@@ -92,8 +82,6 @@ public class LinkStart implements Runnable{
 		int playerID = 0; //look into file to choose the correct one :S
 		FPPCamera fppCamera = new FPPCamera();
 		Player player = new Player(fppCamera, entityController, playerID);
-		
-		
 		
 		
 		// < The Loop >
@@ -125,6 +113,7 @@ public class LinkStart implements Runnable{
 		}
 		
 		display.destroy();
+		audioSystem.cleanUp();
 		if(online) {
 			networkSystem.disconnectFromServer();
 		}
