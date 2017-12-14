@@ -65,4 +65,7 @@ public class FPPCamera {
 		FOV -= fov;
 	}
 	
+	public Quaternionf getViewDir() {
+		return viewDir;
+	}
 }

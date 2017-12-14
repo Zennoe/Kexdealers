@@ -8,8 +8,8 @@ public class AudioSourceComponent extends Component{
 	private float al_gain = 1.0f;
 	private float al_pitch = 1.0f;
 	private float al_rolloff_factor = 1.0f;
-	private float al_reference_distance = 3.0f;
-	private float al_max_distance = 50.0f;
+	private float al_reference_distance = 5.0f;
+	private float al_max_distance = 100.0f;
 	private boolean al_looping = true;
 	private boolean cmd_start = false;
 	private boolean cmd_stop = false;
