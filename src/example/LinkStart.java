@@ -87,6 +87,7 @@ public class LinkStart implements Runnable{
         try {
 			audioSystem.loadSoundFile("shout04", "/audio/shout_04.wav");
 			audioSystem.loadSoundFile("disappointment_02", "/audio/disappointment_02.wav");
+			audioSystem.loadSoundFile("music", "/audio/music2.wav");
 		} catch (UnsupportedAudioFileException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

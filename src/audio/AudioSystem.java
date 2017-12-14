@@ -57,7 +57,9 @@ public class AudioSystem {
         EXTThreadLocalContext.alcSetThreadContext(context);
         
         AL.createCapabilities(deviceCaps);
+        
         AL10.alDistanceModel(EXTLinearDistance.AL_LINEAR_DISTANCE_CLAMPED);
+        AL10.alListener3f(AL10.AL_VELOCITY, 0, 0, 0);
 	}
 	
 	public void run(FPPCamera fppcamera) {
@@ -73,10 +75,6 @@ public class AudioSystem {
 							lis_dir_up.x, lis_dir_up.y, lis_dir_up.z };
 		AL10.alListenerfv(AL10.AL_ORIENTATION, lis_dir);
 		
-		// update listener's velocity
-		AL10.alListener3f(AL10.AL_VELOCITY, 0, 0, 0); // TODO IMPLEMENTATION
-		
-		
 		for (AudioSourceComponent comp : entityController.getAudioSourceComponents()) {
 			if (comp.getAl_id() < 0) {
 				// component was previously not initialised! fixing it now
@@ -89,7 +87,9 @@ public class AudioSystem {
 			
 			// if no playing resource has been set; skip entity
 			if (comp.getAl_resource_name() == null) {
+				comp.setAl_resource_name("shout04"); // REMOVE ME
 				comp.setAl_resource_name("disappointment_02"); // REMOVE ME
+				comp.setAl_resource_name("music"); // REMOVE ME
 				continue;
 			}
 			
@@ -124,7 +124,6 @@ public class AudioSystem {
 				Vector3f al_pos = entityController.getTransformable(comp.getEID()).getPosition();
 				AL10.alSource3f(comp.getAl_id(), AL10.AL_POSITION, al_pos.x, al_pos.y, al_pos.z);
 				AL10.alSource3f(comp.getAl_id(), AL10.AL_DIRECTION, 0, 0, 0); // TODO IMPLEMENTATION
-				AL10.alSource3f(comp.getAl_id(), AL10.AL_VELOCITY, 0, 0, 0); // TODO IMPLEMENTATION
 			}
 		}
 	}
