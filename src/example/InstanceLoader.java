@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import org.joml.Vector3f;
 
 import ecs.EntityController;
-import ecs.Transformable;
 import render.RenderSystem;
 
 public class InstanceLoader {
@@ -65,13 +64,12 @@ public class InstanceLoader {
 		for(String dataSet : transformableData){
 			int eID = extractEID(dataSet);
 			frags = getDataFragments(dataSet);
-			Transformable transformable = entityController.getTransformable(eID);
 			Vector3f position = new Vector3f(Float.valueOf(frags[0]), Float.valueOf(frags[1]), Float.valueOf(frags[2]));
 			float rotX = Float.valueOf(frags[3]);
 			float rotY = Float.valueOf(frags[4]);
 			float rotZ = Float.valueOf(frags[5]);
 			float scale = Float.valueOf(frags[6]);
-			transformable
+			entityController.getTransformable(eID)
 				.setPosition(position)
 				.setRotX(rotX)
 				.setRotY(rotY)
@@ -95,8 +93,7 @@ public class InstanceLoader {
 			Vector3f diffuse = new Vector3f(Float.valueOf(frags[6]), Float.valueOf(frags[7]), Float.valueOf(frags[8]));
 			Vector3f specular = new Vector3f(Float.valueOf(frags[9]), Float.valueOf(frags[10]), Float.valueOf(frags[11]));
 			Vector3f attenuation = new Vector3f(Float.valueOf(frags[12]), Float.valueOf(frags[13]), Float.valueOf(frags[14]));
-			entityController.addPointLightComponent(eID);// BUILDER PATTERN! Have it return the result
-			entityController.getPointLightComponent(eID)
+			entityController.addPointLightComponent(eID)
 				.setPosition(position)
 				.setAmbient(ambient)
 				.setDiffuse(diffuse)
@@ -108,7 +105,8 @@ public class InstanceLoader {
 		for(String dataSet : audioSourceComponentData) {
 			int eID = extractEID(dataSet);
 			frags = getDataFragments(dataSet);
-			entityController.addAudioSourceComponent(eID, frags[0]);
+			entityController.addAudioSourceComponent(eID)
+				.setAudioSourceFileName(frags[0]);;
 		}
 		
 	}
