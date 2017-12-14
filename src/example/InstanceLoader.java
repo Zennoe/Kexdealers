@@ -108,6 +108,13 @@ public class InstanceLoader {
 			entityController.addAudioSourceComponent(eID)
 				.setAudioSourceFileName(frags[0]);;
 		}
+		// - FPPCameraComponent
+		ArrayList<String> fppCameraComponentData = getAllLinesWith("FPPCAMERACOMPONENT", lines);
+		for(String dataSet : fppCameraComponentData) {
+			int eID = extractEID(dataSet);
+			frags = getDataFragments(dataSet);
+			entityController.addFPPCameraComponent(eID);
+		}
 		
 	}
 	

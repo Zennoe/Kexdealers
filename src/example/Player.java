@@ -9,21 +9,17 @@ import ecs.Transformable;
 public class Player {
 	
 	private FPPCamera camera;
-	private Vector3f cameraOffset = new Vector3f(0.0f, 10.0f, 0.0f);
+	private Vector3f cameraOffset = new Vector3f(10.0f, 10.0f, 10.0f);
 	
 	private EntityController entityController;
 	
-	private int eID;
-	
-	public Player(FPPCamera camera, EntityController entityController, int eID){
+	public Player(FPPCamera camera, EntityController entityController){
 		this.camera = camera;
 		this.entityController = entityController;
-		this.eID = eID;
 	}
 	
-	public void update(float delta){
+	public void update(int eID, float delta){
 		Transformable transformable = entityController.getTransformable(eID);
-		
 		// Rotation
 		float yaw = (float) Math.toRadians(Display.getMouseX() * 5.0f * delta);
 		float pitch = (float) Math.toRadians(Display.getMouseY() * 5.0f * delta);
