@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import org.joml.Vector3f;
-
 public class EntityController {
 
 	private HashMap<Integer, ArrayList<String>> entities = new HashMap<>();
@@ -69,9 +67,9 @@ public class EntityController {
 		return comp;
 	}
 	
-	public AudioSourceComponent addAudioSourceComponent(int eID, String assetName) {
+	public AudioSourceComponent addAudioSourceComponent(int eID) {
 		entities.get(eID).add("audiosourcecomponent");
-		AudioSourceComponent comp = new AudioSourceComponent(eID, assetName);
+		AudioSourceComponent comp = new AudioSourceComponent(eID);
 		audioSourceComponent.put(eID, comp);
 		return comp;
 	}

@@ -18,9 +18,8 @@ public class AudioSourceComponent extends Component{
 	private int eID;
 	private String assetName = "default";
 	
-	public AudioSourceComponent(int eID, String assetName) {
+	public AudioSourceComponent(int eID) {
 		this.eID = eID;
-		this.assetName = assetName;
 	}
 
 	public int getEID() {
