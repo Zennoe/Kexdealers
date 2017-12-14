@@ -8,10 +8,10 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
+import ecs.FPPCameraComponent;
 import ecs.PointLightComponent;
 import ecs.Transformable;
 import example.AssetData;
-import example.FPPCamera;
 import example.ResourceLoader;
 
 public class EntityRenderer {
@@ -23,7 +23,7 @@ public class EntityRenderer {
 	}
 	
 	public void render(ResourceLoader resourceLoader,
-			FPPCamera camera,
+			FPPCameraComponent camera,
 			HashMap<String, HashSet<Transformable>> entitiesToRender,
 			HashSet<PointLightComponent> pointLights){
 		shader.start();

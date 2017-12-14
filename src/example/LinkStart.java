@@ -74,8 +74,7 @@ public class LinkStart implements Runnable{
 		}
 		
 		int playerID = 0; //look into file to choose the correct one :S
-		FPPCamera fppCamera = new FPPCamera();
-		Player player = new Player(fppCamera, entityController);
+		Player player = new Player(entityController);
 		
 		// < The Loop >
 		double frameBegin;
@@ -94,7 +93,7 @@ public class LinkStart implements Runnable{
 			resourceLoader.getSkybox().updateRotation((float)timeDelta);
 			
 			// Render
-			renderSystem.run(fppCamera);
+			renderSystem.run(playerID);
 			
 			if(GLFW.glfwWindowShouldClose(Display.window)){
 				running = false;

@@ -14,9 +14,9 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
 import ecs.EntityController;
+import ecs.FPPCameraComponent;
 import ecs.Transformable;
 import example.Display;
-import example.FPPCamera;
 import example.ResourceLoader;
 import skybox.SkyboxRenderer;
 import terrain.TerrainRenderer;
@@ -49,13 +49,13 @@ public class RenderSystem {
 		skyboxRenderer = new SkyboxRenderer();
 	}
 	
-	public void run(FPPCamera camera){
+	public void run(int observerEID){
 		// Do all the message processing
 		// ???
 		// Do other processing
 		
 		// render
-		renderScene(camera);
+		renderScene(entityController.getFPPCameraComponent(observerEID));
 	}
 	
 	public void materialize(int eID, String assetName){
@@ -99,7 +99,7 @@ public class RenderSystem {
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 	}
 	
-	private void renderScene(FPPCamera camera){
+	private void renderScene(FPPCameraComponent camera){
 		prepareForRendering();
 		
 		terrainRenderer.render(resourceLoader, camera, entityController.getPointLightComponents());

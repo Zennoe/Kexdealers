@@ -7,8 +7,8 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
+import ecs.FPPCameraComponent;
 import ecs.PointLightComponent;
-import example.FPPCamera;
 import example.ResourceLoader;
 import textures.MultiTexture;
 import textures.Texture;
@@ -26,7 +26,7 @@ public class TerrainRenderer {
 	}
 	
 	public void render(ResourceLoader resourceLoader,
-			FPPCamera camera,
+			FPPCameraComponent camera,
 			HashSet<PointLightComponent> pointLights){
 		shader.start();
 		shader.uploadDirectionalLight(resourceLoader.getSun());

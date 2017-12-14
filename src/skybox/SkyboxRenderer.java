@@ -5,7 +5,7 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
-import example.FPPCamera;
+import ecs.FPPCameraComponent;
 import example.ResourceLoader;
 
 public class SkyboxRenderer {
@@ -17,7 +17,7 @@ public class SkyboxRenderer {
 	}
 	
 	public void render(ResourceLoader resourceLoader,
-			FPPCamera camera){
+			FPPCameraComponent camera){
 		shader.start();
 		shader.loadProjectionMatrix(camera.getProjectionMatrix());
 		shader.loadViewMatrix(camera.getViewMatrix());

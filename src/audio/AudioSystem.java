@@ -3,6 +3,7 @@ package audio;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
+import org.joml.Vector3f;
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.AL10;
 import org.lwjgl.openal.ALC;
@@ -58,7 +59,12 @@ public class AudioSystem {
 	}
 	
 	public void run(int listenerEID) {
-		// do stuff
+		// Update listener position
+		Vector3f listenerPosition = entityController.getFPPCameraComponent(listenerEID).getPosition();
+		AL10.alListener3f(AL10.AL_POSITION, listenerPosition.x, listenerPosition.y, listenerPosition.z);
+		// Update listener orientation
+		Vector3f listenerFWD;
+		Vector3f listenerUP;
 	}
 	
 	// add and remove audio related components only through this system

@@ -4,17 +4,16 @@ import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 
 import ecs.EntityController;
+import ecs.FPPCameraComponent;
 import ecs.Transformable;
 
 public class Player {
 	
-	private FPPCamera camera;
 	private Vector3f cameraOffset = new Vector3f(10.0f, 10.0f, 10.0f);
 	
 	private EntityController entityController;
 	
-	public Player(FPPCamera camera, EntityController entityController){
-		this.camera = camera;
+	public Player(EntityController entityController){
 		this.entityController = entityController;
 	}
 	
@@ -42,6 +41,7 @@ public class Player {
 		}
 		
 		// Camera update
+		FPPCameraComponent camera = entityController.getFPPCameraComponent(eID);
 		camera.rotateYaw(yaw);
 		camera.rotatePitch(pitch);
 		Vector3f newCamPos = new Vector3f(transformable.getPosition());
