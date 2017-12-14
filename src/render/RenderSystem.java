@@ -5,6 +5,7 @@ import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -68,6 +69,7 @@ public class RenderSystem {
 			resourceLoader.load(assetName);
 		}
 		entitiesToRender.get(assetName).add(entityController.getTransformable(eID));
+		System.out.println("materialize complete for: " +eID);
 	}
 	
 	public void dematerialize(int eID){
@@ -101,6 +103,19 @@ public class RenderSystem {
 		prepareForRendering();
 		
 		terrainRenderer.render(resourceLoader, camera, entityController.getPointLightComponents());
+		
+		// count entities rendered
+		ArrayList<Integer> ids = new ArrayList<>();
+		for(HashSet<Transformable> mats : entitiesToRender.values()) {
+			for(Transformable comp : mats) {
+				if(!ids.contains(comp.getEID())) {
+					ids.add(comp.getEID());
+				}
+			}
+		}
+		if(ids.size() > 8) {
+			//System.out.println("yyeah");
+		}
 		
 		entityRenderer.render(resourceLoader, camera, entitiesToRender, entityController.getPointLightComponents());
 		

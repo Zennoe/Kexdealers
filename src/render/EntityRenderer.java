@@ -37,10 +37,14 @@ public class EntityRenderer {
 			
 			HashSet<Transformable> transformations = entitiesToRender.get(appearance);
 			for(Transformable transformation : transformations){
+				if(appearance.equals("lamp")) {
+					System.out.println("lamp/" +transformation.getPosition().toString());
+				}
 				shader.uploadMVP(transformation.getTransformation(), camera.getViewMatrix(), camera.getProjectionMatrix());
 				GL11.glDrawElements(GL11.GL_TRIANGLES, data.getRawMesh().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
 			}
 			unbindEntityAppearance(data);
+			System.out.println("call done");
 		}
 		
 		

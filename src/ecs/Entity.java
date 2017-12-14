@@ -22,6 +22,11 @@ public class Entity {
 		return eID;
 	}
 	
+	public int setEID(int eID) {
+		this.eID = eID;
+		return eID;
+	}
+	
 	public ArrayList<String> getComposition(){
 		return componentTypes;
 	}

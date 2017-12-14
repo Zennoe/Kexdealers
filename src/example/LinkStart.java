@@ -7,6 +7,7 @@ import java.util.HashSet;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 
+import ecs.Entity;
 import ecs.EntityController;
 import ecs.Transformable;
 import render.RenderSystem;
@@ -77,7 +78,8 @@ public class LinkStart implements Runnable{
 		FPPCamera fppCamera = new FPPCamera();
 		Player player = new Player(fppCamera, entityController, playerID);
 		
-		
+		// Entity that can be added and removed with F1/F2
+		int optionalID = -1;
 		
 		// < The Loop >
 		double frameBegin;
@@ -89,6 +91,38 @@ public class LinkStart implements Runnable{
 			
 			if(online) {
 				networkSystem.sendPlayerData(playerID);
+			}
+			
+			// Add/Remove optional entity
+			if(Display.pressedKeys[GLFW.GLFW_KEY_F1] && (optionalID == -1)) {
+				System.out.println("Creating optional entity");
+				// Create entity
+				optionalID = entityController.allocEID();
+				entityController
+					.getTransformable(optionalID)
+					.setPosition(entityController.getTransformable(playerID).getPosition());
+				renderSystem.materialize(optionalID, "lamp");
+				
+				System.out.println(entityController.getTransformable(optionalID).getPosition().toString());
+				System.out.println(entityController.getTransformable(playerID).getPosition().toString());
+				
+			} else if(Display.pressedKeys[GLFW.GLFW_KEY_F2] && (optionalID != -1)) {
+				System.out.println("Removing optional entity");
+				// Remove entity
+				entityController.freeEID(optionalID);
+				optionalID = -1;
+				
+			} else if(Display.pressedKeys[GLFW.GLFW_KEY_F3] && (optionalID == -1)) {
+				System.out.println("Copying player entity");
+				// Copy player entity
+				optionalID = entityController.allocEID();
+				Entity playerCopy = entityController.copyEntity(playerID);
+				// Update copy's eID
+				playerCopy.setEID(optionalID);
+				for(String compType : playerCopy.getComposition()) {
+					playerCopy.getComponentOfType(compType).setEID(optionalID);
+				}
+				entityController.integrateEntity(playerCopy);
 			}
 			
 			player.update((float)timeDelta);

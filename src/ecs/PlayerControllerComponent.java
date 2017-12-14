@@ -4,6 +4,10 @@ public class PlayerControllerComponent extends Component{
 
 	private int eID;
 	
+	public PlayerControllerComponent(int eID) {
+		this.eID = eID;
+	}
+	
 	public int getEID() {
 		return eID;
 	}

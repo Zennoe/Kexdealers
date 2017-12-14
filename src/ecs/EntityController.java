@@ -76,14 +76,14 @@ public class EntityController {
 	
 	public FPPCameraComponent addFPPCameraComponent(int eID) {
 		entities.get(eID).add("fppcameracomponent");
-		FPPCameraComponent comp = new FPPCameraComponent();
+		FPPCameraComponent comp = new FPPCameraComponent(eID);
 		fppCameraComponent.put(eID, comp);
 		return comp;
 	}
 	
 	public PlayerControllerComponent addPlayerControllerComponent(int eID) {
 		entities.get(eID).add("playercontrollercomponent");
-		PlayerControllerComponent comp = new PlayerControllerComponent();
+		PlayerControllerComponent comp = new PlayerControllerComponent(eID);
 		playerControllerComponent.put(eID, comp);
 		return comp;
 	}
