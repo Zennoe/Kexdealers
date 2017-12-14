@@ -73,8 +73,10 @@ public class AudioSystem {
 							lis_dir_up.x, lis_dir_up.y, lis_dir_up.z };
 		AL10.alListenerfv(AL10.AL_ORIENTATION, lis_dir);
 		
+		// update listener's velocity
 		AL10.alListener3f(AL10.AL_VELOCITY, 0, 0, 0); // TODO IMPLEMENTATION
-				
+		
+		
 		for (AudioSourceComponent comp : entityController.getAudioSourceComponents()) {
 			if (comp.getAl_id() < 0) {
 				// component was previously not initialised! fixing it now
