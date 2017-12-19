@@ -80,10 +80,26 @@ public class AudioSystem {
 			if(AL10.alGetSourcei(comp.getSourceID(), AL10.AL_SOURCE_STATE) == AL10.AL_PLAYING) {
 				Vector3f pos = entityController.getTransformable(comp.getEID()).getPosition();
 				AL10.alSource3f(comp.getSourceID(), AL10.AL_POSITION, pos.x, pos.y, pos.z);
-				AL10.alSource3f(comp.getSourceID(), AL10.AL_DIRECTION, 0, 0, 0); // TODO IMPLEMENTATION
+				AL10.alSource3f(comp.getSourceID(), AL10.AL_DIRECTION, 0, 0, 0); // TODO AL_DIRECTION
 			}
 		}
 		
+	}
+	
+	public void playEntitySound(int entityID) {
+		AudioSourceComponent comp = entityController.getAudioSourceComponent(entityID);
+		AL10.alSourcePlay(comp.getSourceID());
+	}
+	
+	public void pauseEntitySound(int entityID) {
+		AudioSourceComponent comp = entityController.getAudioSourceComponent(entityID);
+		AL10.alSourcePause(comp.getSourceID());
+	}
+	
+	public void stopEntitySound(int entityID) {
+		AudioSourceComponent comp = entityController.getAudioSourceComponent(entityID);
+		AL10.alSourceStop(comp.getSourceID());
+		AL10.alSourceRewind(comp.getSourceID());
 	}
 	
 	// add and remove audio related components only through this system
