@@ -9,7 +9,7 @@ import ecs.Transformable;
 
 public class Player {
 	
-	private Vector3f cameraOffset = new Vector3f(10.0f, 10.0f, 10.0f);
+	private Vector3f cameraOffset = new Vector3f(0.0f, 10.0f, 0.0f);
 	
 	private EntityController entityController;
 	

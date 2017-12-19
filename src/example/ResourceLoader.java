@@ -28,8 +28,11 @@ public class ResourceLoader {
 	
 	private OBJLoader objLoader;
 	
-	private HashMap<String, Integer> pointerCounter = new HashMap<>();
-	private HashMap<String, AssetData> assets = new HashMap<>();
+	private HashMap<String, Integer> pointerCounter3D = new HashMap<>();
+	private HashMap<String, AssetData> assets3D = new HashMap<>();
+	
+	private HashMap<String, Integer> pointerCounterSound = new HashMap<>();
+	private HashMap<String, Object> assetsSound = new HashMap<>();
 	
 	private Terrain terrain = null;
 	
@@ -39,14 +42,14 @@ public class ResourceLoader {
 	
 	public ResourceLoader(){
 		// preload keys
-		assets.put("lowPolyTree", null);
-		pointerCounter.put("lowPolyTree", 0);
+		assets3D.put("lowPolyTree", null);
+		pointerCounter3D.put("lowPolyTree", 0);
 		
-		assets.put("player", null);
-		pointerCounter.put("player", 0);
+		assets3D.put("player", null);
+		pointerCounter3D.put("player", 0);
 		
-		assets.put("lamp", null);
-		pointerCounter.put("lamp", 0);
+		assets3D.put("lamp", null);
+		pointerCounter3D.put("lamp", 0);
 		
 		// create tools
 		materialLoader = new MaterialLoader();
@@ -57,7 +60,7 @@ public class ResourceLoader {
 	}
 	
 	public void load(String assetName){
-		int x = pointerCounter.get(assetName);
+		int x = pointerCounter3D.get(assetName);
 		if(x == 0){
 			// load fresh from HDD
 			ModelData modelData = objLoader.loadOBJ(assetName);
@@ -69,25 +72,50 @@ public class ResourceLoader {
 			// random hardcoded default value for shininess = 1
 			Material material = materialLoader.loadMaterial(assetName, 1.0f);
 			AssetData newAsset = new AssetData(rawMesh, material);
-			assets.put(assetName, newAsset);
+			assets3D.put(assetName, newAsset);
+			pointerCounter3D.put(assetName, x++);
 		}
-		x++;
 	}
 	
 	public void unload(String assetName){
-		int x = pointerCounter.get(assetName);
+		int x = pointerCounter3D.get(assetName);
 		if(x == 1){
-			x--;
+			pointerCounter3D.put(assetName, x--);
 			//unload completely
-			// VAO deletion code missing at this spot
-			assets.put(assetName, null);
+			// TODO Clean up on sound deletion
+			assets3D.put(assetName, null);
 		}else{
-			x--;
+			pointerCounter3D.put(assetName, x--);
 		}
 	}
 	
 	public AssetData getRessource(String assetName){
-		return assets.get(assetName);
+		return assets3D.get(assetName);
+	}
+	
+	public void loadSound(String assetName) {
+		int x = pointerCounterSound.get(assetName);
+		if( x == 0) {
+			// load fresh from HDD
+			
+			
+		}
+	}
+	
+	public void unloadSound(String assetName) {
+		int x = pointerCounterSound.get(assetName);
+		if(x == 1) {
+			pointerCounterSound.put(assetName, x--);
+			// unload completely
+			// TODO Clean up on sound deletion
+			assetsSound.put(assetName, null);			
+		} else {
+			pointerCounterSound.put(assetName, x--);
+		}
+	}
+	
+	public Object getSound(String assetName) {
+		return assetsSound.get(assetName);
 	}
 	
 	// grab an already loaded Terrain

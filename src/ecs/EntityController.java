@@ -46,7 +46,7 @@ public class EntityController {
 	}
 	// --- ADDERS ---
 	
-	public Transformable addTransformable(int eID){// Should exist anyways.
+	public Transformable addTransformable(int eID){// TODO: Make not required
 		entities.get(eID).add("transformable");
 		Transformable comp = new Transformable(eID);
 		transformable.put(eID, comp);

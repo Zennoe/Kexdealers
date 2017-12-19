@@ -9,8 +9,8 @@ public class FPPCameraComponent extends Component{
 	private int eID;
 	
 	private Vector3f cameraPosition = new Vector3f();
-	private Quaternionf viewDir = new Quaternionf();
-	// viewDir.rotateY((float) Math.toRadians(180));
+	private Quaternionf viewDir = new Quaternionf()
+			.rotateY((float) Math.toRadians(180));
 	
 	// Make settable if video options ever come around
 	private float FOV = 70.0f;

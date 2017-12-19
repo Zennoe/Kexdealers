@@ -3,6 +3,7 @@ package audio;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
+import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.AL10;
@@ -13,7 +14,9 @@ import org.lwjgl.openal.EXTLinearDistance;
 import org.lwjgl.openal.EXTThreadLocalContext;
 import org.lwjgl.system.MemoryUtil;
 
+import ecs.AudioSourceComponent;
 import ecs.EntityController;
+import ecs.FPPCameraComponent;
 import example.ResourceLoader;
 
 public class AudioSystem {
@@ -59,14 +62,39 @@ public class AudioSystem {
 	}
 	
 	public void run(int listenerEID) {
+		FPPCameraComponent camera = entityController.getFPPCameraComponent(listenerEID);
 		// Update listener position
-		Vector3f listenerPosition = entityController.getFPPCameraComponent(listenerEID).getPosition();
+		Vector3f listenerPosition = camera.getPosition();
 		AL10.alListener3f(AL10.AL_POSITION, listenerPosition.x, listenerPosition.y, listenerPosition.z);
 		// Update listener orientation
-		Vector3f listenerFWD;
-		Vector3f listenerUP;
+		Vector3f listenerFWD = new Matrix4f(camera.getViewMatrix())
+				.invert()
+				.transformDirection(new Vector3f(0.0f, 0.0f, -1.0f));
+		Vector3f listenerUP = new Vector3f(0.0f, 1.0f, 0.0f); // Imprecise? Camera has more than 1 DOF.
+		float[] ListenerOrientation = {listenerFWD.x, listenerFWD.y, listenerFWD.z,
+				listenerUP.x, listenerUP.y, listenerUP.z};
+		AL10.alListenerfv(AL10.AL_ORIENTATION, ListenerOrientation);
+		
+		for(AudioSourceComponent comp : entityController.getAudioSourceComponents()) {
+			
+			if(AL10.alGetSourcei(comp.getSourceID(), AL10.AL_SOURCE_STATE) == AL10.AL_PLAYING) {
+				Vector3f pos = entityController.getTransformable(comp.getEID()).getPosition();
+				AL10.alSource3f(comp.getSourceID(), AL10.AL_POSITION, pos.x, pos.y, pos.z);
+				AL10.alSource3f(comp.getSourceID(), AL10.AL_DIRECTION, 0, 0, 0); // TODO IMPLEMENTATION
+			}
+		}
+		
 	}
 	
 	// add and remove audio related components only through this system
+	
+	public void cleanUp() {
+		// Delete all sound buffers
+		
+		// Close OpenAL
+		ALC10.alcMakeContextCurrent(alContext);
+		ALC10.alcDestroyContext(alContext);
+		ALC10.alcCloseDevice(alDevice);
+	}
 	
 }
