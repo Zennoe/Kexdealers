@@ -102,7 +102,14 @@ public class AudioSystem {
 		AL10.alSourceRewind(comp.getSourceID());
 	}
 	
-	// add and remove audio related components only through this system
+	public void attachAudioSource(int eID, String assetName) {
+		entityController.addAudioSourceComponent(eID);
+		
+	}
+	
+	public void detachAudioSource(int entityID, String assetName) {
+		
+	}
 	
 	public void cleanUp() {
 		// Delete all sound buffers

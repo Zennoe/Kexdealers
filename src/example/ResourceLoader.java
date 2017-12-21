@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import org.joml.Vector3f;
 
+import audio.AudioResource;
 import loaders.CubeMapLoader;
 import loaders.MaterialLoader;
 import loaders.ModelLoader;
@@ -32,7 +33,7 @@ public class ResourceLoader {
 	private HashMap<String, AssetData> assets3D = new HashMap<>();
 	
 	private HashMap<String, Integer> pointerCounterSound = new HashMap<>();
-	private HashMap<String, Object> assetsSound = new HashMap<>();
+	private HashMap<String, AudioResource> assetsSound = new HashMap<>();
 	
 	private Terrain terrain = null;
 	
@@ -97,8 +98,9 @@ public class ResourceLoader {
 		int x = pointerCounterSound.get(assetName);
 		if( x == 0) {
 			// load fresh from HDD
-			
-			
+			AudioResource audioResource = new AudioResource(assetName);
+			assetsSound.put(assetName, audioResource);
+			pointerCounterSound.put(assetName, x++);
 		}
 	}
 	
@@ -107,14 +109,14 @@ public class ResourceLoader {
 		if(x == 1) {
 			pointerCounterSound.put(assetName, x--);
 			// unload completely
-			// TODO Clean up on sound deletion
+			assetsSound.get(assetName).destroy();
 			assetsSound.put(assetName, null);			
 		} else {
 			pointerCounterSound.put(assetName, x--);
 		}
 	}
 	
-	public Object getSound(String assetName) {
+	public AudioResource getSound(String assetName) {
 		return assetsSound.get(assetName);
 	}
 	
