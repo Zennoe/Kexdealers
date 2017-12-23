@@ -41,6 +41,7 @@ public class AudioSystem {
 		
 		ALCCapabilities deviceCaps = ALC.createCapabilities(alDevice);
 		if(deviceCaps.OpenALC10) {
+			ALC10.alcCloseDevice(alDevice); // close previously opened alDevice
 			throw new IllegalStateException("Failed to open audio device -> Failed to load capabilities");
 		}
 		
@@ -86,29 +87,41 @@ public class AudioSystem {
 		
 	}
 	
-	public void playEntitySound(int entityID) {
-		AudioSourceComponent comp = entityController.getAudioSourceComponent(entityID);
+	public void playEntitySound(int eID) {
+		AudioSourceComponent comp = entityController.getAudioSourceComponent(eID);
 		AL10.alSourcePlay(comp.getSourceID());
 	}
 	
-	public void pauseEntitySound(int entityID) {
-		AudioSourceComponent comp = entityController.getAudioSourceComponent(entityID);
+	public void pauseEntitySound(int eID) {
+		AudioSourceComponent comp = entityController.getAudioSourceComponent(eID);
 		AL10.alSourcePause(comp.getSourceID());
 	}
 	
-	public void stopEntitySound(int entityID) {
-		AudioSourceComponent comp = entityController.getAudioSourceComponent(entityID);
+	public void stopEntitySound(int eID) {
+		AudioSourceComponent comp = entityController.getAudioSourceComponent(eID);
 		AL10.alSourceStop(comp.getSourceID());
 		AL10.alSourceRewind(comp.getSourceID());
 	}
 	
-	public void attachAudioSource(int eID, String assetName) {
-		entityController.addAudioSourceComponent(eID);
+	public void attachAudioSource(int eID, String assetName, 
+			float gain, float pitch, float refDist, float rollOff, float maxDist, boolean looping) {
+		entityController.addAudioSourceComponent(eID)
+			.setAudioSourceFileName(assetName)
+			.setGain(gain)
+			.setPitch(pitch)
+			.setReferenceDistance(refDist)
+			.setRolloffFactor(rollOff)
+			.setMaxDistance(maxDist)
+			.setLooping(looping);
+		resourceLoader.loadSound(assetName);
 		
 	}
 	
-	public void detachAudioSource(int entityID, String assetName) {
-		
+	public void detachAudioSource(int eID) {
+		stopEntitySound(eID);
+		String assetName = entityController.getAudioSourceComponent(eID).getAudioSourceFileName();
+		resourceLoader.unloadSound(assetName);
+		entityController.removeAudioSourceComponent(eID);
 	}
 	
 	public void cleanUp() {

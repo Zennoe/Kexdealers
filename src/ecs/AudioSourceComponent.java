@@ -33,64 +33,72 @@ public class AudioSourceComponent extends Component{
 		return assetName;
 	}
 
-	public void setAudioSourceFileName(String assetName) {
+	public AudioSourceComponent setAudioSourceFileName(String assetName) {
 		this.assetName = assetName;
+		return this;
 	}
 
 	public int getSourceID() {
 		return sourceID;
 	}
 
-	public void setSourceID(int sourceID) {
+	public AudioSourceComponent setSourceID(int sourceID) {
 		this.sourceID = sourceID;
+		return this;
 	}
 
 	public float getGain() {
 		return gain;
 	}
 
-	public void setGain(float gain) {
+	public AudioSourceComponent setGain(float gain) {
 		this.gain = gain;
+		return this;
 	}
 
 	public float getPitch() {
 		return pitch;
 	}
 
-	public void setPitch(float pitch) {
+	public AudioSourceComponent setPitch(float pitch) {
 		this.pitch = pitch;
+		return this;
 	}
 
 	public float getReferenceDistance() {
 		return referenceDistance;
 	}
 
-	public void setReferenceDistance(float referenceDistance) {
+	public AudioSourceComponent setReferenceDistance(float referenceDistance) {
 		this.referenceDistance = referenceDistance;
+		return this;
 	}
 
 	public float getRolloffFactor() {
 		return rolloffFactor;
 	}
 
-	public void setRolloffFactor(float rolloffFactor) {
+	public AudioSourceComponent setRolloffFactor(float rolloffFactor) {
 		this.rolloffFactor = rolloffFactor;
+		return this;
 	}
 
 	public float getMaxDistance() {
 		return maxDistance;
 	}
 
-	public void setMaxDistance(float maxDistance) {
+	public AudioSourceComponent setMaxDistance(float maxDistance) {
 		this.maxDistance = maxDistance;
+		return this;
 	}
 
 	public boolean isLooping() {
 		return isLooping;
 	}
 
-	public void setLooping(boolean isLooping) {
+	public AudioSourceComponent setLooping(boolean isLooping) {
 		this.isLooping = isLooping;
+		return this;
 	}
 
 }

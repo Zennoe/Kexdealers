@@ -7,13 +7,16 @@ import java.util.HashSet;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 
+import audio.AudioSystem;
 import ecs.EntityController;
 import ecs.Transformable;
 import render.RenderSystem;
 import terrain.Terrain;
 
 
-
+/*
+ *  We're gonna lose FeelsGoodMan :clap:
+ */
 public class LinkStart implements Runnable{
 
 	private Thread gameloop = null;
@@ -50,12 +53,13 @@ public class LinkStart implements Runnable{
 		
 		// Systems
 		RenderSystem renderSystem = new RenderSystem(entityController, resourceLoader);
+		AudioSystem audioSystem = new AudioSystem(entityController, resourceLoader);
 		NetworkSystem networkSystem = new NetworkSystem(entityController);
 		
 		// Local mode: Load a local instance
 		// Online mode: Connect to a server and request an instance from there.
 		//				Should the connection fail, fall back to local mode.
-		InstanceLoader instanceLoader = new InstanceLoader(entityController, resourceLoader, renderSystem);
+		InstanceLoader instanceLoader = new InstanceLoader(entityController, resourceLoader, renderSystem, audioSystem);
 		if(online) {		
 			online = networkSystem.connectToServer("localhost", 2222, "kekzdealer");
 			if(!online) {

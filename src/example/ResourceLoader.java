@@ -52,6 +52,9 @@ public class ResourceLoader {
 		assets3D.put("lamp", null);
 		pointerCounter3D.put("lamp", 0);
 		
+		assetsSound.put("default", null);
+		pointerCounterSound.put("default", 0);
+		
 		// create tools
 		materialLoader = new MaterialLoader();
 		cubeMapLoader = new CubeMapLoader();

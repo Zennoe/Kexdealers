@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import org.joml.Vector3f;
 
+import audio.AudioSystem;
 import ecs.EntityController;
 import render.RenderSystem;
 
@@ -15,12 +16,17 @@ public class InstanceLoader {
 	
 	private EntityController entityController;
 	private ResourceLoader resourceLoader;
-	private RenderSystem renderSystem;
 	
-	public InstanceLoader(EntityController entityController, ResourceLoader resourceLoader, RenderSystem renderSystem){
+	private RenderSystem renderSystem;
+	private AudioSystem audioSystem;
+	
+	public InstanceLoader(EntityController entityController, ResourceLoader resourceLoader, 
+			RenderSystem renderSystem, AudioSystem audioSystem){
 		this.entityController = entityController;
 		this.resourceLoader = resourceLoader;
+		
 		this.renderSystem = renderSystem;
+		this.audioSystem = audioSystem;
 	}
 	
 	public void loadInstanceFromLocal(String filePath){
@@ -105,8 +111,13 @@ public class InstanceLoader {
 		for(String dataSet : audioSourceComponentData) {
 			int eID = extractEID(dataSet);
 			frags = getDataFragments(dataSet);
-			entityController.addAudioSourceComponent(eID)
-				.setAudioSourceFileName(frags[0]);;
+			audioSystem.attachAudioSource(eID, frags[0], 
+					Float.valueOf(frags[1]), 
+					Float.valueOf(frags[2]), 
+					Float.valueOf(frags[3]), 
+					Float.valueOf(frags[4]), 
+					Float.valueOf(frags[5]), 
+					Boolean.valueOf(frags[6]));
 		}
 		// - FPPCameraComponent
 		ArrayList<String> fppCameraComponentData = getAllLinesWith("FPPCAMERACOMPONENT", lines);
