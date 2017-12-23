@@ -80,6 +80,9 @@ public class LinkStart implements Runnable{
 		int playerID = 0; //look into file to choose the correct one :S
 		Player player = new Player(entityController);
 		
+		// debug stuff
+		audioSystem.playEntitySound(8);
+		
 		// < The Loop >
 		double frameBegin;
 		while(running){

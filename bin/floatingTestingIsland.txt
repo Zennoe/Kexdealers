@@ -33,4 +33,4 @@ RENDERABLE{eID=7}{lowPolyTree}
 TRANSFORMABLE{eID=8}{450/20/350/0/0/0/1}
 POINTLIGHTCOMPONENT{eID=8}{400/20/300/1.5/10.0/1.9/1.5/10.0/1.9/1.5/10.0/1.9/0.5/0.1/0.005}
 >c param: assetName - gain - pitch - refDist - rolloff - maxDist
-AUDIOSOURCECOMPONENT{eID=8}{default/1.0/1.0/10.0/1.0/50.0}
+AUDIOSOURCECOMPONENT{eID=8}{default/1.0/1.0/10.0/1.0/50.0/true}
