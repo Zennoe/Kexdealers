@@ -69,7 +69,6 @@ public class RenderSystem {
 			resourceLoader.load(assetName);
 		}
 		entitiesToRender.get(assetName).add(entityController.getTransformable(eID));
-		System.out.println("materialize complete for: " +eID);
 	}
 	
 	public void dematerialize(int eID){

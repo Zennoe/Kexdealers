@@ -80,9 +80,6 @@ public class LinkStart implements Runnable{
 		int playerID = 0; //look into file to choose the correct one :S
 		Player player = new Player(entityController);
 		
-		// debug stuff
-		audioSystem.playEntitySound(8);
-		
 		// < The Loop >
 		double frameBegin;
 		while(running){
@@ -99,6 +96,9 @@ public class LinkStart implements Runnable{
 			gravity(entityController, resourceLoader);
 			resourceLoader.getSkybox().updateRotation((float)timeDelta);
 			
+			// Audio
+			audioSystem.run(playerID);
+			
 			// Render
 			renderSystem.run(playerID);
 			
@@ -109,6 +109,8 @@ public class LinkStart implements Runnable{
 			timeDelta = glfwGetTime() - frameBegin;
 			// FPS: System.out.println((int) (Math.floor(1000 / timeDelta)) / 1000);
 		}
+		
+		audioSystem.cleanUp();
 		
 		display.destroy();
 		if(online) {
