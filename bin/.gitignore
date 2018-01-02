@@ -1,14 +1,3 @@
-/decodeCommands/
-/ecs/
-/encodeCommands/
 /example/
 /loaders/
 /render/
-/skybox/
-/terrain/
-/textures/
-/utility/
-/water/
-/wrapper/
-/audio/
-/default.wav

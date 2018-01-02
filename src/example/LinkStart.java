@@ -70,11 +70,11 @@ public class LinkStart implements Runnable{
 				netSysThread.start();
 				networkSystem.loadInstanceFromServer(instanceLoader);
 				// THIS IS ONLY FOR TESTING SO THERE IS SOME DATA UNTIL ABOVE METHOD IS DONE
-				instanceLoader.loadInstanceFromLocal("./res/floatingTestingIsland.txt");
+				instanceLoader.loadInstanceFromLocal("./res/AssimpTestWorld.txt");
 			}
 		}
 		if(!online) {
-			instanceLoader.loadInstanceFromLocal("./res/floatingTestingIsland.txt");
+			instanceLoader.loadInstanceFromLocal("./res/AssimpTestWorld.txt");
 		}
 		
 		int playerID = 0; //look into file to choose the correct one :S
@@ -83,6 +83,7 @@ public class LinkStart implements Runnable{
 		// < The Loop >
 		double frameBegin;
 		while(running){
+			System.out.println("running");
 			frameBegin = GLFW.glfwGetTime();
 			
 			// Update
@@ -100,8 +101,9 @@ public class LinkStart implements Runnable{
 			audioSystem.run(playerID);
 			
 			// Render
+			System.out.println("rendering now");
 			renderSystem.run(playerID);
-			
+			System.out.println("rendering done");
 			if(GLFW.glfwWindowShouldClose(Display.window)){
 				running = false;
 			}

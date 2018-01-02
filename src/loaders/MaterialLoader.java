@@ -15,38 +15,38 @@ import org.lwjgl.stb.STBImage;
 import textures.Material;
 import textures.MultiTexture;
 import textures.Texture;
-import textures.Texture2D;
 
 public class MaterialLoader {
 
 	private ArrayList<Integer> textures = new ArrayList<>();
 	
 	public Material loadMaterial(String filename, float shininess){
-		Texture2D diffuse = loadTexture2D(filename +"_diffuse", true);
-		Texture2D specular = loadTexture2D(filename +"_specular", false);
-		return new Material(diffuse.getID(), specular.getID(), shininess, diffuse.getWidth(), diffuse.getHeight());
+		Material newMaterial = new Material();
+		newMaterial.setTexture(loadTexture(filename +"_diffuse", true));
+		newMaterial.setSpecularMap(loadTexture(filename +"_specular", false));
+		return newMaterial;
 	}
 	
 	public MultiTexture loadMultiTexture(String defTexture, String rTex, String gTex, String bTex,
 			String defTextureN, String rTexN, String gTexN, String bTexN){
-		Texture2D def = loadTexture2D(defTexture, true);
-		Texture2D r = loadTexture2D(rTex, true);
-		Texture2D g = loadTexture2D(gTex, true);
-		Texture2D b = loadTexture2D(bTex, true);
+		Texture def = loadTexture(defTexture, true);
+		Texture r = loadTexture(rTex, true);
+		Texture g = loadTexture(gTex, true);
+		Texture b = loadTexture(bTex, true);
 		// Normal Maps
-		Texture2D def_n = loadTexture2D(defTextureN, false);
-		Texture2D r_n = loadTexture2D(rTexN, false);
-		Texture2D g_n = loadTexture2D(gTexN, false);
-		Texture2D b_n = loadTexture2D(bTexN, false);
+		Texture def_n = loadTexture(defTextureN, false);
+		Texture r_n = loadTexture(rTexN, false);
+		Texture g_n = loadTexture(gTexN, false);
+		Texture b_n = loadTexture(bTexN, false);
 		return new MultiTexture(def.getID(), r.getID(), g.getID(), b.getID(),
 				def_n.getID(), r_n.getID(), g_n.getID(), b_n.getID());
 	}
 	
 	public Texture loadBlendMap(String filename){
-		return new Texture(loadTexture2D(filename, false).getID());
+		return loadTexture(filename, false);
 	}
 	
-	private Texture2D loadTexture2D(String filename, boolean gammaCorrected){
+	private Texture loadTexture(String filename, boolean gammaCorrected){
 		IntBuffer width = BufferUtils.createIntBuffer(1);
 		IntBuffer height = BufferUtils.createIntBuffer(1);
 		IntBuffer comp = BufferUtils.createIntBuffer(1);
@@ -87,7 +87,7 @@ public class MaterialLoader {
 		// Un-bind Texture
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
 		
-		return new Texture2D(textureID, widthInt, heightInt);
+		return new Texture(textureID, widthInt, heightInt);
 	}
 	
 	public void cleanUp(){
