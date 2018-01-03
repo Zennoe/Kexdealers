@@ -34,19 +34,14 @@ public class EntityRenderer {
 		for(String appearance : entitiesToRender.keySet()){
 			Mesh data = resourceLoader.getRessource(appearance);
 			bindEntityAppearance(data);
-			System.out.println("bound appearance: " +appearance);
 			
 			HashSet<Transformable> transformations = entitiesToRender.get(appearance);
 			for(Transformable transformation : transformations){
 				shader.uploadMVP(transformation.getTransformation(), camera.getViewMatrix(), camera.getProjectionMatrix());
-				System.out.println("drawing: " +appearance);
-				System.out.println(data.getVertexCount());
-				System.out.println(GL11.glGetError());
+				System.out.println("FINAL: " +GL11.glGetError());
 				GL11.glDrawElements(GL11.GL_TRIANGLES, data.getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
-				System.out.println("done drawing: " +appearance);
 			}
 			unbindEntityAppearance(data);
-			System.out.println("unbound appearance: " +appearance);
 		}
 		
 		

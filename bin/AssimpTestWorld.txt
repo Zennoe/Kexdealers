@@ -9,5 +9,5 @@ ENTITIES{0}
 >c player
 >c param: position - rotation - scale
 TRANSFORMABLE{eID=0}{400/0/400/0/0/0/1}
->c RENDERABLE{eID=0}{player}
+RENDERABLE{eID=0}{player}
 FPPCAMERACOMPONENT{eID=0}

@@ -27,8 +27,7 @@ public class ResourceLoader {
 	private StaticMeshLoader staticMeshLoader;
 	private ModelLoader modelLoader;
 	private TerrainMeshLoader terrainMeshLoader;
-		
-	private HashMap<String, Integer> pointerCounter3D = new HashMap<>();
+	
 	private HashMap<String, Mesh> assets3D = new HashMap<>();
 	
 	private HashMap<String, Integer> pointerCounterSound = new HashMap<>();
@@ -42,15 +41,6 @@ public class ResourceLoader {
 	
 	public ResourceLoader(){
 		// preload keys
-		assets3D.put("lowPolyTree", null);
-		pointerCounter3D.put("lowPolyTree", 0);
-		
-		assets3D.put("player", null);
-		pointerCounter3D.put("player", 0);
-		
-		assets3D.put("lamp", null);
-		pointerCounter3D.put("lamp", 0);
-		
 		assetsSound.put("default", null);
 		pointerCounterSound.put("default", 0);
 		
@@ -64,28 +54,22 @@ public class ResourceLoader {
 	}
 	
 	public void load(String assetName){
-		int x = pointerCounter3D.get(assetName);
-		if(x == 0){
-			// load fresh from HDD
-			// TODO: Scene graph
-			// For now, use only the first mesh from the returned array.
-			Mesh[] meshes = staticMeshLoader.load(assetName, "");
-			Mesh pickFirstMesh = meshes[0];
-			assets3D.put(assetName, pickFirstMesh);
-			
-			pointerCounter3D.put(assetName, x++);
+		Mesh mesh = assets3D.get(assetName);
+		if(mesh == null) {
+			Mesh[] meshes = staticMeshLoader.load(
+					buildPath(assetName, "obj", "model"), 
+					buildPath(assetName, "png", "texture"));
+			mesh = meshes[0];
+			mesh.reference();
+			assets3D.put(assetName, mesh);
 		}
 	}
 	
 	public void unload(String assetName){
-		int x = pointerCounter3D.get(assetName);
-		if(x == 1){
-			pointerCounter3D.put(assetName, x--);
-			//unload completely
-			assets3D.get(assetName).delete();;
+		Mesh mesh = assets3D.get(assetName);
+		if(mesh.dereference() == 0) {
+			mesh.delete();
 			assets3D.put(assetName, null);
-		}else{
-			pointerCounter3D.put(assetName, x--);
 		}
 	}
 	
@@ -129,7 +113,9 @@ public class ResourceLoader {
 		// unload whatever Terrain was loaded before
 		unloadTerrain();
 		// build TerrainMesh
-		TerrainMesh terrainMesh = terrainMeshLoader.loadTerrainMesh(heightMap, maxHeight, size);
+		TerrainMesh terrainMesh = terrainMeshLoader.loadTerrainMesh(
+				buildPath(heightMap, "png", "texture"), 
+				maxHeight, size);
 		// build MultiTexture
 		String d = "_diffuse";
 		String n = "_normal";
@@ -143,6 +129,13 @@ public class ResourceLoader {
 		// bundle together and return
 		terrain = new Terrain(terrainMesh, multiTexture, blendMapTexture);
 		return terrain;
+	}
+	
+	public Terrain loadTerrain2(String terrainName) {
+		// unload whatever Terrain was loaded before
+		unloadTerrain();
+		// load a ready terrain model instead of constructing it
+		
 	}
 	
 	public void unloadTerrain(){
@@ -237,6 +230,26 @@ public class ResourceLoader {
 	
 	public void unloadSun(){
 		sun = new DirectionalLight();
+	}
+	
+	private static String buildPath(String fileName, String extension, String assetType) {
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("./res/");
+		
+		switch(assetType) {
+			case "model": sb.append("models/"); break;
+			case "texture": sb.append("textures/"); break;
+			case "sound": sb.append("sounds/"); break;
+			default:
+				System.err.println("assetType was wrongly specified for: " +fileName);
+		}
+		
+		sb.append(fileName);
+		sb.append(".");
+		sb.append(extension.toLowerCase());
+		
+		return sb.toString();
 	}
 	
 }
