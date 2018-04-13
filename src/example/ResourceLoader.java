@@ -7,29 +7,30 @@ import org.joml.Vector3f;
 import audio.AudioResource;
 import loaders.CubeMapLoader;
 import loaders.MaterialLoader;
-import loaders.Mesh;
 import loaders.ModelLoader;
-import loaders.StaticMeshLoader;
+import loaders.OBJLoader;
 import loaders.TerrainMeshLoader;
-import loaders.TextureLoader;
 import skybox.Skybox;
 import terrain.Terrain;
 import terrain.TerrainMesh;
+import textures.Material;
 import textures.MultiTexture;
 import textures.Texture;
+import wrapper.ModelData;
+import wrapper.RawMesh;
 
 public class ResourceLoader {
 	
 	private MaterialLoader materialLoader;
 	private CubeMapLoader cubeMapLoader;
-	private TextureLoader textureLoader;
-
-	private StaticMeshLoader staticMeshLoader;
+	
 	private ModelLoader modelLoader;
 	private TerrainMeshLoader terrainMeshLoader;
-		
+	
+	private OBJLoader objLoader;
+	
 	private HashMap<String, Integer> pointerCounter3D = new HashMap<>();
-	private HashMap<String, Mesh> assets3D = new HashMap<>();
+	private HashMap<String, AssetData> assets3D = new HashMap<>();
 	
 	private HashMap<String, Integer> pointerCounterSound = new HashMap<>();
 	private HashMap<String, AudioResource> assetsSound = new HashMap<>();
@@ -57,22 +58,25 @@ public class ResourceLoader {
 		// create tools
 		materialLoader = new MaterialLoader();
 		cubeMapLoader = new CubeMapLoader();
-		textureLoader = new TextureLoader();
 		modelLoader = new ModelLoader();
-		staticMeshLoader = new StaticMeshLoader(textureLoader);
 		terrainMeshLoader = new TerrainMeshLoader(modelLoader);
+		objLoader = new OBJLoader();
 	}
 	
 	public void load(String assetName){
 		int x = pointerCounter3D.get(assetName);
 		if(x == 0){
 			// load fresh from HDD
-			// TODO: Scene graph
-			// For now, use only the first mesh from the returned array.
-			Mesh[] meshes = staticMeshLoader.load(assetName, "");
-			Mesh pickFirstMesh = meshes[0];
-			assets3D.put(assetName, pickFirstMesh);
-			
+			ModelData modelData = objLoader.loadOBJ(assetName);
+			RawMesh rawMesh = modelLoader.loadToVAO(
+					modelData.getVertices(), 
+					modelData.getIndices(), 
+					modelData.getTextureCoords(), 
+					modelData.getNormals());
+			// random hardcoded default value for shininess = 1
+			Material material = materialLoader.loadMaterial(assetName, 1.0f);
+			AssetData newAsset = new AssetData(rawMesh, material);
+			assets3D.put(assetName, newAsset);
 			pointerCounter3D.put(assetName, x++);
 		}
 	}
@@ -82,14 +86,14 @@ public class ResourceLoader {
 		if(x == 1){
 			pointerCounter3D.put(assetName, x--);
 			//unload completely
-			assets3D.get(assetName).delete();;
+			// TODO Clean up on sound deletion
 			assets3D.put(assetName, null);
 		}else{
 			pointerCounter3D.put(assetName, x--);
 		}
 	}
 	
-	public Mesh getRessource(String assetName){
+	public AssetData getRessource(String assetName){
 		return assets3D.get(assetName);
 	}
 	

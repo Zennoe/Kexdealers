@@ -63,7 +63,7 @@ public class TerrainRenderer {
 		// bind blendMap
 		Texture blendMap = terrain.getBlendMap();
 		GL13.glActiveTexture(GL13.GL_TEXTURE4);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, blendMap.getID());
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, blendMap.getTextureID());
 	}
 	
 	private void unbindTerrain(){

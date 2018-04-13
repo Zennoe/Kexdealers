@@ -11,8 +11,8 @@ import org.lwjgl.opengl.GL30;
 import ecs.FPPCameraComponent;
 import ecs.PointLightComponent;
 import ecs.Transformable;
+import example.AssetData;
 import example.ResourceLoader;
-import loaders.Mesh;
 
 public class EntityRenderer {
 
@@ -32,43 +32,37 @@ public class EntityRenderer {
 		shader.uploadPointLights(pointLights);
 		
 		for(String appearance : entitiesToRender.keySet()){
-			Mesh data = resourceLoader.getRessource(appearance);
+			AssetData data = resourceLoader.getRessource(appearance);
 			bindEntityAppearance(data);
-			System.out.println("bound appearance: " +appearance);
 			
 			HashSet<Transformable> transformations = entitiesToRender.get(appearance);
 			for(Transformable transformation : transformations){
 				shader.uploadMVP(transformation.getTransformation(), camera.getViewMatrix(), camera.getProjectionMatrix());
-				System.out.println("drawing: " +appearance);
-				System.out.println(data.getVertexCount());
-				System.out.println(GL11.glGetError());
-				GL11.glDrawElements(GL11.GL_TRIANGLES, data.getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
-				System.out.println("done drawing: " +appearance);
+				GL11.glDrawElements(GL11.GL_TRIANGLES, data.getRawMesh().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
 			}
 			unbindEntityAppearance(data);
-			System.out.println("unbound appearance: " +appearance);
 		}
 		
 		
 		shader.stop();
 	}
 	
-	public void bindEntityAppearance(Mesh data){
+	public void bindEntityAppearance(AssetData data){
 		// Bind VAO
-		GL30.glBindVertexArray(data.getVaoID());
+		GL30.glBindVertexArray(data.getRawMesh().getVaoID());
 		GL20.glEnableVertexAttribArray(0);
 		GL20.glEnableVertexAttribArray(1);
 		GL20.glEnableVertexAttribArray(2);
 		// Bind textures
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, data.getMaterial().getTexture().getID());
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, data.getMaterial().getDiffuseID());
 		GL13.glActiveTexture(GL13.GL_TEXTURE1);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, data.getMaterial().getSpecularMap().getID());
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, data.getMaterial().getSpecularID());
 		// Upload Phong-Shading data
-		shader.uploadMaterial(data.getMaterial().getReflectance());
+		shader.uploadMaterial(data.getPhongSpecularExponent());
 	}
 	
-	public void unbindEntityAppearance(Mesh data){
+	public void unbindEntityAppearance(AssetData data){
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
 		
 		GL20.glDisableVertexAttribArray(0);
