@@ -1,6 +1,5 @@
 package audio;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -44,7 +43,7 @@ public class WaveData {
 		data.clear();
 	}
 	
-	private ByteBuffer loadData() { // TODO AudioStream might not be needed after this is called - fixed?
+	private ByteBuffer loadData() {
 		try {
 			int bytesRead = audioStream.read(dataArray, 0, totalBytes);
 			

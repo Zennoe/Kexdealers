@@ -89,7 +89,16 @@ public class AudioSystem {
 	
 	public void playEntitySound(int eID) {
 		AudioSourceComponent comp = entityController.getAudioSourceComponent(eID);
+		
+		AL10.alGetError();
+		
 		AL10.alSourcePlay(comp.getSourceID());
+		
+		int err = AL10.alGetError();
+		if(err != AL10.AL_NO_ERROR) {
+			System.out.println("oh no " +err);
+		}
+		
 	}
 	
 	public void pauseEntitySound(int eID) {

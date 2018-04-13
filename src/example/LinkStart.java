@@ -82,8 +82,9 @@ public class LinkStart implements Runnable{
 		Player player = new Player(entityController);
 		
 		
-		int iid = resourceLoader.getSound("music").getBufferID();
+		int iid = resourceLoader.getSound("music").getSourceID();
 		ecs.AudioSourceComponent asc = entityController.getAudioSourceComponent(8);
+		
 		asc.setSourceID(iid);
 		// update attributes
 		AL10.alSourcef(asc.getSourceID(), AL10.AL_GAIN, asc.getGain());
@@ -93,6 +94,7 @@ public class LinkStart implements Runnable{
 		AL10.alSourcef(asc.getSourceID(), AL10.AL_ROLLOFF_FACTOR, asc.getRolloffFactor());
 		AL10.alSourcef(asc.getSourceID(), AL10.AL_MAX_DISTANCE, asc.getMaxDistance());
 		audioSystem.playEntitySound(8);
+		System.out.println(AL10.AL_PLAYING == AL10.alGetSourcei(iid, AL10.AL_SOURCE_STATE));
 		
 		// < The Loop >
 		double frameBegin;
@@ -123,8 +125,6 @@ public class LinkStart implements Runnable{
 			timeDelta = glfwGetTime() - frameBegin;
 			// FPS: System.out.println((int) (Math.floor(1000 / timeDelta)) / 1000);
 		}
-		
-		System.out.println(AL10.AL_PLAYING == AL10.alGetSourcei(iid, AL10.AL_PLAYING));
 		
 		audioSystem.cleanUp();
 		
