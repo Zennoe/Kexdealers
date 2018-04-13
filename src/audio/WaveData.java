@@ -1,6 +1,7 @@
 package audio;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -61,9 +62,10 @@ public class WaveData {
 	}
 	
 	public static WaveData create(String fileName) {
-		try (BufferedInputStream stream = new BufferedInputStream(Class.class.getResourceAsStream(fileName))) {
+		try {//(BufferedInputStream stream = new BufferedInputStream(Class.class.getResourceAsStream(fileName)))
+			File file = new File(fileName);
 			
-			AudioInputStream audioStream = AudioSystem.getAudioInputStream(stream);
+			AudioInputStream audioStream = AudioSystem.getAudioInputStream(file);
 			return new WaveData(audioStream);
 			
 		} catch (FileNotFoundException x) {

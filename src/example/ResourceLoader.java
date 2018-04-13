@@ -5,6 +5,7 @@ import java.util.HashMap;
 import org.joml.Vector3f;
 
 import audio.AudioResource;
+import ecs.EntityController;
 import loaders.CubeMapLoader;
 import loaders.MaterialLoader;
 import loaders.ModelLoader;
@@ -101,7 +102,7 @@ public class ResourceLoader {
 		int x = pointerCounterSound.get(assetName);
 		if( x == 0) {
 			// load fresh from HDD
-			AudioResource audioResource = new AudioResource(assetName);
+			AudioResource audioResource = new AudioResource("res/" +assetName +".wav");
 			assetsSound.put(assetName, audioResource);
 			pointerCounterSound.put(assetName, x++);
 		}
