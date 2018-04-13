@@ -52,8 +52,8 @@ public class ResourceLoader {
 		assets3D.put("lamp", null);
 		pointerCounter3D.put("lamp", 0);
 		
-		assetsSound.put("default", null);
-		pointerCounterSound.put("default", 0);
+		assetsSound.put("music", null);
+		pointerCounterSound.put("music", 0);
 		
 		// create tools
 		materialLoader = new MaterialLoader();
