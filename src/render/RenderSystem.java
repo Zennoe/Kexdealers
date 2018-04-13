@@ -35,10 +35,10 @@ public class RenderSystem {
 	public RenderSystem(EntityController entityController, ResourceLoader resourceLoader){
 		this.entityController = entityController;
 		this.resourceLoader = resourceLoader;
+		
 		// Back-face culling
 		GL11.glEnable(GL11.GL_CULL_FACE);
-		GL11.glEnable(GL11.GL_BACK); // TODO: Why is this causing openGL error 1280?
-		System.err.println("GL11.glEnable(GL11.GL_BACK); -> openGL error " +GL11.glGetError());
+		GL11.glEnable(GL11.GL_BACK);
 		// Automatic Gamma-correction
 		GL11.glEnable(GL30.GL_FRAMEBUFFER_SRGB);
 		// Wire frame mode: GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
@@ -101,10 +101,13 @@ public class RenderSystem {
 		prepareForRendering();
 		
 		terrainRenderer.render(resourceLoader, camera, entityController.getPointLightComponents());
+		System.out.println("terrain done");
 		
 		entityRenderer.render(resourceLoader, camera, entitiesToRender, entityController.getPointLightComponents());
+		System.out.println("entities done");
 		
 		skyboxRenderer.render(resourceLoader, camera);
+		System.out.println("skybox done");
 		
 		// Swap buffer to make changes visible
 		GLFW.glfwSwapBuffers(Display.window);

@@ -5,12 +5,9 @@ SKYBOX{1200.0f/starfield}
 TERRAIN{1024/32/heightMap1024/blendMap1024/mud/planks/grass3/path}
 >c param: directionInverse - ambient - diffuse - specular
 SUN{-0.2/-1/-0.3/0.529/0.607/0.85/1.429/0.607/0.85/0.529/0.607/0.85}
-ENTITIES{0/1}
+ENTITIES{0}
 >c player
 >c param: position - rotation - scale
 TRANSFORMABLE{eID=0}{400/0/400/0/0/0/1}
->c ignore RENDERABLE{eID=0}{player}
+RENDERABLE{eID=0}{player}
 FPPCAMERACOMPONENT{eID=0}
->c sword
-TRANSFORMABLE{eID=1}{512/0/512/0/0/0/1}
-RENDERABLE{eID=1}{Sword}

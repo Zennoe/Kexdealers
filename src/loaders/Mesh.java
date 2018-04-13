@@ -16,8 +16,6 @@ import textures.Texture;
 
 public class Mesh {
 	
-	private int referenceCount = 0;
-	
 	private final int vaoID;
 	
 	private final List<Integer> vboIDList;
@@ -106,18 +104,6 @@ public class Mesh {
 	
 	public int getVertexCount() {
 		return vertexCount;
-	}
-	
-	public int getReferenceCount() {
-		return referenceCount;
-	}
-	
-	public int reference() {
-		return referenceCount++;
-	}
-	
-	public int dereference() {
-		return referenceCount--;
 	}
 	
 	public void delete() {

@@ -6,6 +6,7 @@ import java.util.HashSet;
 
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
+
 import audio.AudioSystem;
 import ecs.EntityController;
 import ecs.Transformable;
@@ -45,6 +46,7 @@ public class LinkStart implements Runnable{
 		// Window creation
 		Display display = new Display(1920, 1080);//1280, 720
 		display.create();
+		
 		// Managers
 		EntityController entityController = new EntityController();
 		ResourceLoader resourceLoader = new ResourceLoader();
@@ -53,6 +55,7 @@ public class LinkStart implements Runnable{
 		RenderSystem renderSystem = new RenderSystem(entityController, resourceLoader);
 		AudioSystem audioSystem = new AudioSystem(entityController, resourceLoader);
 		NetworkSystem networkSystem = new NetworkSystem(entityController);
+		
 		// Local mode: Load a local instance
 		// Online mode: Connect to a server and request an instance from there.
 		//				Should the connection fail, fall back to local mode.
@@ -80,6 +83,7 @@ public class LinkStart implements Runnable{
 		// < The Loop >
 		double frameBegin;
 		while(running){
+			System.out.println("running");
 			frameBegin = GLFW.glfwGetTime();
 			
 			// Update
@@ -97,7 +101,9 @@ public class LinkStart implements Runnable{
 			audioSystem.run(playerID);
 			
 			// Render
+			System.out.println("rendering now");
 			renderSystem.run(playerID);
+			System.out.println("rendering done");
 			if(GLFW.glfwWindowShouldClose(Display.window)){
 				running = false;
 			}

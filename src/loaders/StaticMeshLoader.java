@@ -65,16 +65,16 @@ public class StaticMeshLoader {
 		textureCache = new HashMap<>();
 	}
 	
-	public Mesh[] load(String modelPath, String texturePath) {
-		return load(modelPath, texturePath, 
+	public Mesh[] load(String resourcePath, String texturesDir) {
+		return load(resourcePath, texturesDir, 
 				Assimp.aiProcess_JoinIdenticalVertices | Assimp.aiProcess_Triangulate | Assimp.aiProcess_FixInfacingNormals);
 	}
 	
-	public Mesh[] load(String modelPath, String texturePath, int flags) {
-		AIScene aiScene = Assimp.aiImportFile(modelPath, flags);
+	public Mesh[] load(String resourcePath, String texturesDir, int flags) {
+		AIScene aiScene = Assimp.aiImportFile("res/" +resourcePath +".obj", flags);
 		Mesh[] meshes;
 		if(aiScene == null) {
-			System.err.println("Failed to load model: " +modelPath +" - using default model");
+			System.err.println("Failed to load model: " +resourcePath +" - using default model");
 			meshes = new Mesh[1];
 			meshes[0] = new Mesh(DEFAULT_VERTICES, DEFAULT_TEXTURECOORDS, DEFAULT_NORMALS, DEFAULT_INDICES);
 			
@@ -86,8 +86,9 @@ public class StaticMeshLoader {
 		ArrayList<Material> materials = new ArrayList<>();
 		for(int i = 0; i < numMaterials; i++) {
 			AIMaterial aiMaterial = AIMaterial.create(aiMaterials.get(i));
-			processMaterial(aiMaterial, materials, texturePath);
+			processMaterial(aiMaterial, materials, texturesDir);
 		}
+		
 		int numMeshes = aiScene.mNumMeshes();
 		PointerBuffer aiMeshes = aiScene.mMeshes();
 		meshes = new Mesh[numMeshes];
@@ -108,8 +109,8 @@ public class StaticMeshLoader {
 		Assimp.aiGetMaterialTexture(aiMaterial, Assimp.aiTextureType_DIFFUSE, 0, path, (IntBuffer) null, null, null, null, null, null);
 		String textPath = path.dataString();
 		Texture texture = null;
-		String texturePath = texturesDir +textPath;
-		System.out.println("texturePath: " +texturePath);
+		String texturePath = texturesDir +"/" +textPath;
+		System.out.println(texturePath);
 		if(textPath != null && textPath.length() > 0) {
 			texture = textureCache.get(texturePath);
 			if(texture == null) {
@@ -119,7 +120,7 @@ public class StaticMeshLoader {
 		}
 		// Check if loading has worked
 		if(texture == null) {
-			texture = textureLoader.createEmptyTexture(256, 256, GL11.GL_RGBA);
+			texture = textureLoader.createEmptyTexture(256, 256, GL11.GL_RGB);
 			System.err.println("Failed to load texture: " +texturePath +" - using default texture");
 		}
 		Vector4f ambient = Material.DEFAULT_COLOR;
