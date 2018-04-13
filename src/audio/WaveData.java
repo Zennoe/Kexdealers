@@ -1,5 +1,6 @@
 package audio;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -43,7 +44,7 @@ public class WaveData {
 		data.clear();
 	}
 	
-	private ByteBuffer loadData() {
+	private ByteBuffer loadData() { // TODO AudioStream might not be needed after this is called - fixed?
 		try {
 			int bytesRead = audioStream.read(dataArray, 0, totalBytes);
 			
@@ -83,9 +84,21 @@ public class WaveData {
 	
 	private static int getOpenAlFormat(int channels, int bitsPerSample) throws UnsupportedAudioFileException {
 		if(channels == 1) {
-			return bitsPerSample == 8 ? AL10.AL_FORMAT_MONO8 : AL10.AL_FORMAT_MONO16;
+			if (bitsPerSample == 8) {
+				return AL10.AL_FORMAT_MONO8;
+			} else if (bitsPerSample == 16) {
+				return AL10.AL_FORMAT_MONO16;
+			} else {
+				throw new UnsupportedAudioFileException("File has an unsupported bps count!");
+			}
 		} else if (channels == 2) {
-			return bitsPerSample == 8 ? AL10.AL_FORMAT_STEREO8 : AL10.AL_FORMAT_STEREO16;
+			if (bitsPerSample == 8) {
+				return AL10.AL_FORMAT_STEREO8;
+			} else if (bitsPerSample == 16) {
+				return AL10.AL_FORMAT_STEREO16;
+			} else {
+				throw new UnsupportedAudioFileException("File has an unsupported bps count!");
+			}
 		} else {
 			throw new UnsupportedAudioFileException("File has more than 2 channels!");
 		}
