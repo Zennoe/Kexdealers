@@ -24,7 +24,7 @@ public class TeleportationSystem {
 				new Vector3f(660.0f, 0.0f, 500.0f), 
 				30.0f);
 		Teleportation tp01 = new Teleportation("tp00", 
-				new Vector3f(660.0f, 0.0f, 500.0f), 
+				new Vector3f(560.0f, 0.0f, 400.0f), 
 				new Vector3f(0.0f, 0.0f, 0.0f), 
 				30.0f);
 		

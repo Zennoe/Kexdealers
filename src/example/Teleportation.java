@@ -1,7 +1,6 @@
 package example;
 
 import org.joml.Vector3f;
-
 import ecs.Transformable;
 
 public class Teleportation {
@@ -28,7 +27,8 @@ public class Teleportation {
 	}
 
 	public Vector3f getDestination() {
-		return destination;
+		Vector3f _destination = new Vector3f(destination);
+		return _destination;
 	}
 
 }
