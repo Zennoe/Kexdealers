@@ -56,6 +56,7 @@ public class LinkStart implements Runnable{
 		RenderSystem renderSystem = new RenderSystem(entityController, resourceLoader);
 		AudioSystem audioSystem = new AudioSystem(entityController, resourceLoader);
 		NetworkSystem networkSystem = new NetworkSystem(entityController);
+		TeleportationSystem teleportationSystem = new TeleportationSystem(entityController);
 		
 		// Local mode: Load a local instance
 		// Online mode: Connect to a server and request an instance from there.
@@ -109,6 +110,8 @@ public class LinkStart implements Runnable{
 			}			
 			
 			player.update(playerID, (float)timeDelta);
+			teleportationSystem.run();
+			
 			gravity(entityController, resourceLoader);
 			resourceLoader.getSkybox().updateRotation((float)timeDelta);
 			
