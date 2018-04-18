@@ -115,14 +115,14 @@ public class LinkStart implements Runnable{
 			}
 			
 			if(Display.pressedKeys[GLFW.GLFW_KEY_O]){
-				messageBus.messageTeleportationSys(Operation.SYS_TELEPORTATION_TARGETCOORDS, playerID, new Vector3f(450.0f, 0.0f, 350.0f));
+				messageBus.messageTeleportationSys(Operation.SYS_TELEPORTATION_TARGETCOORDS, playerID, new Vector3f(450.0f, 20.0f, 350.0f));
 			}
 			
 			player.update(playerID, (float)timeDelta);
 			// Teleport
 			teleportationSystem.run();
 			// Gravity
-			gravity(entityController, resourceLoader);
+			//gravity(entityController, resourceLoader);
 			// Sky box
 			resourceLoader.getSkybox().updateRotation((float)timeDelta);
 			
@@ -155,8 +155,11 @@ public class LinkStart implements Runnable{
 		for(Transformable transformable : transformables){
 			Vector3f correctedPos = transformable.getPosition();
 			correctedPos.set(correctedPos.x, terrain.getHeightAtPoint(correctedPos.x, correctedPos.z), correctedPos.z);
+			System.out.printf("EID: " + transformable.getEID() + " y: %.10f", correctedPos.y);
+			System.out.println();
 			transformable.setPosition(correctedPos);
 		}
+		System.exit(0);
 	}
 	
 }
