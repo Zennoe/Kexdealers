@@ -9,6 +9,8 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.openal.AL10;
 
 import audio.AudioSystem;
+import bus.MessageBus;
+import bus.Operation;
 import ecs.EntityController;
 import ecs.Transformable;
 import render.RenderSystem;
@@ -57,6 +59,9 @@ public class LinkStart implements Runnable{
 		AudioSystem audioSystem = new AudioSystem(entityController, resourceLoader);
 		NetworkSystem networkSystem = new NetworkSystem(entityController);
 		TeleportationSystem teleportationSystem = new TeleportationSystem(entityController);
+		
+		// Message Bus
+		MessageBus messageBus = MessageBus.getInstance();
 		
 		// Local mode: Load a local instance
 		// Online mode: Connect to a server and request an instance from there.
@@ -107,12 +112,18 @@ public class LinkStart implements Runnable{
 			
 			if(online) {
 				networkSystem.sendPlayerData(playerID);
-			}			
+			}
+			
+			if(Display.pressedKeys[GLFW.GLFW_KEY_O]){
+				messageBus.messageTeleportationSys(Operation.SYS_TELEPORTATION_TARGETCOORDS, playerID, new Vector3f(450.0f, 0.0f, 350.0f));
+			}
 			
 			player.update(playerID, (float)timeDelta);
+			// Teleport
 			teleportationSystem.run();
-			
+			// Gravity
 			gravity(entityController, resourceLoader);
+			// Sky box
 			resourceLoader.getSkybox().updateRotation((float)timeDelta);
 			
 			// Audio

@@ -5,11 +5,16 @@ import java.util.Set;
 
 import org.joml.Vector3f;
 
+import bus.MessageBus;
+import bus.MessageListener;
+import bus.TeleportationSysMessage;
 import ecs.EntityController;
 import ecs.FPPCameraComponent;
 import ecs.Transformable;
 
 public class TeleportationSystem {
+	
+	private MessageBus messageBus = MessageBus.getInstance();
 	
 	private EntityController entityController;
 	
@@ -35,8 +40,18 @@ public class TeleportationSystem {
 	}
 
 	public void run() {
+		// work message queue
+		TeleportationSysMessage message;
+		while((message = (TeleportationSysMessage) messageBus.getNextMessage(MessageListener.TELEPORTATION_SYSTEM)) != null) {
+			switch(message.getOP()) {
+			case SYS_TELEPORTATION_TARGETCOORDS: teleportTo(message.getTargetEID(), message.getDestination());
+				break;
+			default: System.err.println("Teleportation operation not implemented");
+			}
+		}
 		// for all player entties,
 		// check all teleportations
+		
 		for (FPPCameraComponent player : entityController.getFPPCameraComponents()) {
 			for (Teleportation tp : teleportations.values()) {
 				Transformable transformable = entityController.getTransformable(player.getEID());
@@ -49,5 +64,11 @@ public class TeleportationSystem {
 
 	public Set<String> getAllTeleportations() {
 		return teleportations.keySet();
+	}
+	
+	private void teleportTo(int targetEID, Vector3f destination) {
+		// > fancy effects <
+		// wheeeeeee~~~
+		entityController.getTransformable(targetEID).setPosition(destination);
 	}
 }
