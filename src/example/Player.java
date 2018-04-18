@@ -1,5 +1,6 @@
 package example;
 
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 
@@ -12,6 +13,9 @@ public class Player {
 	private Vector3f cameraOffset = new Vector3f(0.0f, 10.0f, 0.0f);
 	
 	private EntityController entityController;
+	
+	private float walkSpeed = 30.0f, midAirSpeed = 10.0f;
+	private float jumpInitAccel = 50.0f;
 	
 	public Player(EntityController entityController){
 		this.entityController = entityController;
@@ -26,20 +30,18 @@ public class Player {
 
 		// Translation
 		// Move the player around horizontally.
-		Vector3f scaledDirVec = transformable.getDirectionVector().mul(delta * 30.0f);
-		if(Display.pressedKeys[GLFW.GLFW_KEY_W]){
-			transformable.increasePosition(scaledDirVec);
-		}
-		if(Display.pressedKeys[GLFW.GLFW_KEY_S]){
-			transformable.increasePosition(scaledDirVec.negate());
-		}
-		if(Display.pressedKeys[GLFW.GLFW_KEY_A]){
-			transformable.increasePosition(scaledDirVec.z, scaledDirVec.y, -scaledDirVec.x);
-		}
-		if(Display.pressedKeys[GLFW.GLFW_KEY_D]){
-			transformable.increasePosition(-scaledDirVec.z, scaledDirVec.y, scaledDirVec.x);
-		}
 		
+		Vector2f inputDir = pollInputDir();
+		
+		Vector3f moveDirVec = new Vector3f();
+		moveDirVec.x = inputDir.x;
+		moveDirVec.z = inputDir.y;
+		moveDirVec.y = 0.0f;
+		moveDirVec.mul(walkSpeed * delta);
+		moveDirVec.rotate(transformable.getRotation());
+		
+		transformable.increasePosition(moveDirVec);
+	
 		// Camera update
 		FPPCameraComponent camera = entityController.getFPPCameraComponent(eID);
 		camera.rotateYaw(yaw);
@@ -49,6 +51,30 @@ public class Player {
 		//newCamPos.y = 0.0f;
 		camera.setPosition(newCamPos);
 		camera.changeFOV((float) (100.0f * Display.getMouseScroll() * delta));
+	}
+	
+	private Vector2f pollInputDir() {
+		// returns a normalised direction vector pointing representing player 2D move input.
+		// Input is polled from AWSD input.
+		Vector2f inputDirVec = new Vector2f(); // forward: +y, left: +x
 		
+		if(Display.pressedKeys[GLFW.GLFW_KEY_W]){
+			inputDirVec.y += 1;
+		}
+		if(Display.pressedKeys[GLFW.GLFW_KEY_S]){
+			inputDirVec.y -= 1;
+		}
+		if(Display.pressedKeys[GLFW.GLFW_KEY_A]){
+			inputDirVec.x += 1;
+		}
+		if(Display.pressedKeys[GLFW.GLFW_KEY_D]){
+			inputDirVec.x -= 1;
+		}
+		
+		if (Float.compare(inputDirVec.length(), 0) != 0) {
+			inputDirVec.normalize();
+		}
+			
+		return inputDirVec;
 	}
 }
