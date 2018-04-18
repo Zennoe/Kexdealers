@@ -1,7 +1,9 @@
 package ecs;
 
 import org.joml.Matrix4f;
+import org.joml.Quaternionf;
 import org.joml.Vector3f;
+
 
 public class Transformable extends Component{
 	
@@ -9,26 +11,19 @@ public class Transformable extends Component{
 	
 	private Vector3f position = new Vector3f(0.0f, 0.0f, 0.0f);
 	
-	private float rotX = 0.0f;
-	private float rotY = 0.0f;
-	private float rotZ = 0.0f;
+	private Quaternionf rotation = new Quaternionf().identity();
 	
 	private float scale = 1.0f;
 	
+	// vecs and mats for getters. are to be updated by their respective
+	// getters
 	private Matrix4f transformation = new Matrix4f();
+	private Vector3f dirVec = new Vector3f();
 	
-	private Vector3f direction = new Vector3f(1.0f, 0.0f, 1.0f);
-
 	public Transformable(int eID){
 		this.eID = eID;
 		
-		transformation = new Matrix4f()
-			.translate(position)
-			.rotateX((float) Math.toRadians(rotX))
-			.rotateY((float) Math.toRadians(rotY))
-			.rotateZ((float) Math.toRadians(rotZ))
-			.scale(scale);
-		
+		transformation = new Matrix4f().identity();
 	}
 	
 	public int getEID(){
@@ -49,29 +44,32 @@ public class Transformable extends Component{
 	}
 
 	public float getRotX() {
-		return rotX;
+		Vector3f euler = new Vector3f();
+		return (float) Math.toRadians(rotation.getEulerAnglesXYZ(euler).x);
 	}
 
 	public Transformable setRotX(float rotX) {
-		this.rotX = rotX;
+		rotation.rotateX((float) Math.toRadians(rotX));
 		return this;
 	}
 
 	public float getRotY() {
-		return rotY;
+		Vector3f euler = new Vector3f();
+		return (float) Math.toRadians(rotation.getEulerAnglesXYZ(euler).y);
 	}
 
 	public Transformable setRotY(float rotY) {
-		this.rotY = rotY;
+		rotation.rotateY((float) Math.toRadians(rotY));
 		return this;
 	}
 
 	public float getRotZ() {
-		return rotZ;
+		Vector3f euler = new Vector3f();
+		return (float) Math.toRadians(rotation.getEulerAnglesXYZ(euler).z);
 	}
 
 	public Transformable setRotZ(float rotZ) {
-		this.rotZ = rotZ;
+		rotation.rotateZ((float) Math.toRadians(rotZ));
 		return this;
 	}
 
@@ -89,9 +87,7 @@ public class Transformable extends Component{
 		return transformation
 				.identity()
 				.translate(position)
-				.rotateX((float) Math.toRadians(rotX))
-				.rotateY((float) Math.toRadians(rotY))
-				.rotateZ((float) Math.toRadians(rotZ))
+				.rotate(rotation)
 				.scale(scale);
 	}
 	
@@ -104,17 +100,15 @@ public class Transformable extends Component{
 	}
 	
 	public void rotate(float angleX, float angleY, float angleZ){
-		rotX += angleX;
-		rotY += angleY;
-		rotZ += angleZ;
+		rotation.rotateLocal((float) Math.toRadians(angleX),
+						(float) Math.toRadians(angleY), 
+						(float) Math.toRadians(angleZ));
 	}
 	
 	public Vector3f getDirectionVector(){
-		direction.set(
-			(float) Math.sin(Math.toRadians(rotY)),
-			0.0f,
-			(float) Math.cos(Math.toRadians(rotY))
-		);
-		return direction.normalize();
+		dirVec.set(0,0,1);
+		dirVec.rotate(rotation);
+		
+		return dirVec;
 	}
 }
