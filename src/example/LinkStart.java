@@ -118,7 +118,7 @@ public class LinkStart implements Runnable{
 				messageBus.messageTeleportationSys(Operation.SYS_TELEPORTATION_TARGETCOORDS, playerID, new Vector3f(450.0f, 20.0f, 350.0f));
 			}
 			
-			player.update(playerID, (float)timeDelta);
+			player.update(playerID, (float)timeDelta, resourceLoader.getTerrain());
 			// Teleport
 			teleportationSystem.run();
 			// Gravity
