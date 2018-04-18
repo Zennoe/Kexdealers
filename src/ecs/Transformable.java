@@ -105,6 +105,10 @@ public class Transformable extends Component{
 						(float) Math.toRadians(angleZ));
 	}
 	
+	public Quaternionf getRotation() {
+		return new Quaternionf(rotation);
+	}
+	
 	public Vector3f getDirectionVector(){
 		dirVec.set(0,0,1);
 		dirVec.rotate(rotation);
