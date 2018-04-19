@@ -99,10 +99,22 @@ public class Transformable extends Component{
 		position.add(vec);
 	}
 	
+	public void rotateRadians(float angleX, float angleY, float angleZ){
+		rotation.rotateLocal(angleX, angleY, angleZ);
+	}
+	
 	public void rotate(float angleX, float angleY, float angleZ){
-		rotation.rotateLocal((float) Math.toRadians(angleX),
+		rotateRadians((float) Math.toRadians(angleX),
 						(float) Math.toRadians(angleY), 
 						(float) Math.toRadians(angleZ));
+	}
+	
+	public Vector3f getEulerRotation() {
+		return rotation.getEulerAnglesXYZ(new Vector3f());
+	}
+	
+	public Quaternionf getRotation() {
+		return new Quaternionf(rotation);
 	}
 	
 	public Vector3f getDirectionVector(){
