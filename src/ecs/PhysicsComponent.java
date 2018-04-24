@@ -54,6 +54,11 @@ public class PhysicsComponent extends Component {
 		return this;
 	}
 	
+	public PhysicsComponent resetAcceleration() {
+		acceleration.set(0,0,0);
+		return this;
+	}
+	
 	public float getWeight() {
 		return weight;
 	}
@@ -76,11 +81,7 @@ public class PhysicsComponent extends Component {
 	}
 	
 	public PhysicsComponent applyForce(String forceName, Vector3f force) {
-		if (listOfAppliedForces.containsKey(forceName)) {
-			listOfAppliedForces.get(forceName).set(force);
-		} else {
-			listOfAppliedForces.put(forceName, force);
-		}
+		listOfAppliedForces.put(forceName, force);
 		return this;
 	}
 	
@@ -104,10 +105,6 @@ public boolean isAffectedByPhysics() {
 
 	public PhysicsComponent setAffectedByPhysics(boolean isAffectedByPhysics) {
 		this.isAffectedByPhysics = isAffectedByPhysics;
-		if (!isAffectedByPhysics) {
-			velocity.set(0,0,0);
-			acceleration.set(0,0,0);
-		}
 		return this;
 	}
 
