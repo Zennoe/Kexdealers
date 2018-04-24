@@ -49,14 +49,14 @@ public class TeleportationSystem {
 			default: System.err.println("Teleportation operation not implemented");
 			}
 		}
-		// for all player entties,
+		// for all player entities,
 		// check all teleportations
 		
 		for (FPPCameraComponent player : entityController.getFPPCameraComponents()) {
 			for (Teleportation tp : teleportations.values()) {
 				Transformable transformable = entityController.getTransformable(player.getEID());
 				if (tp.checkTrigger(transformable)) {
-					transformable.setPosition(tp.getDestination());
+					teleportTo(player.getEID(),tp.getDestination());
 				}
 			}
 		}
@@ -70,5 +70,6 @@ public class TeleportationSystem {
 		// > fancy effects <
 		// wheeeeeee~~~
 		entityController.getTransformable(targetEID).setPosition(destination);
+		entityController.getPhysicsComponent(targetEID).resetVelocity();
 	}
 }

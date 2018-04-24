@@ -14,6 +14,7 @@ public class EntityController {
 	private HashMap<Integer, AudioSourceComponent> audioSourceComponent = new HashMap<>();
 	private HashMap<Integer, FPPCameraComponent> fppCameraComponent = new HashMap<>();
 	private HashMap<Integer, PlayerControllerComponent> playerControllerComponent = new HashMap<>();
+	private HashMap<Integer, PhysicsComponent> physicsComponent = new HashMap<>();
 	
 	// --- eID de-/allocation ---
 	
@@ -88,6 +89,13 @@ public class EntityController {
 		return comp;
 	}
 	
+	public PhysicsComponent addPhysicsComponent(int eID) {
+		entities.get(eID).add("physicscomponent");
+		PhysicsComponent comp = new PhysicsComponent(eID);
+		physicsComponent.put(eID, comp);
+		return comp;
+	}
+	
 	public void addComponentOfType(int eID, String type, Component component) {
 		component.setEID(eID);
 		switch (type){
@@ -97,6 +105,8 @@ public class EntityController {
 			case "audiosourcecomponent": audioSourceComponent.put(eID, (AudioSourceComponent) component); break;
 			case "fppcameracomponent": fppCameraComponent.put(eID, (FPPCameraComponent) component); break;
 			case "playercontrollercomponent": playerControllerComponent.put(eID, (PlayerControllerComponent) component); break;
+			case "physicscomponent": physicsComponent.put(eID, (PhysicsComponent) component); break;
+			default: System.err.println("Failed to add component of type " + type + " to entity " + eID + "! Unknown type!");
 		}
 	}
 	
@@ -132,6 +142,11 @@ public class EntityController {
 		return playerControllerComponent.remove(eID);
 	}
 	
+	public PhysicsComponent removePhysicsComponent(int eID) {
+		entities.get(eID).remove("physicscomponent");
+		return physicsComponent.remove(eID);
+	}
+	
 	public Component removeComponentOfType(int eID, String type) {
 		if(!hasComponent(eID, type)) {
 			return null;
@@ -143,7 +158,8 @@ public class EntityController {
 				case "audiosourcecomponent": return removeAudioSourceComponent(eID);
 				case "fppcameracomponent": return removeFPPCameraComponent(eID);
 				case "playercontrollercomponent": return removePlayerControllerComponent(eID);
-				default: return null;
+				case "physicscomponent": return removePhysicsComponent(eID);
+				default: System.err.println("Failed to remove component of type " + type + " from entity " + eID + "! Unknown type!"); return null;
 			}
 		}
 	}
@@ -197,6 +213,13 @@ public class EntityController {
 	public HashSet<PlayerControllerComponent> getPlayerControllerComponents(){
 		return new HashSet<PlayerControllerComponent>(playerControllerComponent.values());
 	}
+	public PhysicsComponent getPhysicsComponent(int eID) {
+		return physicsComponent.get(eID);
+	}
+	
+	public HashSet<PhysicsComponent> getPhysicsComponents(){
+		return new HashSet<PhysicsComponent>(physicsComponent.values());
+	}
 	
 	public Component getComponentOfType(int eID, String type) {
 		if(!hasComponent(eID, type)) {
@@ -209,7 +232,8 @@ public class EntityController {
 				case "audiosourcecomponent": return getAudioSourceComponent(eID);
 				case "fppcameracomponent": return getFPPCameraComponent(eID);
 				case "playercontrollercomponent": return getPlayerControllerComponent(eID);
-				default: return null;
+				case "physicscomponent": return getPhysicsComponent(eID);
+				default: System.err.println("Failed to get component of type " + type + " from entity " + eID + "! Unknown type!"); return null;
 			}
 		}
 	}

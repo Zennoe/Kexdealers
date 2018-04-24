@@ -13,6 +13,7 @@ import bus.MessageBus;
 import bus.Operation;
 import ecs.EntityController;
 import ecs.Transformable;
+import physics.PhysicsSystem;
 import render.RenderSystem;
 import terrain.Terrain;
 
@@ -29,7 +30,7 @@ public class LinkStart implements Runnable{
 	private boolean online = false;
 	
 	private static int targetFPS = 120;
-	public static double timeDelta = 1000 / targetFPS;
+	public static double timeDelta = 1 / targetFPS;
 	
 	public static void main(String[] args){
 		LinkStart link = new LinkStart();
@@ -59,6 +60,7 @@ public class LinkStart implements Runnable{
 		AudioSystem audioSystem = new AudioSystem(entityController, resourceLoader);
 		NetworkSystem networkSystem = new NetworkSystem(entityController);
 		TeleportationSystem teleportationSystem = new TeleportationSystem(entityController);
+		PhysicsSystem physicsSystem = new PhysicsSystem(entityController);
 		
 		// Message Bus
 		MessageBus messageBus = MessageBus.getInstance();
@@ -102,6 +104,9 @@ public class LinkStart implements Runnable{
 		audioSystem.playEntitySound(8);
 		System.out.println(AL10.AL_PLAYING == AL10.alGetSourcei(iid, AL10.AL_SOURCE_STATE));
 		
+		entityController.getPhysicsComponent(6).applyForce("force", new Vector3f(150.0f,1.0f,12.5f));
+		entityController.getPhysicsComponent(10).applyForce("wooosh", new Vector3f(0,5,0));
+		
 		// < The Loop >
 		double frameBegin;
 		while(running){
@@ -115,7 +120,7 @@ public class LinkStart implements Runnable{
 			}
 			
 			if(Display.pressedKeys[GLFW.GLFW_KEY_O]){
-				messageBus.messageTeleportationSys(Operation.SYS_TELEPORTATION_TARGETCOORDS, playerID, new Vector3f(450.0f, 20.0f, 350.0f));
+				messageBus.messageTeleportationSys(Operation.SYS_TELEPORTATION_TARGETCOORDS, playerID, new Vector3f(450.0f, 25.0f, 350.0f));
 			}
 			
 			player.update(playerID, (float)timeDelta, resourceLoader.getTerrain());
@@ -123,6 +128,18 @@ public class LinkStart implements Runnable{
 			teleportationSystem.run();
 			// Gravity
 			//gravity(entityController, resourceLoader);
+			// Physics
+			physicsSystem.run(timeDelta, resourceLoader.getTerrain());
+			if (Display.pressedKeys[GLFW.GLFW_KEY_N]) {
+				entityController.getPhysicsComponent(6).increaseForce("force", new Vector3f(-50.0f * (float) timeDelta,0 ,0));
+			}
+			if (Display.pressedKeys[GLFW.GLFW_KEY_M]) {
+				entityController.getPhysicsComponent(6).increaseForce("force", new Vector3f(50.0f * (float) timeDelta,0 ,0));
+			}
+			if (Display.pressedKeys[GLFW.GLFW_KEY_B]) {
+				entityController.getPhysicsComponent(6).setForce("force", new Vector3f(0,0,0));
+			}
+			
 			// Sky box
 			resourceLoader.getSkybox().updateRotation((float)timeDelta);
 			

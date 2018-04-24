@@ -126,7 +126,15 @@ public class InstanceLoader {
 			frags = getDataFragments(dataSet);
 			entityController.addFPPCameraComponent(eID);
 		}
-		
+		// - PhysicsComponent
+		ArrayList<String> physicsComponentData = getAllLinesWith("PHYSICSCOMPONENT", lines);
+		for(String dataSet : physicsComponentData) {
+			int eID = extractEID(dataSet);
+			frags = getDataFragments(dataSet);
+			entityController.addPhysicsComponent(eID)
+				.setWeight(Float.valueOf(frags[0]))
+				.setAffectedByGravity(Boolean.valueOf(frags[1]));
+		}
 	}
 	
 	public void loadInstanceFromServer(String fromServer){
