@@ -14,7 +14,7 @@ public class FPPCameraComponent extends Component{
 	
 	// Make settable if video options ever come around
 	private float FOV = 70.0f;
-	private float nearPlane = 0.001f;
+	private float nearPlane = 0.5f;
 	private float farPlane = 3000.0f;
 	private float aspectRatio = 1920 / 1080;
 	
