@@ -6,6 +6,7 @@ import org.lwjgl.glfw.GLFW;
 
 import ecs.EntityController;
 import ecs.FPPCameraComponent;
+import ecs.PhysicsComponent;
 import ecs.Transformable;
 import terrain.Terrain;
 
@@ -13,16 +14,11 @@ public class Player {
 	
 	private EntityController entityController;
 	
-	private Vector3f playerPrevPos = new Vector3f();
-	private Vector3f moveDirVec = new Vector3f();
-	private Vector3f previousMoveDir = new Vector3f();
-	private float playerSpeedY = 0.0f, playerAccelY = 0.0f;
+	private Vector3f moveVec = new Vector3f();
 	
 	//-- player params
-	private final float walkSpeed = 35.0f, midAirSpeed = 10.0f;
-	private final float jumpInitSpeed = 40.0f;
-	private final float gravity = -7.0f;
-	private final float playerWeight = 12.0f;
+	private final float walkSpeed = 32.5f;
+	private final Vector3f jumpForce = new Vector3f(0, 20_000.0f, 0);
 	private final Vector3f cameraOffset = new Vector3f(0.0f, 10.0f, 0.0f);
 	private final float cameraTurnSpeed = 5.0f;
 	/*
@@ -45,8 +41,7 @@ public class Player {
 	
 	public void update(int eID, float delta, Terrain terrain){
 		Transformable transformable = entityController.getTransformable(eID);
-		
-		playerAccelY = gravity * playerWeight;
+		PhysicsComponent physics = entityController.getPhysicsComponent(eID);
 		
 		//-- Poll input
 		float yaw = (float) Math.toRadians(Display.getMouseX() * cameraTurnSpeed * delta);
@@ -54,36 +49,28 @@ public class Player {
 		Vector2f inputDir = pollMoveInputDir();
 		boolean jumping = (Display.pressedKeys[GLFW.GLFW_KEY_SPACE]);
 
-		//-- Update player position and rotation
-		
+		//-- Update player velocity and rotation
 		transformable.rotateRadians(0.0f, -yaw, 0.0f);
 		
-		Vector3f transPos = transformable.getPosition();
-		if (transPos.y <= terrain.getHeightAtPoint(transPos.x, transPos.z)) {
+		if (physics.isOnGround()) {
 			// player is on ground
-			moveDirVec.x = inputDir.x;
-			moveDirVec.z = inputDir.y;
-			moveDirVec.mul(walkSpeed * delta);
-			moveDirVec.rotate(transformable.getRotation());
-			previousMoveDir.set(moveDirVec);
-			
-			playerSpeedY = (jumping) ? jumpInitSpeed : 0;
-			// clamp player to ground
-			transPos.y = terrain.getHeightAtPoint(transPos.x, transPos.z) - 0.01f;
-			
+			physics.setOnGround(true);
+			if (jumping) {
+				physics.applyForce("jump", jumpForce);
+			}
+			moveVec.x = inputDir.x;
+			moveVec.z = inputDir.y;
+			moveVec.mul(walkSpeed);
+			moveVec.rotate(transformable.getRotation());
 		} else {
 			// player is mid air
-			moveDirVec.x = previousMoveDir.x;
-			moveDirVec.z = previousMoveDir.z;
-			
-			playerSpeedY += playerAccelY * delta;
+			physics.setOnGround(false);
+			physics.removeForce("jump");
 		}
 		
-		moveDirVec.y = playerSpeedY * delta;
-		
-		// update player position
-		playerPrevPos.set(transformable.getPosition());
-		transformable.increasePosition(moveDirVec);
+		// update velocity position
+		physics.setVelocity(new Vector3f(moveVec.x,
+				physics.getVelocity().y, moveVec.z));
 	
 		//-- Camera update
 		FPPCameraComponent camera = entityController.getFPPCameraComponent(eID);
