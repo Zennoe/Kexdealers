@@ -59,7 +59,7 @@ public class LinkStart implements Runnable{
 		// Systems
 		RenderSystem renderSystem = new RenderSystem(entityController, resourceLoader);
 		AudioSystem audioSystem = new AudioSystem(entityController, resourceLoader);
-		NetworkSystem networkSystem = new NetworkSystem(entityController);
+		NetworkSystem networkSystem = new NetworkSystem();
 		TeleportationSystem teleportationSystem = new TeleportationSystem(entityController);
 		PhysicsSystem physicsSystem = new PhysicsSystem(entityController);
 		
@@ -117,7 +117,7 @@ public class LinkStart implements Runnable{
 			GLFW.glfwPollEvents();
 			
 			if(online) {
-				networkSystem.sendPlayerData(playerID);
+				//networkSystem.sendPlayerData(playerID);
 			}
 			
 			if(Display.pressedKeys[GLFW.GLFW_KEY_O]){
@@ -149,6 +149,12 @@ public class LinkStart implements Runnable{
 					pc.applyForce("attractor", attrForce);
 				}
 				
+			}
+			
+			if(Display.pressedKeys[GLFW.GLFW_KEY_L]) {
+				messageBus.messageRenderSys(bus.Operation.SYS_RENDER_WIREFRAME_ON);
+			} else if(Display.pressedKeys[GLFW.GLFW_KEY_N]) {
+				messageBus.messageRenderSys(bus.Operation.SYS_RENDER_WIREFRAME_OFF);
 			}
 			
 			// Sky box

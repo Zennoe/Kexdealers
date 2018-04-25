@@ -28,25 +28,27 @@ public class MessageBus {
 	public BusMessage getNextMessage(MessageListener listener) {
 		BusMessage nextMessage;
 		switch(listener) {
-		case RENDER_SYSTEM: nextMessage = renderSystemQueue.removeLast(); break;
-		case AUDIO_SYSTEM: nextMessage = audioSystemQueue.removeLast(); break;
-		case NETWORK_SYSTEM: nextMessage = networkSystemQueue.removeLast(); break;
-		case TELEPORTATION_SYSTEM: nextMessage = (teleportationSystemQueue.size() > 0) ? teleportationSystemQueue.removeLast() : null; break;
+		case RENDER_SYSTEM: nextMessage = (renderSystemQueue.isEmpty() ? null : renderSystemQueue.removeLast()); break;
+		case AUDIO_SYSTEM: nextMessage = (audioSystemQueue.isEmpty() ? null : audioSystemQueue.removeLast()); break;
+		case NETWORK_SYSTEM: nextMessage = (networkSystemQueue.isEmpty() ? null : networkSystemQueue.removeLast()); break;
+		case TELEPORTATION_SYSTEM: nextMessage = (teleportationSystemQueue.isEmpty() ? null : teleportationSystemQueue.removeLast()); break;
 		default: return null;
 		}
 		return nextMessage;
 	}
 	
-	public void messageRenderSys(Operation op) {
-		
+	public BusMessage messageRenderSys(Operation op) {
+		BusMessage msg = new RenderSysMessage(op);
+		renderSystemQueue.addFirst(msg);
+		return msg;
 	}
 	
-	public void messageAudioSys(Operation op) {
-
+	public BusMessage messageAudioSys(Operation op) {
+		return null;
 	}
 	
-	public void messageNetworkSys(Operation op) {
-		
+	public BusMessage messageNetworkSys(Operation op) {
+		return null;
 	}
 	
 	public BusMessage messageTeleportationSys(Operation op, int targetEID, Vector3f destination) {

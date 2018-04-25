@@ -13,6 +13,9 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
+import bus.MessageBus;
+import bus.MessageListener;
+import bus.RenderSysMessage;
 import ecs.EntityController;
 import ecs.FPPCameraComponent;
 import ecs.Transformable;
@@ -23,6 +26,8 @@ import terrain.TerrainRenderer;
 
 public class RenderSystem {
 
+	private MessageBus messageBus = MessageBus.getInstance();
+	
 	private EntityController entityController;
 	
 	private ResourceLoader resourceLoader;
@@ -42,7 +47,6 @@ public class RenderSystem {
 		GL11.glEnable(GL11.GL_BACK);
 		// Automatic Gamma-correction
 		GL11.glEnable(GL30.GL_FRAMEBUFFER_SRGB);
-		// Wire frame mode: GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
 		
 		entityRenderer = new EntityRenderer();
 		terrainRenderer = new TerrainRenderer();
@@ -50,7 +54,17 @@ public class RenderSystem {
 	}
 	
 	public void run(int observerEID){
-		// Do all the message processing
+		// work message queue
+		RenderSysMessage message;
+		while((message = (RenderSysMessage) messageBus.getNextMessage(MessageListener.RENDER_SYSTEM)) != null) {
+			switch(message.getOP()) {
+			case SYS_RENDER_WIREFRAME_ON: GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
+				break;
+			case SYS_RENDER_WIREFRAME_OFF: GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
+				break;
+			default: System.err.println("Render operation not implemented");
+			}
+		}
 		// ???
 		// Do other processing
 		
