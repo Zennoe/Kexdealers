@@ -12,6 +12,7 @@ import audio.AudioSystem;
 import bus.MessageBus;
 import bus.Operation;
 import ecs.EntityController;
+import ecs.PhysicsComponent;
 import ecs.Transformable;
 import physics.PhysicsSystem;
 import render.RenderSystem;
@@ -138,6 +139,16 @@ public class LinkStart implements Runnable{
 			}
 			if (Display.pressedKeys[GLFW.GLFW_KEY_B]) {
 				entityController.getPhysicsComponent(6).setForce("force", new Vector3f(0,0,0));
+			}
+			
+			if(Display.pressedKeys[GLFW.GLFW_KEY_0]) {
+				Vector3f attrPos = new Vector3f(400.0f, 100.0f, 400.0f);
+				for(PhysicsComponent pc : entityController.getPhysicsComponents()) {
+					Vector3f attrForce = new Vector3f(); 
+					entityController.getTransformable(pc.getEID()).getPosition().sub(attrPos, attrForce).mul(-40.0f);
+					pc.applyForce("attractor", attrForce);
+				}
+				
 			}
 			
 			// Sky box

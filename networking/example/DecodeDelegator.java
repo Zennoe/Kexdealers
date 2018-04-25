@@ -3,13 +3,13 @@ package example;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Set;
 
 import decodeCommands.DecoderCommand;
 import decodeCommands.PointLightComponentDecoder;
 import decodeCommands.RenderComponentDecoder;
 import decodeCommands.TransformComponentDecoder;
 import ecs.Component;
-import ecs.EntityController;
 
 public class DecodeDelegator {
 	
@@ -17,9 +17,7 @@ public class DecodeDelegator {
 	
 	private HashMap<Byte, String> cTypeTable;
 	
-	private EntityController entityController;
-	
-	public DecodeDelegator(EntityController entityController) {
+	public DecodeDelegator() {
 		// Populate the look up table
 		commands = new HashMap<>();
 		commands.put((byte) 0x01, new TransformComponentDecoder());
@@ -30,18 +28,16 @@ public class DecodeDelegator {
 		cTypeTable.put((byte) 0x01, "transformable");
 		cTypeTable.put((byte) 0x02, "renderable");
 		cTypeTable.put((byte) 0x03, "pointlightcomponent");
-		
-		this.entityController = entityController;
 	}
 	
-	public void delegate(DataInputStream stream) throws IOException{
+	public void delegate(DataInputStream stream, Set<Component> buffer) throws IOException{
 		/*
 		 * fetch next message.
 		 * if message is 0x00 => start of block
 		 * 1) read entity ID and remember
 		 * 2) read component type and delegate accordingly. Pass lookup table along 
 		 * 	so the command object knows how many more messages to expect. Also pass along input stream.
-		 * 3) pass the entity ID and the component object from the returning command to the ECS
+		 * 3) put the assembled component into the buffer
 		 * 4) await next start byte 
 		 * 	Should next message not by a start byte, dump it to error console. -> 4)
 		 */
@@ -54,20 +50,15 @@ public class DecodeDelegator {
 			byte cType = (byte) stream.readByte();
 			// delegate to command object and catch the returned component object
 			Component comp = commands.get(cType).decode(stream);
-			// hand the component over to the ECS
-			entityController.addComponentOfType(nextEID, cTypeTable.get(cType), comp);
+			comp.setEID(nextEID);
+			buffer.add(comp);
 			
-		}else if(control_byte == 0x01) {
-			// read eID from next message
-			int nextEID = stream.readInt();
-			// allocate new entity on the ECS
-			entityController.directAllocEID(nextEID);
-			// let the reader continue so it can read the components
-			
-		}else {
+		} else {
 			System.err.println("DecodeDelegator received unexpected data");
 		}
 
 	}
+	
+	
 	
 }

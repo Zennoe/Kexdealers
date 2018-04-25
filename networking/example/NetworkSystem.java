@@ -10,8 +10,9 @@ import java.io.OutputStream;
 import java.net.ConnectException;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.HashSet;
 
-import ecs.EntityController;
+import ecs.Component;
 
 public class NetworkSystem implements Runnable{
 	
@@ -24,12 +25,17 @@ public class NetworkSystem implements Runnable{
 	private EncodeDelegator encodeDelegator;
 	private DecodeDelegator decodeDelegator;
 	
-	private EntityController entityController;
+	private HashSet<Component> componentBuffer;
 	
-	public NetworkSystem(EntityController entityController) {
-		this.entityController = entityController;
+	public NetworkSystem() {
 		encodeDelegator = new EncodeDelegator();
-		decodeDelegator = new DecodeDelegator(entityController);
+		decodeDelegator = new DecodeDelegator();
+		
+		componentBuffer = new HashSet<Component>();
+	}
+	
+	public void copyDatatoECS() {
+		
 	}
 	
 	public void run() {
@@ -38,7 +44,7 @@ public class NetworkSystem implements Runnable{
 		try (DataInputStream stream = new DataInputStream(inputStream)) {
 			while(running) {
 				// Maybe check if stream is actually opened?
-				decodeDelegator.delegate(stream);
+				decodeDelegator.delegate(stream, componentBuffer);
 			}
 		}catch(IOException x) {
 			x.printStackTrace();
@@ -49,11 +55,6 @@ public class NetworkSystem implements Runnable{
 		synchronized(this) {
 			this.notifyAll();
 		}
-	}
-	
-	public void sendPlayerData(int playerID) {
-		encodeDelegator.delegate(outputStream, "transformable", 
-				entityController.getTransformable(playerID));
 	}
 	
 	// Returns false if connection failed
