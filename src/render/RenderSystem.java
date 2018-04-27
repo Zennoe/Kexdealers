@@ -115,6 +115,8 @@ public class RenderSystem {
 	private void renderScene(FPPCameraComponent camera){
 		prepareForRendering();
 		
+		skyboxRenderer.render(resourceLoader, camera);
+		
 		terrainRenderer.render(resourceLoader, camera, entityController.getPointLightComponents());
 		
 		// count entities rendered
@@ -132,7 +134,6 @@ public class RenderSystem {
 		
 		entityRenderer.render(resourceLoader, camera, entitiesToRender, entityController.getPointLightComponents());
 		
-		skyboxRenderer.render(resourceLoader, camera);
 		
 		// Swap buffer to make changes visible
 		GLFW.glfwSwapBuffers(Display.window);

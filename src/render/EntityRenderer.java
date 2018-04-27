@@ -26,6 +26,9 @@ public class EntityRenderer {
 			FPPCameraComponent camera,
 			HashMap<String, HashSet<Transformable>> entitiesToRender,
 			HashSet<PointLightComponent> pointLights){
+		
+		GL11.glDepthMask(true);
+		
 		shader.start();
 		shader.uploadViewPos(camera.getPosition());
 		shader.uploadDirectionalLight(resourceLoader.getSun());
