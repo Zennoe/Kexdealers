@@ -28,6 +28,7 @@ public class TerrainRenderer {
 			FPPCameraComponent camera,
 			HashSet<PointLightComponent> pointLights){
 		
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glDepthMask(true);
 		
 		shader.start();

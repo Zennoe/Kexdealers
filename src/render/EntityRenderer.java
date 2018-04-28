@@ -27,6 +27,7 @@ public class EntityRenderer {
 			HashMap<String, HashSet<Transformable>> entitiesToRender,
 			HashSet<PointLightComponent> pointLights){
 		
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glDepthMask(true);
 		
 		shader.start();
