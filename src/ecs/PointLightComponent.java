@@ -10,7 +10,8 @@ public class PointLightComponent extends Component{
 	private Vector3f ambient = new Vector3f();
 	private Vector3f diffuse = new Vector3f();
 	private Vector3f specular = new Vector3f();
-	private Vector3f attenuation = new Vector3f();
+	private float radius = 0.0f;
+	private float cutoff = 0.005f;
 	
 	public PointLightComponent(int eID){
 		this.eID = eID;
@@ -60,15 +61,23 @@ public class PointLightComponent extends Component{
 		return this;
 	}
 
-	public Vector3f getAttenuation(){
-		return attenuation;
+	public float getRadius() {
+		return radius;
 	}
 
-	public PointLightComponent setAttenuation(Vector3f attenuation){
-		this.attenuation = attenuation;
+	public PointLightComponent setRadius(float radius) {
+		this.radius = radius;
 		return this;
 	}
-	
+
+	public float getCutoff() {
+		return cutoff;
+	}
+
+	public PointLightComponent setCutoff(float cutoff) {
+		this.cutoff = cutoff;
+		return this;
+	}
 	
 }
 

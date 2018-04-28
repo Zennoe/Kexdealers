@@ -34,7 +34,8 @@ public class EntityShader extends ShaderProgram{
 	private int[] location_lightAmbient;
 	private int[] location_lightDiffuse;
 	private int[] location_lightSpecular;
-	private int[] location_lightAttenuation;
+	private int[] location_lightRadius;
+	private int[] location_lightCutoff;
 	
 	public EntityShader(){
 		super(VERTEX_FILE, FRAGMENT_FILE);
@@ -60,13 +61,15 @@ public class EntityShader extends ShaderProgram{
 		location_lightAmbient = new int[MAX_LIGHTS];
 		location_lightDiffuse = new int[MAX_LIGHTS];
 		location_lightSpecular = new int[MAX_LIGHTS];
-		location_lightAttenuation = new int[MAX_LIGHTS];
+		location_lightRadius = new int[MAX_LIGHTS];
+		location_lightCutoff = new int[MAX_LIGHTS];
 		for(int i = 0; i < MAX_LIGHTS; i++){
 			location_lightPosition[i] = super.getUniformLocation("pointLights[" +i +"].position");
 			location_lightAmbient[i] = super.getUniformLocation("pointLights[" +i +"].ambient");
 			location_lightDiffuse[i] = super.getUniformLocation("pointLights[" +i +"].diffuse");
 			location_lightSpecular[i] = super.getUniformLocation("pointLights[" +i +"].specular");
-			location_lightAttenuation[i] = super.getUniformLocation("pointLights[" +i +"].attenuation");
+			location_lightRadius[i] = super.getUniformLocation("pointLights[" +i +"].radius");
+			location_lightCutoff[i] = super.getUniformLocation("pointLights[" +i +"].cutoff");
 		}
 	}
 	
@@ -103,13 +106,15 @@ public class EntityShader extends ShaderProgram{
 				super.loadVector3f(location_lightAmbient[i], pointLight.getAmbient());
 				super.loadVector3f(location_lightDiffuse[i], pointLight.getDiffuse());
 				super.loadVector3f(location_lightSpecular[i], pointLight.getSpecular());
-				super.loadVector3f(location_lightAttenuation[i], pointLight.getAttenuation());
-			}else{
+				super.loadFloat(location_lightRadius[i], pointLight.getRadius());
+				super.loadFloat(location_lightCutoff[i], pointLight.getCutoff());
+			} else {
 				super.loadVector3f(location_lightPosition[i], new Vector3f(0, 0, 0));
 				super.loadVector3f(location_lightAmbient[i], new Vector3f(0, 0, 0));
 				super.loadVector3f(location_lightDiffuse[i], new Vector3f(0, 0, 0));
 				super.loadVector3f(location_lightSpecular[i], new Vector3f(0, 0, 0));
-				super.loadVector3f(location_lightAttenuation[i], new Vector3f(1, 0, 0));
+				super.loadFloat(location_lightRadius[i], 0);
+				super.loadFloat(location_lightCutoff[i], 0);
 			}
 		}
 	}

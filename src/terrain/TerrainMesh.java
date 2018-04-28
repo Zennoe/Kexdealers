@@ -26,13 +26,7 @@ public class TerrainMesh {
 	}
 	
 	public Matrix4f getModelMatrix(){
-		transformation.identity()
-			.translate(0.0f, 0.0f, 0.0f)
-			.rotateX(0.0f)
-			.rotateY(0.0f)
-			.rotateZ(0.0f)
-			.scale(1.0f);
-		
+		transformation.identity();
 		return transformation;
 	}
 	

@@ -33,6 +33,8 @@ public class LinkStart implements Runnable{
 	private static int targetFPS = 120;
 	public static double timeDelta = 1 / targetFPS;
 	
+	private long tickCounter = 0;
+	
 	public static void main(String[] args){
 		LinkStart link = new LinkStart();
 		link.start();
@@ -103,7 +105,7 @@ public class LinkStart implements Runnable{
 		AL10.alSourcef(asc.getSourceID(), AL10.AL_ROLLOFF_FACTOR, asc.getRolloffFactor());
 		AL10.alSourcef(asc.getSourceID(), AL10.AL_MAX_DISTANCE, asc.getMaxDistance());
 		audioSystem.playEntitySound(8);
-		System.out.println(AL10.AL_PLAYING == AL10.alGetSourcei(iid, AL10.AL_SOURCE_STATE));
+		System.out.printf("Audio Source is playing: %b %n", AL10.AL_PLAYING == AL10.alGetSourcei(iid, AL10.AL_SOURCE_STATE));
 		
 		entityController.getPhysicsComponent(6).applyForce("force", new Vector3f(150.0f,1.0f,12.5f));
 		entityController.getPhysicsComponent(10).applyForce("wooosh", new Vector3f(0,5,0));
@@ -171,7 +173,12 @@ public class LinkStart implements Runnable{
 			}
 			
 			timeDelta = glfwGetTime() - frameBegin;
-			// FPS: System.out.println((int) (Math.floor(1000 / timeDelta)) / 1000);
+			
+			if (tickCounter % (targetFPS*2) == 0) {
+				System.out.println((Math.floor(1000 / timeDelta)) / 1000 + " FPS");
+			}
+			
+			tickCounter++;
 		}
 		
 		audioSystem.cleanUp();
