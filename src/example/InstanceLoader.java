@@ -98,13 +98,13 @@ public class InstanceLoader {
 			Vector3f ambient = new Vector3f(Float.valueOf(frags[3]), Float.valueOf(frags[4]), Float.valueOf(frags[5]));
 			Vector3f diffuse = new Vector3f(Float.valueOf(frags[6]), Float.valueOf(frags[7]), Float.valueOf(frags[8]));
 			Vector3f specular = new Vector3f(Float.valueOf(frags[9]), Float.valueOf(frags[10]), Float.valueOf(frags[11]));
-			Vector3f attenuation = new Vector3f(Float.valueOf(frags[12]), Float.valueOf(frags[13]), Float.valueOf(frags[14]));
 			entityController.addPointLightComponent(eID)
 				.setPosition(position)
 				.setAmbient(ambient)
 				.setDiffuse(diffuse)
 				.setSpecular(specular)
-				.setAttenuation(attenuation);
+				.setRadius(Float.valueOf(frags[12]))
+				.setCutoff(Float.valueOf(frags[13]));
 		}
 		// - AudioSourceComponent
 		ArrayList<String> audioSourceComponentData = getAllLinesWith("AUDIOSOURCECOMPONENT", lines);

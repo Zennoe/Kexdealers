@@ -47,9 +47,7 @@ public class AudioSystem {
 		}
 
 		String defaultDeviceSpecifier = ALC10.alcGetString(MemoryUtil.NULL, ALC10.ALC_DEFAULT_DEVICE_SPECIFIER);
-		if (defaultDeviceSpecifier != null) {
-			System.out.println("Audio output device: " + defaultDeviceSpecifier);
-		} else {
+		if (defaultDeviceSpecifier == null) {
 			throw new AssertionError("Default Audio Device Specifier == null");
 		}
 

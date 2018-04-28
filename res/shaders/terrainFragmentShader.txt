@@ -20,9 +20,10 @@ struct DirLight{
 struct PointLight{
 	vec3 position;
 	
-	vec3 attenuation;
 	vec3 ambient;
 	vec3 diffuse;
+	float radius;
+	float cutoff;
 };
 
 in vec2 pass_texCoords;
@@ -56,7 +57,7 @@ void main(){
 	// Directional lighting
 	vec3 result = calcDirLight(totalColor, dirLight, unitNormal);
 	// Point lights
-	for(int i = 0; i < 4; i++){
+	for(int i = 0; i < MAX_POINT_LIGHTS; i++){
 		result += calcPointLight(totalColor, pointLights[i], unitNormal, fragPos);
 	}
 	
@@ -80,9 +81,17 @@ vec3 calcPointLight(vec4 totalColor, PointLight light, vec3 normal, vec3 fragPos
 	vec3 lightDir = normalize(light.position - fragPos);
     // Diffuse shading
     float diffuse = max(dot(normal, lightDir), 0.0);
-    // Attenuation
     float distance = length(light.position - fragPos);
-    float attenuation = 1.0f / (light.attenuation.x + (light.attenuation.y * distance) + (light.attenuation.z * (distance * distance)));
+    // Attenuation
+    float d = max(distance - light.radius, 0);
+    float denom = d/light.radius + 1;
+ 	float attenuation = 1 / (denom*denom);
+    // scale and bias attenuation such that:
+    //   attenuation == 0 at extent of max influence
+    //   attenuation == 1 when d == 0
+    attenuation = (attenuation - light.cutoff) / (1 - light.cutoff);
+    attenuation = max(attenuation, 0);
+    
     // Combine results
     vec3 ambientResult = light.ambient * vec3(totalColor);
 	vec3 diffuseResult = light.diffuse * diffuse * vec3(totalColor);

@@ -44,7 +44,8 @@ public class RenderSystem {
 		
 		// Back-face culling
 		GL11.glEnable(GL11.GL_CULL_FACE);
-		GL11.glEnable(GL11.GL_BACK);
+		GL11.glFrontFace(GL11.GL_FRONT);
+		GL11.glCullFace(GL11.GL_BACK);
 		// Automatic Gamma-correction
 		GL11.glEnable(GL30.GL_FRAMEBUFFER_SRGB);
 		
@@ -110,10 +111,13 @@ public class RenderSystem {
 		glClearColor(0.529f, 0.807f, 0.95f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		GL11.glDepthMask(true);
 	}
 	
 	private void renderScene(FPPCameraComponent camera){
 		prepareForRendering();
+		
+		skyboxRenderer.render(resourceLoader, camera);
 		
 		terrainRenderer.render(resourceLoader, camera, entityController.getPointLightComponents());
 		
@@ -132,7 +136,6 @@ public class RenderSystem {
 		
 		entityRenderer.render(resourceLoader, camera, entitiesToRender, entityController.getPointLightComponents());
 		
-		skyboxRenderer.render(resourceLoader, camera);
 		
 		// Swap buffer to make changes visible
 		GLFW.glfwSwapBuffers(Display.window);

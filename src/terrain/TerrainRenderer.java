@@ -6,7 +6,6 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
-
 import ecs.FPPCameraComponent;
 import ecs.PointLightComponent;
 import example.ResourceLoader;
@@ -28,6 +27,10 @@ public class TerrainRenderer {
 	public void render(ResourceLoader resourceLoader,
 			FPPCameraComponent camera,
 			HashSet<PointLightComponent> pointLights){
+		
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		GL11.glDepthMask(true);
+		
 		shader.start();
 		shader.uploadDirectionalLight(resourceLoader.getSun());
 		shader.uploadPointLights(pointLights);

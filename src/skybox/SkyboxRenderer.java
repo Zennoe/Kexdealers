@@ -18,6 +18,10 @@ public class SkyboxRenderer {
 	
 	public void render(ResourceLoader resourceLoader,
 			FPPCameraComponent camera){
+		
+		GL11.glDisable(GL11.GL_DEPTH_TEST);
+		GL11.glDepthMask(false);
+		
 		shader.start();
 		shader.loadProjectionMatrix(camera.getProjectionMatrix());
 		shader.loadViewMatrix(camera.getViewMatrix());
