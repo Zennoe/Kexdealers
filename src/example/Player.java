@@ -18,7 +18,7 @@ public class Player {
 	
 	//-- player params
 	private final float walkSpeed = 32.5f;
-	private final Vector3f jumpForce = new Vector3f(0, 20_000.0f, 0);
+	private final Vector3f jumpForce = new Vector3f(0, 90_000.0f, 0);
 	private final Vector3f cameraOffset = new Vector3f(0.0f, 10.0f, 0.0f);
 	private final float cameraTurnSpeed = 5.0f;
 	/*
