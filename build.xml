@@ -1,40 +1,42 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project default="create_run_jar" name="Create Runnable Jar for Project Kexdealers">
+<project default="create_run_jar" name="Create Runnable Jar for Project Kexdealers_zennoesfork with libraries in sub-folder">
     <!--this file was created by Eclipse Runnable JAR Export Wizard-->
     <!--ANT 1.7 is required                                        -->
     <!--define folder properties-->
     <property name="dir.buildfile" value="."/>
-    <property name="dir.workspace" value="/home/desk/workspace"/>
+    <property name="dir.workspace" value="/home/zennoe/workspace"/>
     <property name="dir.jarfile" value="${dir.buildfile}/bin"/>
     <target name="create_run_jar">
-        <jar destfile="${dir.jarfile}/Kexdealers.jar" filesetmanifest="mergewithoutmain">
+        <jar destfile="${dir.jarfile}/kekzdealer.jar">
             <manifest>
                 <attribute name="Main-Class" value="example.LinkStart"/>
-                <attribute name="Class-Path" value="."/>
+                <attribute name="Class-Path" value=". kekzdealer_lib/lwjgl.jar kekzdealer_lib/lwjgl-glfw.jar kekzdealer_lib/lwjgl-openal.jar kekzdealer_lib/lwjgl-opengl.jar kekzdealer_lib/lwjgl-glfw-natives-windows.jar kekzdealer_lib/lwjgl-natives-windows.jar kekzdealer_lib/lwjgl-openal-natives-windows.jar kekzdealer_lib/lwjgl-opengl-natives-windows.jar kekzdealer_lib/lwjgl-stb.jar kekzdealer_lib/lwjgl-stb-natives-windows.jar kekzdealer_lib/lwjgl-glfw-natives-linux.jar kekzdealer_lib/lwjgl-glfw-natives-macos.jar kekzdealer_lib/lwjgl-natives-linux.jar kekzdealer_lib/lwjgl-natives-macos.jar kekzdealer_lib/lwjgl-openal-natives-linux.jar kekzdealer_lib/lwjgl-openal-natives-macos.jar kekzdealer_lib/lwjgl-opengl-natives-linux.jar kekzdealer_lib/lwjgl-opengl-natives-macos.jar kekzdealer_lib/lwjgl-stb-natives-linux.jar kekzdealer_lib/lwjgl-stb-natives-macos.jar kekzdealer_lib/lwjgl-assimp.jar kekzdealer_lib/joml-1.9.9.jar"/>
             </manifest>
             <fileset dir="${dir.jarfile}"/>
-            <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/jars/lwjgl.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/jars/lwjgl-glfw.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/jars/joml-1.9.4.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/jars/lwjgl-openal.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/jars/lwjgl-opengl.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/natives/lwjgl-glfw-natives-windows.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/natives/lwjgl-natives-windows.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/natives/lwjgl-openal-natives-windows.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/natives/lwjgl-opengl-natives-windows.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/jars/lwjgl-stb.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/natives/lwjgl-stb-natives-windows.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/docs/lwjgl-stb-javadoc.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/natives/lwjgl-glfw-natives-linux.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/natives/lwjgl-glfw-natives-macos.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/natives/lwjgl-natives-linux.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/natives/lwjgl-natives-macos.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/natives/lwjgl-openal-natives-linux.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/natives/lwjgl-openal-natives-macos.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/natives/lwjgl-opengl-natives-linux.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/natives/lwjgl-opengl-natives-macos.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/natives/lwjgl-stb-natives-linux.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/natives/lwjgl-stb-natives-macos.jar"/>
         </jar>
+        <delete dir="${dir.jarfile}/kekzdealer_lib"/>
+        <mkdir dir="${dir.jarfile}/kekzdealer_lib"/>
+        <copy file="${dir.buildfile}/lib/jars/lwjgl.jar" todir="${dir.jarfile}/kekzdealer_lib"/>
+        <copy file="${dir.buildfile}/lib/jars/lwjgl-glfw.jar" todir="${dir.jarfile}/kekzdealer_lib"/>
+        <copy file="${dir.buildfile}/lib/jars/lwjgl-openal.jar" todir="${dir.jarfile}/kekzdealer_lib"/>
+        <copy file="${dir.buildfile}/lib/jars/lwjgl-opengl.jar" todir="${dir.jarfile}/kekzdealer_lib"/>
+        <copy file="${dir.buildfile}/lib/natives/lwjgl-glfw-natives-windows.jar" todir="${dir.jarfile}/kekzdealer_lib"/>
+        <copy file="${dir.buildfile}/lib/natives/lwjgl-natives-windows.jar" todir="${dir.jarfile}/kekzdealer_lib"/>
+        <copy file="${dir.buildfile}/lib/natives/lwjgl-openal-natives-windows.jar" todir="${dir.jarfile}/kekzdealer_lib"/>
+        <copy file="${dir.buildfile}/lib/natives/lwjgl-opengl-natives-windows.jar" todir="${dir.jarfile}/kekzdealer_lib"/>
+        <copy file="${dir.buildfile}/lib/jars/lwjgl-stb.jar" todir="${dir.jarfile}/kekzdealer_lib"/>
+        <copy file="${dir.buildfile}/lib/natives/lwjgl-stb-natives-windows.jar" todir="${dir.jarfile}/kekzdealer_lib"/>
+        <copy file="${dir.buildfile}/lib/natives/lwjgl-glfw-natives-linux.jar" todir="${dir.jarfile}/kekzdealer_lib"/>
+        <copy file="${dir.buildfile}/lib/natives/lwjgl-glfw-natives-macos.jar" todir="${dir.jarfile}/kekzdealer_lib"/>
+        <copy file="${dir.buildfile}/lib/natives/lwjgl-natives-linux.jar" todir="${dir.jarfile}/kekzdealer_lib"/>
+        <copy file="${dir.buildfile}/lib/natives/lwjgl-natives-macos.jar" todir="${dir.jarfile}/kekzdealer_lib"/>
+        <copy file="${dir.buildfile}/lib/natives/lwjgl-openal-natives-linux.jar" todir="${dir.jarfile}/kekzdealer_lib"/>
+        <copy file="${dir.buildfile}/lib/natives/lwjgl-openal-natives-macos.jar" todir="${dir.jarfile}/kekzdealer_lib"/>
+        <copy file="${dir.buildfile}/lib/natives/lwjgl-opengl-natives-linux.jar" todir="${dir.jarfile}/kekzdealer_lib"/>
+        <copy file="${dir.buildfile}/lib/natives/lwjgl-opengl-natives-macos.jar" todir="${dir.jarfile}/kekzdealer_lib"/>
+        <copy file="${dir.buildfile}/lib/natives/lwjgl-stb-natives-linux.jar" todir="${dir.jarfile}/kekzdealer_lib"/>
+        <copy file="${dir.buildfile}/lib/natives/lwjgl-stb-natives-macos.jar" todir="${dir.jarfile}/kekzdealer_lib"/>
+        <copy file="${dir.buildfile}/lib/jars/lwjgl-assimp.jar" todir="${dir.jarfile}/kekzdealer_lib"/>
+        <copy file="${dir.buildfile}/lib/jars/joml-1.9.9.jar" todir="${dir.jarfile}/kekzdealer_lib"/>
     </target>
 </project>
