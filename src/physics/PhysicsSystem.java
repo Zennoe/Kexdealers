@@ -11,7 +11,7 @@ public class PhysicsSystem {
 	private EntityController entityController;
 
 	// TODO move me to somewhere else
-	private final Vector3f gravitationalAccel = new Vector3f(0, -9.8f, 0);
+	private final Vector3f gravitationalAccel = new Vector3f(0, -98.1f, 0);
 
 	public PhysicsSystem(EntityController entityController) {
 		this.entityController = entityController;
@@ -49,17 +49,20 @@ public class PhysicsSystem {
 				for (Vector3f currForce : currentComp.getAppliedForces()) {
 					resultingForce.add(currForce);
 				}
+				if (currentComp.isOnGround()) {
+					// simulate friction (too simple.)
+					// TODO rewrite this.
+					final float frictionFactor = 0.2f;
+					Vector3f frictionForce = new Vector3f(currentComp.getVelocity());
+					frictionForce.y = 0;
+					frictionForce.mul(-1.0f/frictionFactor);
+					resultingForce.add(frictionForce);
+				}
 				Vector3f newAccel = resultingForce.div(currentComp.getWeight());
 				currentComp.setAcceleration(newAccel);
 
 				// update velocity
 				Vector3f newVeloc = (new Vector3f(currentComp.getVelocity())).add(newAccel.mul((float) timeDelta));
-				if (currentComp.isOnGround()) {
-					// simulate friction (too simple.)
-					// TODO rewrite this.
-					final float frictionFactor = 0.99f;
-					newVeloc.mul(frictionFactor);
-				}
 				currentComp.setVelocity(newVeloc);
 
 				// update position
