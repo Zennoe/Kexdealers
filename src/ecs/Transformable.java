@@ -123,4 +123,6 @@ public class Transformable extends Component{
 		
 		return dirVec;
 	}
+	
+	
 }
