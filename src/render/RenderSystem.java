@@ -19,12 +19,13 @@ import bus.RenderSysMessage;
 import ecs.EntityController;
 import ecs.FPPCameraComponent;
 import ecs.Transformable;
+import example.AbstractSystem;
 import example.Display;
 import example.ResourceLoader;
 import skybox.SkyboxRenderer;
 import terrain.TerrainRenderer;
 
-public class RenderSystem {
+public class RenderSystem extends AbstractSystem {
 
 	private MessageBus messageBus = MessageBus.getInstance();
 	
@@ -38,7 +39,13 @@ public class RenderSystem {
 	
 	private HashMap<String, HashSet<Transformable>> entitiesToRender = new HashMap<>(); // All the currently active transforms for one asset
 	
-	public RenderSystem(EntityController entityController, ResourceLoader resourceLoader){
+	/*
+	 * TODO: Make separate ResourceLoaders for separate types of resources. 
+	 * Let the loaders needed for each system be created in their own code.
+	 */
+	public RenderSystem(MessageBus messageBus, EntityController entityController) {
+		super(messageBus, entityController);
+		
 		this.entityController = entityController;
 		this.resourceLoader = resourceLoader;
 		
