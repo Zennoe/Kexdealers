@@ -23,13 +23,13 @@ public class PhysicsSystem {
 			Transformable currTrans = entityController.getTransformable(currentComp.getEID());
 			// TODO Implement a proper collision system.
 			// collision check using terrain height
-			float currHeight = terrain.getHeightAtPoint(currTrans.getPosition().x, currTrans.getPosition().z);
-			if (Float.compare(currHeight, currTrans.getPosition().y) > 0) {
+			float currHeight = terrain.getHeightAtPoint(currTrans.getPosition().x(), currTrans.getPosition().z());
+			if (Float.compare(currHeight, currTrans.getPosition().y()) > 0) {
 				currentComp.setOnGround(true);
-				Vector3f pos = currTrans.getPosition();
-				Vector3f vel = currentComp.getVelocity();
-				pos.y = currHeight;
-				vel.y = 0.0f;
+				Vector3f pos = new Vector3f();
+				currTrans.getPosition().add(0.0f, currHeight, 0.0f, pos);
+				Vector3f vel = new Vector3f(currentComp.getVelocity());
+				vel.setComponent(1, 0.0f);
 				currTrans.setPosition(pos);
 				currentComp.setVelocity(vel);
 			} else {

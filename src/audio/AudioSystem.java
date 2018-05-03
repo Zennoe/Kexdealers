@@ -5,6 +5,7 @@ import java.nio.IntBuffer;
 
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
+import org.joml.Vector3fc;
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.AL10;
 import org.lwjgl.openal.ALC;
@@ -75,23 +76,23 @@ public class AudioSystem {
 		// Update listener velocity
 		PhysicsComponent listenPhysComp = entityController.getPhysicsComponent(listenerEID);
 		if (listenPhysComp != null && listenPhysComp.isAffectedByPhysics()) {
-			Vector3f vel = listenPhysComp.getVelocity();
-			AL10.alListener3f(AL10.AL_VELOCITY, vel.x, vel.y, vel.z);
+			Vector3fc vel = listenPhysComp.getVelocity();
+			AL10.alListener3f(AL10.AL_VELOCITY, vel.x(), vel.y(), vel.z());
 		} else {
 			AL10.alListener3f(AL10.AL_VELOCITY, 0, 0, 0);
 		}
 	
 		for (AudioSourceComponent comp : entityController.getAudioSourceComponents()) {
 			if (AL10.alGetSourcei(comp.getSourceID(), AL10.AL_SOURCE_STATE) == AL10.AL_PLAYING) {
-				Vector3f pos = entityController.getTransformable(comp.getEID()).getPosition();
+				Vector3fc pos = entityController.getTransformable(comp.getEID()).getPosition();
 				Vector3f dir = entityController.getTransformable(comp.getEID()).getDirectionVector();
-				AL10.alSource3f(comp.getSourceID(), AL10.AL_POSITION, pos.x, pos.y, pos.z);
+				AL10.alSource3f(comp.getSourceID(), AL10.AL_POSITION, pos.x(), pos.y(), pos.z());
 				AL10.alSource3f(comp.getSourceID(), AL10.AL_DIRECTION, dir.x, dir.y, dir.z);
 				// set velocity if available
 				PhysicsComponent physComp = entityController.getPhysicsComponent(comp.getEID());
 				if (physComp != null && physComp.isAffectedByPhysics()) {
-					Vector3f vel = physComp.getVelocity();
-					AL10.alSource3f(comp.getSourceID(), AL10.AL_VELOCITY, vel.x, vel.y, vel.z);
+					Vector3fc vel = physComp.getVelocity();
+					AL10.alSource3f(comp.getSourceID(), AL10.AL_VELOCITY, vel.x(), vel.y(), vel.z());
 				} else {
 					AL10.alSource3f(comp.getSourceID(), AL10.AL_VELOCITY, 0, 0, 0);
 				}

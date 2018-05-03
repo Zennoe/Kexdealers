@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 import org.joml.Vector3f;
+import org.joml.Vector3fc;
 
 public class PhysicsComponent extends Component {
 
@@ -66,7 +67,7 @@ public class PhysicsComponent extends Component {
 		return s.toString();
 	}
 
-	public Vector3f getVelocity() {
+	public Vector3fc getVelocity() {
 		return velocity;
 	}
 
@@ -75,7 +76,7 @@ public class PhysicsComponent extends Component {
 		return this;
 	}
 
-	public Vector3f getAcceleration() {
+	public Vector3fc getAcceleration() {
 		return acceleration;
 	}
 

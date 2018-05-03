@@ -70,7 +70,7 @@ public class Player {
 		
 		// update velocity position
 		physics.setVelocity(new Vector3f(moveVec.x,
-				physics.getVelocity().y, moveVec.z));
+				physics.getVelocity().y(), moveVec.z));
 	
 		//-- Camera update
 		FPPCameraComponent camera = entityController.getFPPCameraComponent(eID);
