@@ -60,23 +60,23 @@ public class NetworkSystem implements Runnable{
 	// Returns false if connection failed
 	public boolean connectToServer(String address, int port, String username) {
 		try {
-			System.out.println("Trying to connect to server...");
+			AbstractSystem.out.println("Trying to connect to server...");
 			socket = new Socket(address, port);
-			System.out.println("...Connected to server: " +address +":" +port);
+			AbstractSystem.out.println("...Connected to server: " +address +":" +port);
 			// Setting up streams
 			inputStream = socket.getInputStream();
 			outputStream = socket.getOutputStream();
 			// User name verification
 			DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
 			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-			System.out.println(bufferedReader.readLine());
+			AbstractSystem.out.println(bufferedReader.readLine());
 			dataOutputStream.writeChars(username +"\n");
 			// ===> close top level streams?
 			// This socket will get rejected by the server if the user name is "bad" in any way
 		}catch (ConnectException x) {
-			System.err.println("Firewall blocking or no server listening");
+			AbstractSystem.err.println("Firewall blocking or no server listening");
 		}catch (UnknownHostException e) {
-			System.err.println("Server address unknown: " +e.getMessage());
+			AbstractSystem.err.println("Server address unknown: " +e.getMessage());
 		}catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -89,7 +89,7 @@ public class NetworkSystem implements Runnable{
 			running = false;
 			this.wait();
 		}catch(InterruptedException x) {
-			System.err.println("Error while disconnecting from server (interrupted while waiting for network_system to exit)");
+			AbstractSystem.err.println("Error while disconnecting from server (interrupted while waiting for network_system to exit)");
 			x.printStackTrace();
 		}
 		try {
@@ -97,7 +97,7 @@ public class NetworkSystem implements Runnable{
 			outputStream.close();
 			socket.close();
 		}catch(IOException x) {
-			System.err.println("Error while disconnecting from server (while closing Socket/Streams)");
+			AbstractSystem.err.println("Error while disconnecting from server (while closing Socket/Streams)");
 			x.printStackTrace();
 		}
 		

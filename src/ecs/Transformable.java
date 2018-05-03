@@ -2,7 +2,9 @@ package ecs;
 
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
+import org.joml.Quaternionfc;
 import org.joml.Vector3f;
+import org.joml.Vector3fc;
 
 
 public class Transformable extends Component{
@@ -26,15 +28,38 @@ public class Transformable extends Component{
 		transformation = new Matrix4f().identity();
 	}
 	
+	@Override
 	public int getEID(){
 		return eID;
 	}
-	
+
+	@Override
 	public void setEID(int eID) {
 		this.eID = eID;
 	}
 	
-	public Vector3f getPosition() {
+	@Override
+	public Transformable clone() {
+		Transformable deepCopy = new Transformable(this.eID)
+				.setPosition(new Vector3f(this.position))
+				.setRotation(new Quaternionf(this.rotation))
+				.setScale(this.scale);
+		return deepCopy;
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder s = new StringBuilder();
+		s.append("Transformable<").append(eID).append(">");
+		s.append("(");
+		s.append(" T: ").append(position.x).append("/").append(position.y).append("/").append(position.z);
+		s.append(" R: ").append(this.getRotX()).append("/").append(this.getRotY()).append("/").append(this.getRotZ());
+		s.append(" S: ").append(scale);
+		s.append(" )");
+		return s.toString();
+	}
+	
+	public Vector3fc getPosition() {
 		return position;
 	}
 
@@ -42,7 +67,16 @@ public class Transformable extends Component{
 		this.position = position;
 		return this;
 	}
-
+	
+	public Quaternionfc getRotation() {
+		return rotation;
+	}
+	
+	public Transformable setRotation(Quaternionf rotation) {
+		this.rotation = rotation;
+		return this;
+	}
+	
 	public float getRotX() {
 		Vector3f euler = new Vector3f();
 		return (float) Math.toRadians(rotation.getEulerAnglesXYZ(euler).x);
@@ -111,10 +145,6 @@ public class Transformable extends Component{
 	
 	public Vector3f getEulerRotation() {
 		return rotation.getEulerAnglesXYZ(new Vector3f());
-	}
-	
-	public Quaternionf getRotation() {
-		return new Quaternionf(rotation);
 	}
 	
 	public Vector3f getDirectionVector(){

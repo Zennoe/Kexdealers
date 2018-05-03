@@ -26,12 +26,31 @@ public class FPPCameraComponent extends Component{
 		this.eID = eID;
 	}
 	
+	@Override
 	public int getEID() {
 		return eID;
 	}
 
+	@Override
 	public void setEID(int eID) {
 		this.eID = eID;
+	}
+	
+	@Override
+	public FPPCameraComponent clone() {
+		FPPCameraComponent deepCopy = new FPPCameraComponent(this.eID)
+				.setPosition(new Vector3f(this.cameraPosition));
+		return deepCopy;
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder s = new StringBuilder();
+		s.append("FPPCameraComponent<").append(eID).append(">");
+		s.append("(");
+		s.append(" T: ").append(cameraPosition.x).append("/").append(cameraPosition.y).append("/").append(cameraPosition.z);
+		s.append(" )");
+		return s.toString();
 	}
 	
 	public Matrix4f getViewMatrix(){
@@ -53,8 +72,9 @@ public class FPPCameraComponent extends Component{
 		return cameraPosition;
 	}
 	
-	public void setPosition(Vector3f pos){
+	public FPPCameraComponent setPosition(Vector3f pos){
 		cameraPosition = pos;
+		return this;
 	}
 	
 	public void rotate(float angleX, float angleY, float angleZ){

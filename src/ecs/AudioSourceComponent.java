@@ -21,14 +21,47 @@ public class AudioSourceComponent extends Component{
 		this.eID = eID;
 	}
 
+	@Override
 	public int getEID() {
 		return eID;
 	}
 
+	@Override
 	public void setEID(int eID) {
 		this.eID = eID;
 	}
-
+	
+	@Override
+	public AudioSourceComponent clone() {
+		AudioSourceComponent deepCopy = new AudioSourceComponent(eID)
+				.setAudioSourceFileName(this.assetName)
+				.setSourceID(this.sourceID)
+				.setGain(this.gain)
+				.setPitch(this.pitch)
+				.setReferenceDistance(this.referenceDistance)
+				.setRolloffFactor(this.rolloffFactor)
+				.setMaxDistance(this.maxDistance)
+				.setLooping(this.isLooping);
+		return deepCopy;
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder s = new StringBuilder();
+		s.append("AudioSourceComponent<").append(eID).append(">");
+		s.append("(");
+		s.append(" RES: ").append(assetName);
+		s.append(" sID: ").append(sourceID);
+		s.append(" Gain: ").append(gain);
+		s.append(" Pitch: ").append(pitch);
+		s.append(" RefDist: ").append(referenceDistance);
+		s.append(" Rolloff: ").append(rolloffFactor);
+		s.append(" MaxDist: ").append(maxDistance);
+		s.append(" Loop: ").append(isLooping);
+		s.append(" )");
+		return s.toString();
+	}
+	
 	public String getAudioSourceFileName() {
 		return assetName;
 	}

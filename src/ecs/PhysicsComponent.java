@@ -1,6 +1,7 @@
 package ecs;
 
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import org.joml.Vector3f;
 
@@ -29,6 +30,40 @@ public class PhysicsComponent extends Component {
 	@Override
 	public void setEID(int eID) {
 		this.eID = eID;
+	}
+	
+	@Override
+	public PhysicsComponent clone() {
+		PhysicsComponent deepCopy = new PhysicsComponent(this.eID)
+				.setVelocity(new Vector3f(velocity))
+				.setAcceleration(new Vector3f(acceleration))
+				.setWeight(this.weight)
+				.setAffectedByPhysics(this.isAffectedByPhysics)
+				.setAffectedByGravity(this.isAffectedByGravity)
+				.setOnGround(this.isOnGround);
+		for(Entry<String, Vector3f> force : listOfAppliedForces.entrySet()) {
+			deepCopy.setForce(force.getKey(), force.getValue());
+		}
+		return deepCopy;
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder s = new StringBuilder();
+		s.append("PhysicsComponent<").append(eID).append(">");
+		s.append("(");
+		s.append(" V: ").append(velocity.x).append("/").append(velocity.y).append("/").append(velocity.z);
+		s.append(" A: ").append(acceleration.x).append("/").append(acceleration.y).append("/").append(acceleration.z);
+		s.append(" M: ").append(weight);
+		s.append(" Physics: ").append(isAffectedByPhysics);
+		s.append(" Gravity: ").append(isAffectedByGravity);
+		s.append(" Grounded: ").append(isOnGround);
+		for(Entry<String, Vector3f> force : listOfAppliedForces.entrySet()) {
+			s.append(" ").append(force.getKey()).append(": ");
+			s.append(force.getValue().x).append("/").append(force.getValue().y).append("/").append(force.getValue().z);
+		}
+		s.append(" )");
+		return s.toString();
 	}
 
 	public Vector3f getVelocity() {

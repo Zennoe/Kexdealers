@@ -54,7 +54,7 @@ public class DecodeDelegator {
 			buffer.add(comp);
 			
 		} else {
-			System.err.println("DecodeDelegator received unexpected data");
+			AbstractSystem.err.println("DecodeDelegator received unexpected data");
 		}
 
 	}

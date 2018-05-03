@@ -17,14 +17,43 @@ public class PointLightComponent extends Component{
 		this.eID = eID;
 	}
 	
+	@Override
 	public int getEID(){
 		return eID;
 	}
 	
+	@Override
 	public void setEID(int eID) {
 		this.eID = eID;
 	}
 
+	@Override
+	public PointLightComponent clone() {
+		PointLightComponent deepCopy = new PointLightComponent(eID)
+				.setPosition(new Vector3f(this.position))
+				.setAmbient(new Vector3f(this.ambient))
+				.setDiffuse(new Vector3f(this.diffuse))
+				.setSpecular(new Vector3f(this.specular))
+				.setRadius(this.radius)
+				.setCutoff(this.cutoff);
+		return deepCopy;
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder s = new StringBuilder();
+		s.append("PointLightComponent<").append(eID).append(">");
+		s.append("(");
+		s.append(" T: ").append(position.x).append("/").append(position.y).append("/").append(position.z);
+		s.append(" A: ").append(ambient.x).append("/").append(ambient.y).append("/").append(ambient.z);
+		s.append(" D: ").append(diffuse.x).append("/").append(diffuse.y).append("/").append(diffuse.z);
+		s.append(" S: ").append(specular.x).append("/").append(specular.y).append("/").append(specular.z);
+		s.append(" R: ").append(radius);
+		s.append(" C: ").append(cutoff);
+		s.append(" )");
+		return s.toString();
+	}
+	
 	public Vector3f getPosition(){
 		return position;
 	}

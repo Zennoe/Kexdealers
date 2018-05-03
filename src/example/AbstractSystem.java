@@ -3,12 +3,12 @@ package example;
 import bus.MessageBus;
 import ecs.EntityController;
 
-public abstract class System {
+public abstract class AbstractSystem {
 	
 	protected MessageBus messageBus;
 	protected EntityController entityController;
 	
-	protected System(MessageBus messageBus, EntityController entityController) {
+	protected AbstractSystem(MessageBus messageBus, EntityController entityController) {
 		this.messageBus = messageBus;
 		this.entityController = entityController;
 	}

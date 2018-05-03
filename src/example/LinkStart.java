@@ -2,8 +2,6 @@ package example;
 
 import static org.lwjgl.glfw.GLFW.glfwGetTime;
 
-import java.util.HashSet;
-
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.openal.AL10;
@@ -11,12 +9,11 @@ import org.lwjgl.openal.AL10;
 import audio.AudioSystem;
 import bus.MessageBus;
 import bus.Operation;
+import ecs.AudioSourceComponent;
 import ecs.EntityController;
 import ecs.PhysicsComponent;
-import ecs.Transformable;
 import physics.PhysicsSystem;
 import render.RenderSystem;
-import terrain.Terrain;
 
 
 /*
@@ -92,9 +89,8 @@ public class LinkStart implements Runnable{
 		int playerID = 0; //look into file to choose the correct one :S
 		Player player = new Player(entityController);
 		
-		
 		int iid = resourceLoader.getSound("music").getSourceID();
-		ecs.AudioSourceComponent asc = entityController.getAudioSourceComponent(8);
+		AudioSourceComponent asc = entityController.getAudioSourceComponent(8);
 		
 		asc.setSourceID(iid);
 		// update attributes
@@ -187,20 +183,6 @@ public class LinkStart implements Runnable{
 		if(online) {
 			networkSystem.disconnectFromServer();
 		}
-	}
-	
-	private void gravity(EntityController entityController, ResourceLoader resourceLoader){
-		
-		HashSet<Transformable> transformables = entityController.getTransformables();
-		Terrain terrain = resourceLoader.getTerrain();
-		for(Transformable transformable : transformables){
-			Vector3f correctedPos = transformable.getPosition();
-			correctedPos.set(correctedPos.x, terrain.getHeightAtPoint(correctedPos.x, correctedPos.z), correctedPos.z);
-			System.out.printf("EID: " + transformable.getEID() + " y: %.10f", correctedPos.y);
-			System.out.println();
-			transformable.setPosition(correctedPos);
-		}
-		System.exit(0);
 	}
 	
 }
