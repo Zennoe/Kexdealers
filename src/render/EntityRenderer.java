@@ -12,7 +12,7 @@ import ecs.FPPCameraComponent;
 import ecs.PointLightComponent;
 import ecs.Transformable;
 import example.AssetData;
-import example.ResourceLoader;
+import loaders.GraphicsLoader;
 
 public class EntityRenderer {
 
@@ -22,7 +22,7 @@ public class EntityRenderer {
 		shader = new EntityShader();
 	}
 	
-	public void render(ResourceLoader resourceLoader,
+	public void render(GraphicsLoader graphicsLoader,
 			FPPCameraComponent camera,
 			HashMap<String, HashSet<Transformable>> entitiesToRender,
 			HashSet<PointLightComponent> pointLights){
@@ -32,11 +32,11 @@ public class EntityRenderer {
 		
 		shader.start();
 		shader.uploadViewPos(camera.getPosition());
-		shader.uploadDirectionalLight(resourceLoader.getSun());
+		shader.uploadDirectionalLight(graphicsLoader.getSun());
 		shader.uploadPointLights(pointLights);
 		
 		for(String appearance : entitiesToRender.keySet()){
-			AssetData data = resourceLoader.getRessource(appearance);
+			AssetData data = graphicsLoader.getRessource(appearance);
 			bindEntityAppearance(data);
 			
 			HashSet<Transformable> transformations = entitiesToRender.get(appearance);

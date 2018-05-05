@@ -2,6 +2,7 @@ package audio;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+import java.util.Set;
 
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -15,26 +16,25 @@ import org.lwjgl.openal.EXTLinearDistance;
 import org.lwjgl.openal.EXTThreadLocalContext;
 import org.lwjgl.system.MemoryUtil;
 
+import bus.MessageBus;
 import ecs.AudioSourceComponent;
 import ecs.EntityController;
 import ecs.FPPCameraComponent;
 import ecs.PhysicsComponent;
-import example.ResourceLoader;
+import example.AbstractSystem;
+import loaders.AudioLoader;
 
-public class AudioSystem {
-
-	private EntityController entityController;
-
-	private ResourceLoader resourceLoader;
-
+public class AudioSystem extends AbstractSystem {
+	
+	private final AudioLoader audioLoader;
+	
 	// OpenAL context
 	private long alDevice;
 	private long alContext;
 
-	public AudioSystem(EntityController entityController, ResourceLoader resourceLoader) {
-		this.entityController = entityController;
-		this.resourceLoader = resourceLoader;
-
+	public AudioSystem(MessageBus messageBus, EntityController entityController) {
+		super(messageBus, entityController);
+		
 		// Initialize OpenAL
 		alDevice = ALC10.alcOpenDevice((ByteBuffer) null);
 		if (alDevice == MemoryUtil.NULL) {
@@ -59,10 +59,26 @@ public class AudioSystem {
 
 		AL10.alDistanceModel(EXTLinearDistance.AL_LINEAR_DISTANCE_CLAMPED);
 		AL10.alListener3f(AL10.AL_VELOCITY, 0.0f, 0.0f, 0.0f);
+		// Initialization done
+		
+		audioLoader = new AudioLoader();
 	}
 
-	public void run(int listenerEID) {
-		FPPCameraComponent camera = entityController.getFPPCameraComponent(listenerEID);
+	public void run() {
+		// control update rate here
+
+		// update :)
+		update();
+		
+		// cleanUp on program exit
+		// cleanUp();
+	}
+	
+	public void update() {
+		// Assumes that there is only one FPP camera component so the first one found is used.
+		Set<FPPCameraComponent> fppCamComps = entityController.getFPPCameraComponents();
+		FPPCameraComponent camera = fppCamComps.iterator().next();
+		int listenerEID = camera.getEID();
 		// Update listener position
 		Vector3f listenerPosition = camera.getPosition();
 		AL10.alListener3f(AL10.AL_POSITION, listenerPosition.x, listenerPosition.y, listenerPosition.z);
@@ -98,9 +114,18 @@ public class AudioSystem {
 				}
 			}
 		}
-
+		
 	}
+	
+	public void cleanUp() {
+		// Delete all sound buffers
 
+		// Close OpenAL
+		ALC10.alcMakeContextCurrent(alContext);
+		ALC10.alcDestroyContext(alContext);
+		ALC10.alcCloseDevice(alDevice);
+	}
+	
 	public void playEntitySound(int eID) {
 		AudioSourceComponent comp = entityController.getAudioSourceComponent(eID);
 
@@ -134,24 +159,15 @@ public class AudioSystem {
 			.setReferenceDistance(refDist).setRolloffFactor(rollOff)
 			.setMaxDistance(maxDist)
 			.setLooping(looping);
-		resourceLoader.loadSound(assetName);
+		audioLoader.loadSound(assetName);
 
 	}
 
 	public void detachAudioSource(int eID) {
 		stopEntitySound(eID);
 		String assetName = entityController.getAudioSourceComponent(eID).getAudioSourceFileName();
-		resourceLoader.unloadSound(assetName);
+		audioLoader.unloadSound(assetName);
 		entityController.removeAudioSourceComponent(eID);
-	}
-
-	public void cleanUp() {
-		// Delete all sound buffers
-
-		// Close OpenAL
-		ALC10.alcMakeContextCurrent(alContext);
-		ALC10.alcDestroyContext(alContext);
-		ALC10.alcCloseDevice(alDevice);
 	}
 
 }

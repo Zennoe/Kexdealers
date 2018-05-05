@@ -3,6 +3,7 @@ package example;
 import java.util.ArrayList;
 
 import org.joml.Vector3f;
+import org.joml.Vector3fc;
 
 import ecs.PointLightComponent;
 import ecs.Renderable;
@@ -49,15 +50,15 @@ public class Encoder {
 		output.append(transformable.getEID());
 		output.append("}{");
 		
-		Vector3f position = transformable.getPosition();
+		Vector3fc position = transformable.getPosition();
 		float rotX = transformable.getRotX();
 		float rotY = transformable.getRotY();
 		float rotZ = transformable.getRotZ();
 		float scale = transformable.getScale();
 		
-		output.append(position.x +"/");
-		output.append(position.y +"/");
-		output.append(position.z +"/");
+		output.append(position.x() +"/");
+		output.append(position.y() +"/");
+		output.append(position.z() +"/");
 		
 		output.append(rotX +"/");
 		output.append(rotY +"/");
@@ -117,10 +118,11 @@ public class Encoder {
 		output.append(specular.y +"/");
 		output.append(specular.z +"/");
 		
-		Vector3f attenuation = pointLightComponent.getAttenuation();
-		output.append(attenuation.x +"/");
-		output.append(attenuation.y +"/");
-		output.append(attenuation.z +"");
+		float radius = pointLightComponent.getRadius();
+		output.append(radius +"/");
+		
+		float cutoff = pointLightComponent.getCutoff();
+		output.append(cutoff +"");
 		
 		output.append("}");
 		

@@ -1,20 +1,20 @@
 package physics;
 
 import org.joml.Vector3f;
+
+import bus.MessageBus;
 import ecs.EntityController;
 import ecs.PhysicsComponent;
 import ecs.Transformable;
+import example.AbstractSystem;
 import terrain.Terrain;
 
-public class PhysicsSystem {
+public class PhysicsSystem extends AbstractSystem {
 
-	private EntityController entityController;
+	private static final Vector3f G_FORCE = new Vector3f(0, -98.1f, 0);
 
-	// TODO move me to somewhere else
-	private final Vector3f gravitationalAccel = new Vector3f(0, -98.1f, 0);
-
-	public PhysicsSystem(EntityController entityController) {
-		this.entityController = entityController;
+	public PhysicsSystem(MessageBus messageBus, EntityController entityController) {
+		super(messageBus, entityController);
 	}
 
 	public void run(double timeDelta, Terrain terrain) {
@@ -39,7 +39,7 @@ public class PhysicsSystem {
 			if (currentComp.isAffectedByPhysics()) {
 				// update gravity
 				if (currentComp.isAffectedByGravity()) {
-					currentComp.applyForce("gravity", (new Vector3f(gravitationalAccel)).mul(currentComp.getWeight()));
+					currentComp.applyForce("gravity", (new Vector3f(G_FORCE)).mul(currentComp.getWeight()));
 				} else {
 					currentComp.removeForce("gravity");
 				}
@@ -69,5 +69,13 @@ public class PhysicsSystem {
 				currTrans.increasePosition(newVeloc.mul((float) timeDelta));
 			}
 		}
+	}
+	
+	public void update() {
+		
+	}
+	
+	public void cleanUp() {
+		
 	}
 }

@@ -6,15 +6,15 @@ import java.util.HashSet;
 
 public class EntityController {
 
-	private HashMap<Integer, ArrayList<String>> entities = new HashMap<>();
+	private final HashMap<Integer, ArrayList<String>> entities = new HashMap<>();
 
-	private HashMap<Integer, Transformable> transformable = new HashMap<>();
-	private HashMap<Integer, Renderable> renderable = new HashMap<>();
-	private HashMap<Integer, PointLightComponent> pointLightComponent = new HashMap<>();
-	private HashMap<Integer, AudioSourceComponent> audioSourceComponent = new HashMap<>();
-	private HashMap<Integer, FPPCameraComponent> fppCameraComponent = new HashMap<>();
-	private HashMap<Integer, PlayerControllerComponent> playerControllerComponent = new HashMap<>();
-	private HashMap<Integer, PhysicsComponent> physicsComponent = new HashMap<>();
+	private final HashMap<Integer, Transformable> transformable = new HashMap<>();
+	private final HashMap<Integer, Renderable> renderable = new HashMap<>();
+	private final HashMap<Integer, PointLightComponent> pointLightComponent = new HashMap<>();
+	private final HashMap<Integer, AudioSourceComponent> audioSourceComponent = new HashMap<>();
+	private final HashMap<Integer, FPPCameraComponent> fppCameraComponent = new HashMap<>();
+	private final HashMap<Integer, PlayerControllerComponent> playerControllerComponent = new HashMap<>();
+	private final HashMap<Integer, PhysicsComponent> physicsComponent = new HashMap<>();
 	
 	// --- eID de-/allocation ---
 	
@@ -242,6 +242,10 @@ public class EntityController {
 	
 	public boolean hasComponent(int eID, String type){
 		return entities.get(eID).contains(type);
+	}
+	
+	public ArrayList<String> getComponentsFor(int eID) {
+		return entities.get(eID);
 	}
 	
 	// --- EXCHANGE ---

@@ -5,7 +5,6 @@ import java.util.HashMap;
 import org.joml.Vector3f;
 
 import audio.AudioResource;
-import ecs.EntityController;
 import loaders.CubeMapLoader;
 import loaders.MaterialLoader;
 import loaders.ModelLoader;
@@ -43,7 +42,7 @@ public class ResourceLoader {
 	private DirectionalLight sun = new DirectionalLight();
 	
 	public ResourceLoader(){
-		// preload keys
+		// Initialize keys
 		assets3D.put("lowPolyTree", null);
 		pointerCounter3D.put("lowPolyTree", 0);
 		

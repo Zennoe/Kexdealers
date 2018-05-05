@@ -8,7 +8,7 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import ecs.FPPCameraComponent;
 import ecs.PointLightComponent;
-import example.ResourceLoader;
+import loaders.GraphicsLoader;
 import textures.MultiTexture;
 import textures.Texture;
 import wrapper.RawMesh;
@@ -24,7 +24,7 @@ public class TerrainRenderer {
 		shader.stop();
 	}
 	
-	public void render(ResourceLoader resourceLoader,
+	public void render(GraphicsLoader graphicsLoader,
 			FPPCameraComponent camera,
 			HashSet<PointLightComponent> pointLights){
 		
@@ -32,10 +32,10 @@ public class TerrainRenderer {
 		GL11.glDepthMask(true);
 		
 		shader.start();
-		shader.uploadDirectionalLight(resourceLoader.getSun());
+		shader.uploadDirectionalLight(graphicsLoader.getSun());
 		shader.uploadPointLights(pointLights);
 		
-		Terrain terrain = resourceLoader.getTerrain();
+		Terrain terrain = graphicsLoader.getTerrain();
 		
 		prepareTerrain(terrain);
 		

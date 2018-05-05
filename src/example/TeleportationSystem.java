@@ -12,16 +12,12 @@ import ecs.EntityController;
 import ecs.FPPCameraComponent;
 import ecs.Transformable;
 
-public class TeleportationSystem {
-	
-	private MessageBus messageBus = MessageBus.getInstance();
-	
-	private EntityController entityController;
+public class TeleportationSystem extends AbstractSystem {
 	
 	private HashMap<String, Teleportation> teleportations;
 
-	public TeleportationSystem(EntityController entityController) {
-		this.entityController = entityController;
+	public TeleportationSystem(MessageBus messageBus, EntityController entityController) {
+		super(messageBus, entityController);
 		
 		// some tps
 		Teleportation tp00 = new Teleportation("tp00", 
@@ -40,6 +36,16 @@ public class TeleportationSystem {
 	}
 
 	public void run() {
+		// control update rate here
+		
+		// update :)
+		update();
+		
+		// cleanUp on program exit
+		// cleanUp();
+	}
+	
+	public void update() {
 		// work message queue
 		TeleportationSysMessage message;
 		while((message = (TeleportationSysMessage) messageBus.getNextMessage(MessageListener.TELEPORTATION_SYSTEM)) != null) {
@@ -61,7 +67,11 @@ public class TeleportationSystem {
 			}
 		}
 	}
-
+	
+	public void cleanUp() {
+		
+	}
+	
 	public Set<String> getAllTeleportations() {
 		return teleportations.keySet();
 	}

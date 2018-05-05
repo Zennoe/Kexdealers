@@ -15,7 +15,7 @@ PHYSICSCOMPONENT{eID=0}{60/true}
 >c lamp
 TRANSFORMABLE{eID=1}{660/6.45/500/0/0/0/1.8}
 RENDERABLE{eID=1}{lamp}
->c param: position - ambient - diffuse - specular - float radius - float cutoff
+>c param: position - ambient - diffuse - specular - radius - cutoff
 POINTLIGHTCOMPONENT{eID=1}{660/21/500/1.5/1.0/10.9/1.5/1.0/10.9/1.5/1.0/10.9/25.5/0.01}
 PHYSICSCOMPONENT{eID=1}{300/true}
 >c trees

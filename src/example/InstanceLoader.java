@@ -10,20 +10,26 @@ import org.joml.Vector3f;
 
 import audio.AudioSystem;
 import ecs.EntityController;
+import loaders.AudioLoader;
+import loaders.GraphicsLoader;
 import render.RenderSystem;
 
 public class InstanceLoader {
 	
-	private EntityController entityController;
-	private ResourceLoader resourceLoader;
+	private final EntityController entityController;
+	
+	private final GraphicsLoader graphicsLoader;
+	private final AudioLoader audioLoader;
 	
 	private RenderSystem renderSystem;
 	private AudioSystem audioSystem;
 	
-	public InstanceLoader(EntityController entityController, ResourceLoader resourceLoader, 
+	public InstanceLoader(EntityController entityController, GraphicsLoader graphicsLoader, AudioLoader audioLoader, 
 			RenderSystem renderSystem, AudioSystem audioSystem){
 		this.entityController = entityController;
-		this.resourceLoader = resourceLoader;
+		
+		this.graphicsLoader = graphicsLoader;
+		this.audioLoader = audioLoader;
 		
 		this.renderSystem = renderSystem;
 		this.audioSystem = audioSystem;
@@ -35,14 +41,14 @@ public class InstanceLoader {
 		// Skybox
 		String skyboxData = getLineWith("SKYBOX", lines);
 		frags = getDataFragments(skyboxData);
-		resourceLoader.loadSkybox(
+		graphicsLoader.loadSkybox(
 				Float.valueOf(frags[0]),
 				frags[1]);
 		// Terrain
 		String terrainData = getLineWith("TERRAIN", lines);
 		frags = getDataFragments(terrainData);
 		String[] drgb = {frags[4], frags[5], frags[6], frags[7]};
-		resourceLoader.loadTerrain(
+		graphicsLoader.loadTerrain(
 				Integer.valueOf(frags[0]), 
 				Integer.valueOf(frags[1]), 
 				frags[2], 
@@ -55,7 +61,7 @@ public class InstanceLoader {
 		Vector3f DL_ambient = new Vector3f(Float.valueOf(frags[3]), Float.valueOf(frags[4]), Float.valueOf(frags[5]));
 		Vector3f DL_diffuse = new Vector3f(Float.valueOf(frags[6]), Float.valueOf(frags[7]), Float.valueOf(frags[8]));
 		Vector3f DL_specular = new Vector3f(Float.valueOf(frags[9]), Float.valueOf(frags[10]), Float.valueOf(frags[11]));
-		resourceLoader.loadSun(
+		graphicsLoader.loadSun(
 				directionInverse, 
 				DL_ambient, DL_diffuse, DL_specular);
 		// Entities

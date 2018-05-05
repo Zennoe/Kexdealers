@@ -8,6 +8,7 @@ import static org.lwjgl.opengl.GL11.glClearColor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Set;
 
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
@@ -21,21 +22,17 @@ import ecs.FPPCameraComponent;
 import ecs.Transformable;
 import example.AbstractSystem;
 import example.Display;
-import example.ResourceLoader;
+import loaders.GraphicsLoader;
 import skybox.SkyboxRenderer;
 import terrain.TerrainRenderer;
 
 public class RenderSystem extends AbstractSystem {
 
-	private MessageBus messageBus = MessageBus.getInstance();
+	private final GraphicsLoader graphicsLoader;
 	
-	private EntityController entityController;
-	
-	private ResourceLoader resourceLoader;
-	
-	private EntityRenderer entityRenderer;
-	private TerrainRenderer terrainRenderer;
-	private SkyboxRenderer skyboxRenderer;
+	private final EntityRenderer entityRenderer;
+	private final TerrainRenderer terrainRenderer;
+	private final SkyboxRenderer skyboxRenderer;
 	
 	private HashMap<String, HashSet<Transformable>> entitiesToRender = new HashMap<>(); // All the currently active transforms for one asset
 	
@@ -46,9 +43,6 @@ public class RenderSystem extends AbstractSystem {
 	public RenderSystem(MessageBus messageBus, EntityController entityController) {
 		super(messageBus, entityController);
 		
-		this.entityController = entityController;
-		this.resourceLoader = resourceLoader;
-		
 		// Back-face culling
 		GL11.glEnable(GL11.GL_CULL_FACE);
 		GL11.glFrontFace(GL11.GL_FRONT);
@@ -56,12 +50,24 @@ public class RenderSystem extends AbstractSystem {
 		// Automatic Gamma-correction
 		GL11.glEnable(GL30.GL_FRAMEBUFFER_SRGB);
 		
+		graphicsLoader = new GraphicsLoader();
+		
 		entityRenderer = new EntityRenderer();
 		terrainRenderer = new TerrainRenderer();
 		skyboxRenderer = new SkyboxRenderer();
 	}
 	
-	public void run(int observerEID){
+	public void run() {
+		// control update rate here
+		
+		// update :)
+		update();
+		
+		// cleanUp on program exit
+		// cleanUp();
+	}
+	
+	public void update() {
 		// work message queue
 		RenderSysMessage message;
 		while((message = (RenderSysMessage) messageBus.getNextMessage(MessageListener.RENDER_SYSTEM)) != null) {
@@ -73,11 +79,16 @@ public class RenderSystem extends AbstractSystem {
 			default: System.err.println("Render operation not implemented");
 			}
 		}
-		// ???
-		// Do other processing
 		
 		// render
-		renderScene(entityController.getFPPCameraComponent(observerEID));
+		// Assumes that there is only one FPP camera component so the first one found is used.
+		Set<FPPCameraComponent> fppCamComps = entityController.getFPPCameraComponents();
+		FPPCameraComponent fppCamComp = fppCamComps.iterator().next();
+		renderScene(fppCamComp);
+	}
+	
+	public void cleanUp() {
+		// ???
 	}
 	
 	public void materialize(int eID, String assetName){
@@ -88,7 +99,7 @@ public class RenderSystem extends AbstractSystem {
 		if(entitiesToRender.get(assetName) == null){
 			entitiesToRender.put(assetName, new HashSet<Transformable>());
 			// add +1 to pointer count for this asset
-			resourceLoader.load(assetName);
+			graphicsLoader.load(assetName);
 		}
 		entitiesToRender.get(assetName).add(entityController.getTransformable(eID));
 	}
@@ -105,14 +116,10 @@ public class RenderSystem extends AbstractSystem {
 				break;
 			}
 		}
-		resourceLoader.unload(assetName);
+		graphicsLoader.unload(assetName);
 		// Make change "official"
 		entityController.removeRenderable(eID);
 	}
-	
-	// ============================================================================
-	// =================== MASTER RENDERER ACTIVITIES =============================
-	// ============================================================================
 	
 	private void prepareForRendering(){
 		glClearColor(0.529f, 0.807f, 0.95f, 1.0f);
@@ -124,9 +131,9 @@ public class RenderSystem extends AbstractSystem {
 	private void renderScene(FPPCameraComponent camera){
 		prepareForRendering();
 		
-		skyboxRenderer.render(resourceLoader, camera);
+		skyboxRenderer.render(graphicsLoader, camera);
 		
-		terrainRenderer.render(resourceLoader, camera, entityController.getPointLightComponents());
+		terrainRenderer.render(graphicsLoader, camera, entityController.getPointLightComponents());
 		
 		// count entities rendered
 		ArrayList<Integer> ids = new ArrayList<>();
@@ -141,7 +148,7 @@ public class RenderSystem extends AbstractSystem {
 			//System.out.println("yyeah");
 		}
 		
-		entityRenderer.render(resourceLoader, camera, entitiesToRender, entityController.getPointLightComponents());
+		entityRenderer.render(graphicsLoader, camera, entitiesToRender, entityController.getPointLightComponents());
 		
 		
 		// Swap buffer to make changes visible

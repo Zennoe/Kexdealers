@@ -53,22 +53,22 @@ public class LinkStart implements Runnable{
 		
 		// Managers
 		EntityController entityController = new EntityController();
-		ResourceLoader resourceLoader = new ResourceLoader();
-		
-		// Systems
-		RenderSystem renderSystem = new RenderSystem(entityController, resourceLoader);
-		AudioSystem audioSystem = new AudioSystem(entityController, resourceLoader);
-		NetworkSystem networkSystem = new NetworkSystem();
-		TeleportationSystem teleportationSystem = new TeleportationSystem(entityController);
-		PhysicsSystem physicsSystem = new PhysicsSystem(entityController);
 		
 		// Message Bus
 		MessageBus messageBus = MessageBus.getInstance();
+
+		// Systems
+		RenderSystem renderSystem = new RenderSystem(messageBus, entityController);
+		AudioSystem audioSystem = new AudioSystem(messageBus, entityController);
+		NetworkSystem networkSystem = new NetworkSystem();
+		TeleportationSystem teleportationSystem = new TeleportationSystem(messageBus, entityController);
+		PhysicsSystem physicsSystem = new PhysicsSystem(messageBus, entityController);
+		
 		
 		// Local mode: Load a local instance
 		// Online mode: Connect to a server and request an instance from there.
 		//				Should the connection fail, fall back to local mode.
-		InstanceLoader instanceLoader = new InstanceLoader(entityController, resourceLoader, renderSystem, audioSystem);
+		InstanceLoader instanceLoader = new InstanceLoader(entityController, graphicsLoader, audioLoader, renderSystem, audioSystem);
 		if(online) {		
 			online = networkSystem.connectToServer("localhost", 2222, "kekzdealer");
 			if(!online) {
@@ -88,20 +88,6 @@ public class LinkStart implements Runnable{
 		
 		int playerID = 0; //look into file to choose the correct one :S
 		Player player = new Player(entityController);
-		
-		int iid = resourceLoader.getSound("music").getSourceID();
-		AudioSourceComponent asc = entityController.getAudioSourceComponent(8);
-		
-		asc.setSourceID(iid);
-		// update attributes
-		AL10.alSourcef(asc.getSourceID(), AL10.AL_GAIN, asc.getGain());
-		AL10.alSourcef(asc.getSourceID(), AL10.AL_PITCH, asc.getPitch());
-		AL10.alSourcei(asc.getSourceID(), AL10.AL_LOOPING, asc.isLooping() ? AL10.AL_TRUE : AL10.AL_FALSE);
-		AL10.alSourcef(asc.getSourceID(), AL10.AL_REFERENCE_DISTANCE, asc.getReferenceDistance());
-		AL10.alSourcef(asc.getSourceID(), AL10.AL_ROLLOFF_FACTOR, asc.getRolloffFactor());
-		AL10.alSourcef(asc.getSourceID(), AL10.AL_MAX_DISTANCE, asc.getMaxDistance());
-		audioSystem.playEntitySound(8);
-		System.out.printf("Audio Source is playing: %b %n", AL10.AL_PLAYING == AL10.alGetSourcei(iid, AL10.AL_SOURCE_STATE));
 		
 		entityController.getPhysicsComponent(6).applyForce("force", new Vector3f(150.0f,1.0f,12.5f));
 		entityController.getPhysicsComponent(10).applyForce("wooosh", new Vector3f(0,5,0));
@@ -159,10 +145,10 @@ public class LinkStart implements Runnable{
 			resourceLoader.getSkybox().updateRotation((float)timeDelta);
 			
 			// Audio
-			audioSystem.run(playerID);
+			audioSystem.run();
 			
 			// Render
-			renderSystem.run(playerID);
+			renderSystem.run();
 			
 			if(GLFW.glfwWindowShouldClose(Display.window)){
 				running = false;
