@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
@@ -17,11 +18,12 @@ import org.lwjgl.opengl.GL30;
 import bus.MessageBus;
 import bus.MessageListener;
 import bus.RenderSysMessage;
+import ecs.AbstractSystem;
 import ecs.EntityController;
 import ecs.FPPCameraComponent;
 import ecs.Transformable;
-import example.AbstractSystem;
 import example.Display;
+import loaders.BlueprintLoader;
 import loaders.GraphicsLoader;
 import skybox.SkyboxRenderer;
 import terrain.TerrainRenderer;
@@ -68,6 +70,8 @@ public class RenderSystem extends AbstractSystem {
 	}
 	
 	public void update() {
+		super.timeMarkStart();
+		
 		// work message queue
 		RenderSysMessage message;
 		while((message = (RenderSysMessage) messageBus.getNextMessage(MessageListener.RENDER_SYSTEM)) != null) {
@@ -80,15 +84,82 @@ public class RenderSystem extends AbstractSystem {
 			}
 		}
 		
-		// render
+		// update sky box rotation
+		graphicsLoader.getSkybox().updateRotation(super.getDeltaTime());
+		
+		// render scene
 		// Assumes that there is only one FPP camera component so the first one found is used.
 		Set<FPPCameraComponent> fppCamComps = entityController.getFPPCameraComponents();
 		FPPCameraComponent fppCamComp = fppCamComps.iterator().next();
 		renderScene(fppCamComp);
+		
+		super.timeMarkEnd();
 	}
 	
 	public void cleanUp() {
 		// ???
+	}
+	
+	public void loadBlueprint(ArrayList<String> blueprint) {
+		
+		// - Renderable
+		String[] frags = null;
+		// Skybox
+		String skyboxData = BlueprintLoader.getLineWith("SKYBOX", blueprint);
+		frags = BlueprintLoader.getDataFragments(skyboxData);
+		graphicsLoader.loadSkybox(
+				Float.valueOf(frags[0]),
+				frags[1]);
+		// Terrain
+		String terrainData = BlueprintLoader.getLineWith("TERRAIN", blueprint);
+		frags = BlueprintLoader.getDataFragments(terrainData);
+		String[] drgb = {frags[4], frags[5], frags[6], frags[7]};
+		graphicsLoader.loadTerrain(
+				Integer.valueOf(frags[0]), 
+				Integer.valueOf(frags[1]), 
+				frags[2], 
+				drgb, 
+				frags[3]);
+		// Sun
+		String sunData = BlueprintLoader.getLineWith("SUN", blueprint);
+		frags = BlueprintLoader.getDataFragments(sunData);
+		Vector3f directionInverse = new Vector3f(Float.valueOf(frags[0]), Float.valueOf(frags[1]), Float.valueOf(frags[2]));
+		Vector3f DL_ambient = new Vector3f(Float.valueOf(frags[3]), Float.valueOf(frags[4]), Float.valueOf(frags[5]));
+		Vector3f DL_diffuse = new Vector3f(Float.valueOf(frags[6]), Float.valueOf(frags[7]), Float.valueOf(frags[8]));
+		Vector3f DL_specular = new Vector3f(Float.valueOf(frags[9]), Float.valueOf(frags[10]), Float.valueOf(frags[11]));
+		graphicsLoader.loadSun(
+				directionInverse, 
+				DL_ambient, DL_diffuse, DL_specular);
+		ArrayList<String> renderableData = BlueprintLoader.getAllLinesWith("RENDERABLE", blueprint);
+		for(String dataSet : renderableData){
+			int eID = BlueprintLoader.extractEID(dataSet);
+			frags = BlueprintLoader.getDataFragments(dataSet);
+			materialize(eID, frags[0]);
+		}
+		// - PointLightComponent
+		ArrayList<String> pointLightComponentData = BlueprintLoader.getAllLinesWith("POINTLIGHTCOMPONENT", blueprint);
+		for(String dataSet : pointLightComponentData){
+			int eID = BlueprintLoader.extractEID(dataSet);
+			frags = BlueprintLoader.getDataFragments(dataSet);
+			Vector3f position = new Vector3f(Float.valueOf(frags[0]), Float.valueOf(frags[1]), Float.valueOf(frags[2]));
+			Vector3f ambient = new Vector3f(Float.valueOf(frags[3]), Float.valueOf(frags[4]), Float.valueOf(frags[5]));
+			Vector3f diffuse = new Vector3f(Float.valueOf(frags[6]), Float.valueOf(frags[7]), Float.valueOf(frags[8]));
+			Vector3f specular = new Vector3f(Float.valueOf(frags[9]), Float.valueOf(frags[10]), Float.valueOf(frags[11]));
+			entityController.addPointLightComponent(eID)
+				.setPosition(position)
+				.setAmbient(ambient)
+				.setDiffuse(diffuse)
+				.setSpecular(specular)
+				.setRadius(Float.valueOf(frags[12]))
+				.setCutoff(Float.valueOf(frags[13]));
+		}
+		// - FPPCameraComponent
+		ArrayList<String> fppCameraComponentData = BlueprintLoader.getAllLinesWith("FPPCAMERACOMPONENT", blueprint);
+		for(String dataSet : fppCameraComponentData) {
+			int eID = BlueprintLoader.extractEID(dataSet);
+			frags = BlueprintLoader.getDataFragments(dataSet);
+			entityController.addFPPCameraComponent(eID);
+		}
 	}
 	
 	public void materialize(int eID, String assetName){

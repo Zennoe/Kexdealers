@@ -4,6 +4,6 @@ public abstract class BusMessage {
 	
 	protected boolean complete = false;
 	
-	protected abstract void setComplete();
-	protected abstract boolean isComplete();
+	public abstract void setComplete();
+	public abstract boolean isComplete();
 }

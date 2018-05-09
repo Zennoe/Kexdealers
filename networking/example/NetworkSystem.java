@@ -10,11 +10,18 @@ import java.io.OutputStream;
 import java.net.ConnectException;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.HashSet;
 
+import bus.MessageBus;
+import bus.MessageListener;
+import bus.NetworkSysMessage;
+import ecs.AbstractSystem;
 import ecs.Component;
+import ecs.EntityController;
+import loaders.BlueprintLoader;
 
-public class NetworkSystem implements Runnable{
+public class NetworkSystem extends AbstractSystem implements Runnable{
 	
 	public volatile boolean running = false;
 	
@@ -27,15 +34,13 @@ public class NetworkSystem implements Runnable{
 	
 	private HashSet<Component> componentBuffer;
 	
-	public NetworkSystem() {
+	public NetworkSystem(MessageBus messageBus, EntityController entityController) {
+		super(messageBus, entityController);
+		
 		encodeDelegator = new EncodeDelegator();
 		decodeDelegator = new DecodeDelegator();
 		
 		componentBuffer = new HashSet<Component>();
-	}
-	
-	public void copyDatatoECS() {
-		
 	}
 	
 	public void run() {
@@ -57,8 +62,38 @@ public class NetworkSystem implements Runnable{
 		}
 	}
 	
+	public void update() {
+		super.timeMarkStart();
+		
+		// message queue 
+		NetworkSysMessage message;
+		while((message = (NetworkSysMessage) messageBus.getNextMessage(MessageListener.NETWORK_SYSTEM)) != null) {
+			switch(message.getOP()) {
+			case SYS_NETWORK_DISCONNECT: disconnectFromServer();
+				break;
+			case SYS_NETWORK_CONNECT: String[] address = ((String) message.getContent()).split(":");
+				boolean success = connectToServer(address[1], Integer.parseInt(address[1]), "kekzdealer");
+				if(success) {
+					message.setComplete();
+				}
+				break;
+			default: System.err.println("Network operation not implemented");
+			}
+		}
+		
+		super.timeMarkEnd();
+	}
+	
+	public void cleanUp() {
+		
+	}
+	
+	public void loadBlueprint(ArrayList<String> blueprint) {
+		// mostly useless here
+	}
+	
 	// Returns false if connection failed
-	public boolean connectToServer(String address, int port, String username) {
+	private boolean connectToServer(String address, int port, String username) {
 		try {
 			System.out.println("Trying to connect to server...");
 			socket = new Socket(address, port);
@@ -84,7 +119,7 @@ public class NetworkSystem implements Runnable{
 		return (socket != null) ? true : false;
 	}
 	
-	public void disconnectFromServer() {
+	private void disconnectFromServer() {
 		try {
 			running = false;
 			this.wait();
@@ -103,8 +138,9 @@ public class NetworkSystem implements Runnable{
 		
 	}
 	
-	public void loadInstanceFromServer(InstanceLoader instanceLoader) {
-		
+	// TODO: Fetch data from message return?
+	public ArrayList<String> loadInstanceFromServer() {
+		return BlueprintLoader.splitIntoLines("example\nexample");
 	}
 	
 }

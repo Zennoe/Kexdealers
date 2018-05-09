@@ -1,12 +1,15 @@
 package physics;
 
+import java.util.ArrayList;
+
 import org.joml.Vector3f;
 
 import bus.MessageBus;
+import ecs.AbstractSystem;
 import ecs.EntityController;
 import ecs.PhysicsComponent;
 import ecs.Transformable;
-import example.AbstractSystem;
+import loaders.BlueprintLoader;
 import terrain.Terrain;
 
 public class PhysicsSystem extends AbstractSystem {
@@ -17,7 +20,19 @@ public class PhysicsSystem extends AbstractSystem {
 		super(messageBus, entityController);
 	}
 
-	public void run(double timeDelta, Terrain terrain) {
+	public void run() {
+		// control update rate here
+
+		// update :)
+		update();
+		
+		// cleanUp on program exit
+		// cleanUp();
+	}
+	
+	public void update() {
+		super.timeMarkStart();
+		
 		// process all physics components
 		for (PhysicsComponent currentComp : entityController.getPhysicsComponents()) {
 			Transformable currTrans = entityController.getTransformable(currentComp.getEID());
@@ -62,20 +77,31 @@ public class PhysicsSystem extends AbstractSystem {
 				currentComp.setAcceleration(newAccel);
 
 				// update velocity
-				Vector3f newVeloc = (new Vector3f(currentComp.getVelocity())).add(newAccel.mul((float) timeDelta));
+				Vector3f newVeloc = (new Vector3f(currentComp.getVelocity())).add(newAccel.mul(super.getDeltaTime()));
 				currentComp.setVelocity(newVeloc);
 
 				// update position
-				currTrans.increasePosition(newVeloc.mul((float) timeDelta));
+				currTrans.increasePosition(newVeloc.mul(super.getDeltaTime()));
 			}
 		}
-	}
-	
-	public void update() {
 		
+		super.timeMarkEnd();
 	}
 	
 	public void cleanUp() {
 		
+	}
+	
+	public void loadBlueprint(ArrayList<String> blueprint) {
+		// - PhysicsComponent
+		ArrayList<String> physicsComponentData = BlueprintLoader.getAllLinesWith("PHYSICSCOMPONENT", blueprint);
+		String[] frags = null;
+		for(String dataSet : physicsComponentData) {
+			int eID = BlueprintLoader.extractEID(dataSet);
+			frags = BlueprintLoader.getDataFragments(dataSet);
+			entityController.addPhysicsComponent(eID)
+				.setWeight(Float.valueOf(frags[0]))
+				.setAffectedByGravity(Boolean.valueOf(frags[1]));
+		}
 	}
 }

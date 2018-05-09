@@ -47,8 +47,10 @@ public class MessageBus {
 		return null;
 	}
 	
-	public BusMessage messageNetworkSys(Operation op) {
-		return null;
+	public BusMessage messageNetworkSys(Operation op, Object content) {
+		BusMessage msg = new NetworkSysMessage(op, content);
+		networkSystemQueue.addFirst(msg);
+		return msg;
 	}
 	
 	public BusMessage messageTeleportationSys(Operation op, int targetEID, Vector3f destination) {

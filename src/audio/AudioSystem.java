@@ -2,6 +2,7 @@ package audio;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+import java.util.ArrayList;
 import java.util.Set;
 
 import org.joml.Matrix4f;
@@ -17,12 +18,13 @@ import org.lwjgl.openal.EXTThreadLocalContext;
 import org.lwjgl.system.MemoryUtil;
 
 import bus.MessageBus;
+import ecs.AbstractSystem;
 import ecs.AudioSourceComponent;
 import ecs.EntityController;
 import ecs.FPPCameraComponent;
 import ecs.PhysicsComponent;
-import example.AbstractSystem;
 import loaders.AudioLoader;
+import loaders.BlueprintLoader;
 
 public class AudioSystem extends AbstractSystem {
 	
@@ -75,6 +77,8 @@ public class AudioSystem extends AbstractSystem {
 	}
 	
 	public void update() {
+		super.timeMarkStart();
+		
 		// Assumes that there is only one FPP camera component so the first one found is used.
 		Set<FPPCameraComponent> fppCamComps = entityController.getFPPCameraComponents();
 		FPPCameraComponent camera = fppCamComps.iterator().next();
@@ -115,6 +119,7 @@ public class AudioSystem extends AbstractSystem {
 			}
 		}
 		
+		super.timeMarkEnd();
 	}
 	
 	public void cleanUp() {
@@ -124,6 +129,24 @@ public class AudioSystem extends AbstractSystem {
 		ALC10.alcMakeContextCurrent(alContext);
 		ALC10.alcDestroyContext(alContext);
 		ALC10.alcCloseDevice(alDevice);
+	}
+	
+	public void loadBlueprint(ArrayList<String> blueprint) {
+		// - AudioSourceComponent
+		ArrayList<String> audioSourceComponentData = 
+				BlueprintLoader.getAllLinesWith("AUDIOSOURCECOMPONENT", blueprint);
+		String[] frags = null;
+		for(String dataSet : audioSourceComponentData) {
+			int eID = BlueprintLoader.extractEID(dataSet);
+			frags = BlueprintLoader.getDataFragments(dataSet);
+			attachAudioSource(eID, frags[0], 
+					Float.valueOf(frags[1]), 
+					Float.valueOf(frags[2]), 
+					Float.valueOf(frags[3]), 
+					Float.valueOf(frags[4]), 
+					Float.valueOf(frags[5]), 
+					Boolean.valueOf(frags[6]));
+		}
 	}
 	
 	public void playEntitySound(int eID) {

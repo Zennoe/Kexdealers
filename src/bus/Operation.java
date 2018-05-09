@@ -9,6 +9,8 @@ public enum Operation {
 	// AudioSystem
 	SYS_AUDIO_MUTE,
 	// NetworkSystem
+	SYS_NETWORK_CONNECT,
+	SYS_NETWORK_DISCONNECT,
 	// TeleportationSystem
 	SYS_TELEPORTATION_TARGETCOORDS
 }

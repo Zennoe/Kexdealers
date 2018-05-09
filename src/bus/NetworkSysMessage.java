@@ -1,11 +1,13 @@
 package bus;
 
-public class RenderSysMessage extends BusMessage {
-	
+public class NetworkSysMessage extends BusMessage {
+
 	private final Operation op;
+	private final Object content;
 	
-	public RenderSysMessage(Operation op) {
+	public NetworkSysMessage(Operation op, Object content) {
 		this.op = op;
+		this.content = content;
 	}
 	
 	@Override
@@ -17,8 +19,13 @@ public class RenderSysMessage extends BusMessage {
 	public boolean isComplete() {
 		return super.complete;
 	}
-	
+
 	public Operation getOP() {
 		return op;
 	}
+	
+	public Object getContent() {
+		return content;
+	}
+
 }

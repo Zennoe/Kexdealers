@@ -15,12 +15,12 @@ public class TeleportationSysMessage extends BusMessage {
 	}
 	
 	@Override
-	protected void setComplete() {
+	public void setComplete() {
 		super.complete = true;
 	}
 	
 	@Override
-	protected boolean isComplete() {
+	public boolean isComplete() {
 		return super.complete;
 	}
 

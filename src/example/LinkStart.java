@@ -2,16 +2,22 @@ package example;
 
 import static org.lwjgl.glfw.GLFW.glfwGetTime;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.openal.AL10;
 
 import audio.AudioSystem;
 import bus.MessageBus;
+import bus.NetworkSysMessage;
 import bus.Operation;
+import ecs.AbstractSystem;
 import ecs.AudioSourceComponent;
 import ecs.EntityController;
 import ecs.PhysicsComponent;
+import loaders.BlueprintLoader;
 import physics.PhysicsSystem;
 import render.RenderSystem;
 
@@ -27,10 +33,13 @@ public class LinkStart implements Runnable{
 	// online == false -> run in local mode
 	private boolean online = false;
 	
-	private static int targetFPS = 120;
+	private static int targetFPS = 60;
 	public static double timeDelta = 1 / targetFPS;
 	
 	private long tickCounter = 0;
+	
+	// list of all systems
+	private final HashMap<String, AbstractSystem> systems = new HashMap<>();
 	
 	public static void main(String[] args){
 		LinkStart link = new LinkStart();
@@ -58,39 +67,105 @@ public class LinkStart implements Runnable{
 		MessageBus messageBus = MessageBus.getInstance();
 
 		// Systems
-		RenderSystem renderSystem = new RenderSystem(messageBus, entityController);
-		AudioSystem audioSystem = new AudioSystem(messageBus, entityController);
-		NetworkSystem networkSystem = new NetworkSystem();
-		TeleportationSystem teleportationSystem = new TeleportationSystem(messageBus, entityController);
-		PhysicsSystem physicsSystem = new PhysicsSystem(messageBus, entityController);
-		
+		systems.put("RenderSystem", new RenderSystem(messageBus, entityController));
+		systems.put("AudioSystem", new AudioSystem(messageBus, entityController));
+		systems.put("TeleportationSystem", new TeleportationSystem(messageBus, entityController));
+		systems.put("PhysicsSystem", new PhysicsSystem(messageBus, entityController));
+		systems.put("NetworkSystem", new NetworkSystem(messageBus, entityController));
 		
 		// Local mode: Load a local instance
 		// Online mode: Connect to a server and request an instance from there.
 		//				Should the connection fail, fall back to local mode.
-		InstanceLoader instanceLoader = new InstanceLoader(entityController, graphicsLoader, audioLoader, renderSystem, audioSystem);
 		if(online) {		
-			online = networkSystem.connectToServer("localhost", 2222, "kekzdealer");
+			NetworkSysMessage message = 
+					(NetworkSysMessage) messageBus.messageNetworkSys(
+							Operation.SYS_NETWORK_CONNECT, new String("localhost:2222"));
+			float connectTimeoutBegin = (float) GLFW.glfwGetTime();
+			float connectTimeoutRemaining = 3000; // milliseconds
+			while((!message.isComplete()) || (connectTimeoutRemaining > 0)) {
+				if(message.isComplete()) {
+					connectTimeoutRemaining = 0;
+					online = true;
+					break;
+				}
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException x) {
+					x.printStackTrace();
+					System.err.println("Got interrupted while waiting for NetworkSystem to connect to server");
+				}
+				connectTimeoutRemaining -= (float) (GLFW.glfwGetTime() - connectTimeoutBegin);
+				connectTimeoutBegin = (float) GLFW.glfwGetTime();
+			}
 			if(!online) {
 				System.out.println("Connection to server failed. Falling back to offline-mode");
 			}else {
 				// Run NetworkSystem on a new thread so reading data from server can happen asynchronously
 				Thread netSysThread = new Thread(networkSystem, "network_system");
 				netSysThread.start();
-				networkSystem.loadInstanceFromServer(instanceLoader);
-				// THIS IS ONLY FOR TESTING SO THERE IS SOME DATA UNTIL ABOVE METHOD IS DONE
-				instanceLoader.loadInstanceFromLocal("./res/floatingTestingIsland.txt");
+				ArrayList<String> blueprint = systems.get("NetworkSystem").loadInstanceFromServer(); // hmm
+				// Entities
+				String entityIDs = BlueprintLoader.getLineWith("ENTITIES", blueprint);
+				for(String frag : BlueprintLoader.getDataFragments(entityIDs)){
+					entityController.directAllocEID(Integer.valueOf(frag));
+				} 
+				// - Transformable
+				ArrayList<String> transformableData = BlueprintLoader.getAllLinesWith("TRANSFORMABLE", blueprint);
+				String[] frags = null;
+				for(String dataSet : transformableData){
+					int eID = BlueprintLoader.extractEID(dataSet);
+					frags = BlueprintLoader.getDataFragments(dataSet);
+					Vector3f position = new Vector3f(Float.valueOf(frags[0]), Float.valueOf(frags[1]), Float.valueOf(frags[2]));
+					float rotX = Float.valueOf(frags[3]);
+					float rotY = Float.valueOf(frags[4]);
+					float rotZ = Float.valueOf(frags[5]);
+					float scale = Float.valueOf(frags[6]);
+					entityController.getTransformable(eID)
+						.setPosition(position)
+						.setRotX(rotX)
+						.setRotY(rotY)
+						.setRotZ(rotZ)
+						.setScale(scale);
+				}
+				// Components are loaded by their system
+				for(AbstractSystem system : systems.values()) {
+					system.loadBlueprint(blueprint);
+				}
 			}
 		}
 		if(!online) {
-			instanceLoader.loadInstanceFromLocal("./res/floatingTestingIsland.txt");
+			ArrayList<String> blueprint = BlueprintLoader.loadFromFile("./res/floatingTestingIsland.txt");
+			// Entities
+			String entityIDs = BlueprintLoader.getLineWith("ENTITIES", blueprint);
+			for(String frag : BlueprintLoader.getDataFragments(entityIDs)){
+				entityController.directAllocEID(Integer.valueOf(frag));
+			} 
+			// - Transformable
+			ArrayList<String> transformableData = BlueprintLoader.getAllLinesWith("TRANSFORMABLE", blueprint);
+			String[] frags = null;
+			for(String dataSet : transformableData){
+				int eID = BlueprintLoader.extractEID(dataSet);
+				frags = BlueprintLoader.getDataFragments(dataSet);
+				Vector3f position = new Vector3f(Float.valueOf(frags[0]), Float.valueOf(frags[1]), Float.valueOf(frags[2]));
+				float rotX = Float.valueOf(frags[3]);
+				float rotY = Float.valueOf(frags[4]);
+				float rotZ = Float.valueOf(frags[5]);
+				float scale = Float.valueOf(frags[6]);
+				entityController.getTransformable(eID)
+					.setPosition(position)
+					.setRotX(rotX)
+					.setRotY(rotY)
+					.setRotZ(rotZ)
+					.setScale(scale);
+			}
+			// Components are loaded by their system
+			for(AbstractSystem system : systems.values()) {
+				system.loadBlueprint(blueprint);
+			}
 		}
 		
 		int playerID = 0; //look into file to choose the correct one :S
 		Player player = new Player(entityController);
-		
-		entityController.getPhysicsComponent(6).applyForce("force", new Vector3f(150.0f,1.0f,12.5f));
-		entityController.getPhysicsComponent(10).applyForce("wooosh", new Vector3f(0,5,0));
 		
 		// < The Loop >
 		double frameBegin;
@@ -104,51 +179,22 @@ public class LinkStart implements Runnable{
 				//networkSystem.sendPlayerData(playerID);
 			}
 			
-			if(Display.pressedKeys[GLFW.GLFW_KEY_O]){
-				messageBus.messageTeleportationSys(Operation.SYS_TELEPORTATION_TARGETCOORDS, playerID, new Vector3f(450.0f, 25.0f, 350.0f));
-			}
-			
 			player.update(playerID, (float)timeDelta, resourceLoader.getTerrain());
 			// Teleport
-			teleportationSystem.run();
+			systems.get("TeleportationSystem").run();
 			// Gravity
 			//gravity(entityController, resourceLoader);
 			// Physics
-			physicsSystem.run(timeDelta, resourceLoader.getTerrain());
-			if (Display.pressedKeys[GLFW.GLFW_KEY_N]) {
-				entityController.getPhysicsComponent(6).increaseForce("force", new Vector3f(-50.0f * (float) timeDelta,0 ,0));
-			}
-			if (Display.pressedKeys[GLFW.GLFW_KEY_M]) {
-				entityController.getPhysicsComponent(6).increaseForce("force", new Vector3f(50.0f * (float) timeDelta,0 ,0));
-			}
-			if (Display.pressedKeys[GLFW.GLFW_KEY_B]) {
-				entityController.getPhysicsComponent(6).setForce("force", new Vector3f(0,0,0));
-			}
+			systems.get("PhysicsSystem").run(timeDelta, resourceLoader.getTerrain());
 			
-			if(Display.pressedKeys[GLFW.GLFW_KEY_0]) {
-				Vector3f attrPos = new Vector3f(400.0f, 100.0f, 400.0f);
-				for(PhysicsComponent pc : entityController.getPhysicsComponents()) {
-					Vector3f attrForce = new Vector3f(); 
-					entityController.getTransformable(pc.getEID()).getPosition().sub(attrPos, attrForce).mul(-40.0f);
-					pc.applyForce("attractor", attrForce);
-				}
-				
-			}
-			
-			if(Display.pressedKeys[GLFW.GLFW_KEY_L]) {
-				messageBus.messageRenderSys(bus.Operation.SYS_RENDER_WIREFRAME_ON);
-			} else if(Display.pressedKeys[GLFW.GLFW_KEY_N]) {
-				messageBus.messageRenderSys(bus.Operation.SYS_RENDER_WIREFRAME_OFF);
-			}
-			
-			// Sky box
-			resourceLoader.getSkybox().updateRotation((float)timeDelta);
+			// Input
+			systems.get("InputSystem").run();
 			
 			// Audio
-			audioSystem.run();
+			systems.get("AudioSystem").run();
 			
 			// Render
-			renderSystem.run();
+			systems.get("RenderSystem").run();
 			
 			if(GLFW.glfwWindowShouldClose(Display.window)){
 				running = false;
@@ -159,15 +205,12 @@ public class LinkStart implements Runnable{
 			if (tickCounter % (targetFPS*2) == 0) {
 				System.out.println((Math.floor(1000 / timeDelta)) / 1000 + " FPS");
 			}
-			
 			tickCounter++;
 		}
 		
-		audioSystem.cleanUp();
-		
 		display.destroy();
 		if(online) {
-			networkSystem.disconnectFromServer();
+			messageBus.messageNetworkSys(bus.Operation.SYS_NETWORK_DISCONNECT, null);
 		}
 	}
 	

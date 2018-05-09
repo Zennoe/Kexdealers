@@ -1,5 +1,6 @@
 package example;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -8,6 +9,7 @@ import org.joml.Vector3f;
 import bus.MessageBus;
 import bus.MessageListener;
 import bus.TeleportationSysMessage;
+import ecs.AbstractSystem;
 import ecs.EntityController;
 import ecs.FPPCameraComponent;
 import ecs.Transformable;
@@ -41,11 +43,12 @@ public class TeleportationSystem extends AbstractSystem {
 		// update :)
 		update();
 		
-		// cleanUp on program exit
-		// cleanUp();
+		//cleanUp();
 	}
 	
-	public void update() {
+	protected void update() {
+		super.timeMarkStart();
+		
 		// work message queue
 		TeleportationSysMessage message;
 		while((message = (TeleportationSysMessage) messageBus.getNextMessage(MessageListener.TELEPORTATION_SYSTEM)) != null) {
@@ -66,9 +69,15 @@ public class TeleportationSystem extends AbstractSystem {
 				}
 			}
 		}
+		
+		super.timeMarkEnd();
 	}
 	
-	public void cleanUp() {
+	protected void cleanUp() {
+		
+	}
+	
+	public void loadBlueprint(ArrayList<String> blueprint) {
 		
 	}
 	
