@@ -10,6 +10,7 @@ import java.nio.IntBuffer;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GLUtil;
 
 public class Display {
 
@@ -68,6 +69,7 @@ public class Display {
 		glfwShowWindow(window);
 		// Bad stuff happening without this
 		GL.createCapabilities();
+		GLUtil.setupDebugMessageCallback(System.err);
 		// Define viewport
 		IntBuffer w = BufferUtils.createIntBuffer(1);
 		IntBuffer h = BufferUtils.createIntBuffer(1);

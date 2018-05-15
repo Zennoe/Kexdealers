@@ -154,5 +154,17 @@ public class Transformable extends Component{
 		return dirVec;
 	}
 	
+	public Vector3f modelToWorld(Vector3fc modelCoord) {
+		Vector3f retVec = new Vector3f(getPosition());
+		retVec.add(modelCoord);
+		
+		return retVec;
+	}
 	
+	public Vector3f worldToModel(Vector3fc worldCoord) {
+		Vector3f retVec = new Vector3f(worldCoord);
+		retVec.sub(getPosition());
+		
+		return retVec;
+	}
 }

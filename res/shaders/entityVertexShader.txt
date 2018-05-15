@@ -19,7 +19,7 @@ void main(){
 	
 	pass_texCoords = texCoord;
 	
-	surfaceNormal = (modelMatrix * vec4(normal, 0.0)).xyz;
+	surfaceNormal = (viewMatrix * modelMatrix * vec4(normal, 0.0)).xyz;
 	
 	fragPos = worldPosition.xyz;
 }
