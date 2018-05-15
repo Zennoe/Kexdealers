@@ -3,6 +3,7 @@ package bus;
 import java.util.LinkedList;
 
 import org.joml.Vector3f;
+import org.joml.Vector3fc;
 
 public class MessageBus {
 	
@@ -39,6 +40,12 @@ public class MessageBus {
 	
 	public BusMessage messageRenderSys(Operation op) {
 		BusMessage msg = new RenderSysMessage(op);
+		renderSystemQueue.addFirst(msg);
+		return msg;
+	}
+	
+	public BusMessage messageRenderSys(Operation op, Vector3fc lineBegin, Vector3fc lineEnd, Vector3fc lineColour, double lifeTime) {
+		BusMessage msg = new RenderSysMessage(op, lineBegin, lineEnd, lineColour, lifeTime);
 		renderSystemQueue.addFirst(msg);
 		return msg;
 	}
