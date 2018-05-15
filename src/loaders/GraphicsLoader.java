@@ -38,16 +38,6 @@ public class GraphicsLoader {
 	private DirectionalLight sun = new DirectionalLight();
 
 	public GraphicsLoader() {
-		// preload keys
-		assets3D.put("lowPolyTree", null);
-		pointerCounter3D.put("lowPolyTree", 0);
-		
-		assets3D.put("player", null);
-		pointerCounter3D.put("player", 0);
-		
-		assets3D.put("lamp", null);
-		pointerCounter3D.put("lamp", 0);
-		
 		// create tools
 		materialLoader = new MaterialLoader();
 		cubeMapLoader = new CubeMapLoader();
@@ -61,8 +51,7 @@ public class GraphicsLoader {
 	}
 	
 	public void load(String assetName){
-		int x = pointerCounter3D.get(assetName);
-		if(x == 0){
+		if(!pointerCounter3D.containsKey(assetName) || pointerCounter3D.get(assetName) == 0){
 			// load fresh from HDD
 			ModelData modelData = objLoader.loadOBJ(assetName);
 			RawMesh rawMesh = modelLoader.loadToVAO(
@@ -74,11 +63,15 @@ public class GraphicsLoader {
 			Material material = materialLoader.loadMaterial(assetName, 1.0f);
 			AssetData newAsset = new AssetData(rawMesh, material);
 			assets3D.put(assetName, newAsset);
-			pointerCounter3D.put(assetName, x++);
+			pointerCounter3D.put(assetName, 1);
 		}
 	}
 	
 	public void unload(String assetName){
+		if (!pointerCounter3D.containsKey(assetName)) {
+			return;
+		}
+		
 		int x = pointerCounter3D.get(assetName);
 		if(x == 1){
 			pointerCounter3D.put(assetName, x--);
