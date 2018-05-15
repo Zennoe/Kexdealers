@@ -105,9 +105,9 @@ public class AudioSystem extends AbstractSystem {
 		for (AudioSourceComponent comp : entityController.getAudioSourceComponents()) {
 			if (AL10.alGetSourcei(comp.getSourceID(), AL10.AL_SOURCE_STATE) == AL10.AL_PLAYING) {
 				Vector3fc pos = entityController.getTransformable(comp.getEID()).getPosition();
-				Vector3f dir = entityController.getTransformable(comp.getEID()).getDirectionVector();
+				Vector3fc dir = entityController.getTransformable(comp.getEID()).getDirectionVector();
 				AL10.alSource3f(comp.getSourceID(), AL10.AL_POSITION, pos.x(), pos.y(), pos.z());
-				AL10.alSource3f(comp.getSourceID(), AL10.AL_DIRECTION, dir.x, dir.y, dir.z);
+				AL10.alSource3f(comp.getSourceID(), AL10.AL_DIRECTION, dir.x(), dir.y(), dir.z());
 				// set velocity if available
 				PhysicsComponent physComp = entityController.getPhysicsComponent(comp.getEID());
 				if (physComp != null && physComp.isAffectedByPhysics()) {

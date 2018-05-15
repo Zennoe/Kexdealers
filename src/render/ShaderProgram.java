@@ -6,10 +6,15 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import org.joml.Matrix3f;
+import org.joml.Matrix3fc;
 import org.joml.Matrix4f;
+import org.joml.Matrix4fc;
 import org.joml.Vector2f;
+import org.joml.Vector2fc;
 import org.joml.Vector3f;
+import org.joml.Vector3fc;
 import org.joml.Vector4f;
+import org.joml.Vector4fc;
 import org.lwjgl.opengl.GL20;
 
 public  abstract class ShaderProgram{
@@ -103,24 +108,24 @@ public  abstract class ShaderProgram{
 		GL20.glUniform1f(location, value);
 	}
 	
-	protected void loadVector2f(int location, Vector2f vector){
-		GL20.glUniform2f(location, vector.x, vector.y);
+	protected void loadVector2f(int location, Vector2fc vector){
+		GL20.glUniform2f(location, vector.x(), vector.y());
 	}
 	
-	protected void loadVector3f(int location, Vector3f vector){
-		GL20.glUniform3f(location, vector.x, vector.y, vector.z);
+	protected void loadVector3f(int location, Vector3fc vector){
+		GL20.glUniform3f(location, vector.x(), vector.y(), vector.z());
 	}
 	
-	protected void loadVector4f(int location, Vector4f vector){
-		GL20.glUniform4f(location, vector.x, vector.y, vector.z, vector.w);
+	protected void loadVector4f(int location, Vector4fc vector){
+		GL20.glUniform4f(location, vector.x(), vector.y(), vector.z(), vector.w());
 	}
 	
-	protected void loadMatrix3f(int location, Matrix3f matrix){
+	protected void loadMatrix3f(int location, Matrix3fc matrix){
 		matrixBuffer3f = matrix.get(matrixBuffer3f);
 		GL20.glUniformMatrix3fv(location, false, matrixBuffer3f);
 	}
 	
-	protected void loadMatrix4f(int location, Matrix4f matrix){
+	protected void loadMatrix4f(int location, Matrix4fc matrix){
 		matrixBuffer4f = matrix.get(matrixBuffer4f);
 		GL20.glUniformMatrix4fv(location, false, matrixBuffer4f);
 	}

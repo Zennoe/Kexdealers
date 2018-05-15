@@ -12,7 +12,7 @@ public class PointLightComponentDecoder implements DecoderCommand{
 	
 	@Override
 	public Component decode(DataInputStream stream) throws IOException {
-		PointLightComponent comp = new PointLightComponent(0, null, null, null, null, null);
+		PointLightComponent comp = new PointLightComponent(0);
 		// read position x y z as float
 		Vector3f position = new Vector3f(
 				stream.readFloat(),

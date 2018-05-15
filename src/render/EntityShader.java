@@ -3,7 +3,7 @@ package render;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import org.joml.Matrix4f;
+import org.joml.Matrix4fc;
 import org.joml.Vector3f;
 
 import ecs.PointLightComponent;
@@ -73,7 +73,7 @@ public class EntityShader extends ShaderProgram{
 		}
 	}
 	
-	public void uploadMVP(Matrix4f modelMatrix, Matrix4f viewMatrix, Matrix4f projectionMatrix){
+	public void uploadMVP(Matrix4fc modelMatrix, Matrix4fc viewMatrix, Matrix4fc projectionMatrix){
 		super.loadMatrix4f(location_modelMatrix, modelMatrix);
 		super.loadMatrix4f(location_viewMatrix, viewMatrix);
 		super.loadMatrix4f(location_projectionMatrix, projectionMatrix);
