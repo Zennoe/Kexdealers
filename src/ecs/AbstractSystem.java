@@ -12,8 +12,8 @@ public abstract class AbstractSystem {
 	protected final EntityController entityController;
 	
 	protected int tickRate = 60;
-	private float tickTime = 1000 / tickRate;
-	private float tickBegin;
+	private double tickTime = 1.0f / tickRate;
+	private double tickBegin;
 	
 	protected AbstractSystem(MessageBus messageBus, EntityController entityController) {
 		this.messageBus = messageBus;
@@ -42,15 +42,15 @@ public abstract class AbstractSystem {
 	
 	// MUST be called at the beginning of update()
 	protected void timeMarkStart() {
-		tickBegin = (float) GLFW.glfwGetTime();
+		tickBegin = GLFW.glfwGetTime();
 	}
 	
 	// MUST be called at the end of update()
 	protected void timeMarkEnd() {
-		tickTime = (float) (GLFW.glfwGetTime() - tickBegin);
+		tickTime = (GLFW.glfwGetTime() - tickBegin);
 	}
 	
-	protected float getDeltaTime() {
-		return tickTime;
+	protected double getDeltaTime() {
+		return Math.min(tickTime, 1.0f / tickRate);
 	}
 }
