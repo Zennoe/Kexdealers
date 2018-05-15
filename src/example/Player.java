@@ -8,7 +8,6 @@ import ecs.EntityController;
 import ecs.FPPCameraComponent;
 import ecs.PhysicsComponent;
 import ecs.Transformable;
-import terrain.Terrain;
 
 public class Player {
 	
@@ -39,7 +38,7 @@ public class Player {
 		this.entityController = entityController;
 	}
 	
-	public void update(int eID, float delta, Terrain terrain){
+	public void update(int eID, double delta){
 		Transformable transformable = entityController.getTransformable(eID);
 		PhysicsComponent physics = entityController.getPhysicsComponent(eID);
 		

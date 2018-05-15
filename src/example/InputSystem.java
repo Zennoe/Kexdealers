@@ -51,6 +51,12 @@ public class InputSystem extends AbstractSystem {
 			messageBus.messageRenderSys(Operation.SYS_RENDER_WIREFRAME_OFF);
 		}
 		
+		if (Display.pressedKeys[GLFW.GLFW_KEY_R]) {
+			messageBus.messageRenderSys(Operation.SYS_RENDER_DEBUGLINES_ADDNEWLINE, 
+					entityController.getTransformable(0).getPosition(), entityController.getTransformable(10).getPosition(),
+					new Vector3f(0,1,0), 0);
+		}
+		
 		super.timeMarkEnd();
 	}
 

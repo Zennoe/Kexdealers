@@ -27,6 +27,7 @@ import loaders.BlueprintLoader;
 import loaders.GraphicsLoader;
 import skybox.SkyboxRenderer;
 import terrain.TerrainRenderer;
+import ui.LineRenderer;
 
 public class RenderSystem extends AbstractSystem {
 
@@ -35,8 +36,12 @@ public class RenderSystem extends AbstractSystem {
 	private final EntityRenderer entityRenderer;
 	private final TerrainRenderer terrainRenderer;
 	private final SkyboxRenderer skyboxRenderer;
+	private final LineRenderer lineRenderer;
 	
 	private HashMap<String, HashSet<Transformable>> entitiesToRender = new HashMap<>(); // All the currently active transforms for one asset
+	
+	// state tracking
+	private boolean drawDebugLines = false;
 	
 	/*
 	 * TODO: Make separate ResourceLoaders for separate types of resources. 
@@ -47,7 +52,6 @@ public class RenderSystem extends AbstractSystem {
 		
 		// Back-face culling
 		GL11.glEnable(GL11.GL_CULL_FACE);
-		GL11.glFrontFace(GL11.GL_FRONT);
 		GL11.glCullFace(GL11.GL_BACK);
 		// Automatic Gamma-correction
 		GL11.glEnable(GL30.GL_FRAMEBUFFER_SRGB);
@@ -57,6 +61,7 @@ public class RenderSystem extends AbstractSystem {
 		entityRenderer = new EntityRenderer();
 		terrainRenderer = new TerrainRenderer();
 		skyboxRenderer = new SkyboxRenderer();
+		lineRenderer = new LineRenderer();
 	}
 	
 	public void run() {
@@ -71,7 +76,6 @@ public class RenderSystem extends AbstractSystem {
 	
 	public void update() {
 		super.timeMarkStart();
-		
 		// work message queue
 		RenderSysMessage message;
 		while((message = (RenderSysMessage) messageBus.getNextMessage(MessageListener.RENDER_SYSTEM)) != null) {
@@ -80,12 +84,19 @@ public class RenderSystem extends AbstractSystem {
 				break;
 			case SYS_RENDER_WIREFRAME_OFF: GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
 				break;
+			case SYS_RENDER_DEBUGLINES_ON: drawDebugLines = true;
+				break;
+			case SYS_RENDER_DEBUGLINES_OFF: drawDebugLines = false;
+				break;
+			case SYS_RENDER_DEBUGLINES_ADDNEWLINE:
+				lineRenderer.addLine(message.getPosBegin(), message.getPosEnd(), message.getColour(), message.getTime());
+				break;
 			default: System.err.println("Render operation not implemented");
 			}
 		}
 		
 		// update sky box rotation
-		graphicsLoader.getSkybox().updateRotation(super.getDeltaTime());
+		graphicsLoader.getSkybox().updateRotation((float)super.getDeltaTime());
 		
 		// render scene
 		// Assumes that there is only one FPP camera component so the first one found is used.
@@ -193,10 +204,10 @@ public class RenderSystem extends AbstractSystem {
 	}
 	
 	private void prepareForRendering(){
-		glClearColor(0.529f, 0.807f, 0.95f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glDepthMask(true);
+		glClearColor(0.529f, 0.807f, 0.95f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 	
 	private void renderScene(FPPCameraComponent camera){
@@ -206,21 +217,11 @@ public class RenderSystem extends AbstractSystem {
 		
 		terrainRenderer.render(graphicsLoader, camera, entityController.getPointLightComponents());
 		
-		// count entities rendered
-		ArrayList<Integer> ids = new ArrayList<>();
-		for(HashSet<Transformable> mats : entitiesToRender.values()) {
-			for(Transformable comp : mats) {
-				if(!ids.contains(comp.getEID())) {
-					ids.add(comp.getEID());
-				}
-			}
-		}
-		if(ids.size() > 8) {
-			//System.out.println("yyeah");
-		}
-		
 		entityRenderer.render(graphicsLoader, camera, entitiesToRender, entityController.getPointLightComponents());
 		
+		if (drawDebugLines) {
+			lineRenderer.render(camera, getDeltaTime());
+		}
 		
 		// Swap buffer to make changes visible
 		GLFW.glfwSwapBuffers(Display.window);

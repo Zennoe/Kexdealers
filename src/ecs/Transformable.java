@@ -1,6 +1,7 @@
 package ecs;
 
 import org.joml.Matrix4f;
+import org.joml.Matrix4fc;
 import org.joml.Quaternionf;
 import org.joml.Quaternionfc;
 import org.joml.Vector3f;
@@ -117,7 +118,7 @@ public class Transformable extends Component{
 	}
 	
 	// The M in MVP :ok_hand:
-	public Matrix4f getTransformation(){
+	public Matrix4fc getTransformation(){
 		return transformation
 				.identity()
 				.translate(position)
@@ -143,16 +144,14 @@ public class Transformable extends Component{
 						(float) Math.toRadians(angleZ));
 	}
 	
-	public Vector3f getEulerRotation() {
+	public Vector3fc getEulerRotation() {
 		return rotation.getEulerAnglesXYZ(new Vector3f());
 	}
 	
-	public Vector3f getDirectionVector(){
+	public Vector3fc getDirectionVector(){
 		dirVec.set(0,0,1);
 		dirVec.rotate(rotation);
 		
 		return dirVec;
 	}
-	
-	
 }

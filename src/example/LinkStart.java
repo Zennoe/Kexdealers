@@ -72,6 +72,7 @@ public class LinkStart implements Runnable{
 		systems.put("TeleportationSystem", new TeleportationSystem(messageBus, entityController));
 		systems.put("PhysicsSystem", new PhysicsSystem(messageBus, entityController));
 		systems.put("NetworkSystem", new NetworkSystem(messageBus, entityController));
+		systems.put("InputSystem", new InputSystem(messageBus, entityController));
 		
 		// Local mode: Load a local instance
 		// Online mode: Connect to a server and request an instance from there.
@@ -100,6 +101,7 @@ public class LinkStart implements Runnable{
 			if(!online) {
 				System.out.println("Connection to server failed. Falling back to offline-mode");
 			}else {
+				/* TODO complete me
 				// Run NetworkSystem on a new thread so reading data from server can happen asynchronously
 				Thread netSysThread = new Thread(networkSystem, "network_system");
 				netSysThread.start();
@@ -131,6 +133,7 @@ public class LinkStart implements Runnable{
 				for(AbstractSystem system : systems.values()) {
 					system.loadBlueprint(blueprint);
 				}
+				*/
 			}
 		}
 		if(!online) {
@@ -167,6 +170,11 @@ public class LinkStart implements Runnable{
 		int playerID = 0; //look into file to choose the correct one :S
 		Player player = new Player(entityController);
 		
+		messageBus.messageRenderSys(Operation.SYS_RENDER_DEBUGLINES_ON);
+		messageBus.messageRenderSys(Operation.SYS_RENDER_DEBUGLINES_ADDNEWLINE, new Vector3f(0,0,0), new Vector3f(1024,15,1024), new Vector3f(0.68f, 0.14f, 0.74f), 5.0f);
+		messageBus.messageRenderSys(Operation.SYS_RENDER_DEBUGLINES_ADDNEWLINE, new Vector3f(1024,0,20), new Vector3f(0,5,0), new Vector3f(1,1,1), 3.0f);
+		messageBus.messageRenderSys(Operation.SYS_RENDER_DEBUGLINES_ADDNEWLINE, new Vector3f(1024,0,20), new Vector3f(0,55,2000), new Vector3f(0.86f, 0.16f, 0), 10.0f);
+		
 		// < The Loop >
 		double frameBegin;
 		while(running){
@@ -179,13 +187,13 @@ public class LinkStart implements Runnable{
 				//networkSystem.sendPlayerData(playerID);
 			}
 			
-			player.update(playerID, (float)timeDelta, resourceLoader.getTerrain());
+			player.update(playerID, timeDelta);
 			// Teleport
 			systems.get("TeleportationSystem").run();
 			// Gravity
 			//gravity(entityController, resourceLoader);
 			// Physics
-			systems.get("PhysicsSystem").run(timeDelta, resourceLoader.getTerrain());
+			//systems.get("PhysicsSystem").run(timeDelta, resourceLoader.getTerrain());
 			
 			// Input
 			systems.get("InputSystem").run();
@@ -206,6 +214,10 @@ public class LinkStart implements Runnable{
 				System.out.println((Math.floor(1000 / timeDelta)) / 1000 + " FPS");
 			}
 			tickCounter++;
+		}
+		
+		for (AbstractSystem currSys : systems.values()) {
+			// TODO graceful shutdown
 		}
 		
 		display.destroy();
