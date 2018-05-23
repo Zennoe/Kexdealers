@@ -15,10 +15,37 @@ import org.lwjgl.stb.STBImage;
 import textures.Material;
 import textures.MultiTexture;
 import textures.Texture;
-import textures.Texture2D;
 
 public class MaterialLoader {
+	
+	private class Texture2D{
+		private int id;
+		private int width;
+		private int height;
+		
+		public Texture2D(int id, int width, int height){
+			this.id = id;
+			this.width = width;
+			this.height = height;
+		}
 
+		public int getID(){
+			return id;
+		}
+
+		public int getWidth(){
+			return width;
+		}
+
+		public int getHeight(){
+			return height;
+		}
+		
+		public void delete(){
+			GL11.glDeleteTextures(id);
+		}
+	}
+	
 	private ArrayList<Integer> textures = new ArrayList<>();
 	
 	public Material loadMaterial(String filename, float shininess){
@@ -95,4 +122,5 @@ public class MaterialLoader {
 			GL11.glDeleteTextures(texture);
 		}
 	}
+	
 }
