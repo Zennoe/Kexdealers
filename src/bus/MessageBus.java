@@ -10,10 +10,10 @@ public class MessageBus {
 	// Singleton instance
 	private static MessageBus messageBusInstance = null;
 	
-	private LinkedList<BusMessage> renderSystemQueue = new LinkedList<>();
-	private LinkedList<BusMessage> audioSystemQueue = new LinkedList<>();
-	private LinkedList<BusMessage> networkSystemQueue = new LinkedList<>();
-	private LinkedList<BusMessage> teleportationSystemQueue = new LinkedList<>();
+	private LinkedList<Message> renderSystemQueue = new LinkedList<>();
+	private LinkedList<Message> audioSystemQueue = new LinkedList<>();
+	private LinkedList<Message> networkSystemQueue = new LinkedList<>();
+	private LinkedList<Message> teleportationSystemQueue = new LinkedList<>();
 	
 	private MessageBus() {
 		// - / -
@@ -26,8 +26,8 @@ public class MessageBus {
 		return messageBusInstance;
 	}
 	
-	public BusMessage getNextMessage(MessageListener listener) {
-		BusMessage nextMessage;
+	public Message getNextMessage(Systems listener) {
+		Message nextMessage;
 		switch(listener) {
 		case RENDER_SYSTEM: nextMessage = (renderSystemQueue.isEmpty() ? null : renderSystemQueue.removeLast()); break;
 		case AUDIO_SYSTEM: nextMessage = (audioSystemQueue.isEmpty() ? null : audioSystemQueue.removeLast()); break;
@@ -38,30 +38,41 @@ public class MessageBus {
 		return nextMessage;
 	}
 	
-	public BusMessage messageRenderSys(Operation op) {
-		BusMessage msg = new RenderSysMessage(op);
+	/** New generic message function to reduce API clutter.
+	 * @param recipient = a registered recipient system.
+	 * @param behaviourID = a specific behavior (function) to be applied to some data. Resolved inside the recipient system.
+	 * @param args = data to be passed along to the behavior function that is mapped to behaviorID.
+	 * @return
+	 */
+	public Message messageSystem(Systems recipient, int behaviorID, Object[] args) {
+		return null;
+		// TODO: Actually support this throughout all systems :)
+	}
+	
+	public Message messageRenderSys(Operation op) {
+		Message msg = new RenderSysMessage(op);
 		renderSystemQueue.addFirst(msg);
 		return msg;
 	}
 	
-	public BusMessage messageRenderSys(Operation op, Vector3fc lineBegin, Vector3fc lineEnd, Vector3fc lineColour, double lifeTime) {
-		BusMessage msg = new RenderSysMessage(op, lineBegin, lineEnd, lineColour, lifeTime);
+	public Message messageRenderSys(Operation op, Vector3fc lineBegin, Vector3fc lineEnd, Vector3fc lineColour, double lifeTime) {
+		Message msg = new RenderSysMessage(op, lineBegin, lineEnd, lineColour, lifeTime);
 		renderSystemQueue.addFirst(msg);
 		return msg;
 	}
 	
-	public BusMessage messageAudioSys(Operation op) {
+	public Message messageAudioSys(Operation op) {
 		return null;
 	}
 	
-	public BusMessage messageNetworkSys(Operation op, Object content) {
-		BusMessage msg = new NetworkSysMessage(op, content);
+	public Message messageNetworkSys(Operation op, Object content) {
+		Message msg = new NetworkSysMessage(op, content);
 		networkSystemQueue.addFirst(msg);
 		return msg;
 	}
 	
-	public BusMessage messageTeleportationSys(Operation op, int targetEID, Vector3f destination) {
-		BusMessage msg = new TeleportationSysMessage(op, targetEID, destination);
+	public Message messageTeleportationSys(Operation op, int targetEID, Vector3f destination) {
+		Message msg = new TeleportationSysMessage(op, targetEID, destination);
 		teleportationSystemQueue.addFirst(msg);
 		return msg;
 	}

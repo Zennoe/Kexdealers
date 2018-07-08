@@ -2,7 +2,7 @@ package bus;
 
 import org.joml.Vector3f;
 
-public class TeleportationSysMessage extends BusMessage {
+public class TeleportationSysMessage extends Message {
 
 	private final Operation op;
 	private final int targetEID;

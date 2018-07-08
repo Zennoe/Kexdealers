@@ -7,7 +7,7 @@ import java.util.Set;
 import org.joml.Vector3f;
 
 import bus.MessageBus;
-import bus.MessageListener;
+import bus.Systems;
 import bus.TeleportationSysMessage;
 import ecs.AbstractSystem;
 import ecs.EntityController;
@@ -51,7 +51,7 @@ public class TeleportationSystem extends AbstractSystem {
 		
 		// work message queue
 		TeleportationSysMessage message;
-		while((message = (TeleportationSysMessage) messageBus.getNextMessage(MessageListener.TELEPORTATION_SYSTEM)) != null) {
+		while((message = (TeleportationSysMessage) messageBus.getNextMessage(Systems.TELEPORTATION_SYSTEM)) != null) {
 			switch(message.getOP()) {
 			case SYS_TELEPORTATION_TARGETCOORDS: teleportTo(message.getTargetEID(), message.getDestination());
 				break;

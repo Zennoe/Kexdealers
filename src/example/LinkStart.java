@@ -212,10 +212,6 @@ public class LinkStart implements Runnable{
 			tickCounter++;
 		}
 		
-		for (AbstractSystem currSys : systems.values()) {
-			// TODO graceful shutdown
-		}
-		
 		display.destroy();
 		if(online) {
 			messageBus.messageNetworkSys(bus.Operation.SYS_NETWORK_DISCONNECT, null);

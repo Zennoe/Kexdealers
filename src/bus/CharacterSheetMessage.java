@@ -1,11 +1,11 @@
 package bus;
 
-public class NetworkSysMessage extends Message {
-
+public class CharacterSheetMessage extends Message {
+	
 	private final Operation op;
 	private final Object content;
 	
-	public NetworkSysMessage(Operation op, Object content) {
+	public CharacterSheetMessage(Operation op, Object content) {
 		this.op = op;
 		this.content = content;
 	}
@@ -14,12 +14,12 @@ public class NetworkSysMessage extends Message {
 	public void setComplete() {
 		super.complete = true;
 	}
-	
+
 	@Override
 	public boolean isComplete() {
 		return super.complete;
 	}
-
+	
 	public Operation getOP() {
 		return op;
 	}
@@ -27,5 +27,4 @@ public class NetworkSysMessage extends Message {
 	public Object getContent() {
 		return content;
 	}
-
 }

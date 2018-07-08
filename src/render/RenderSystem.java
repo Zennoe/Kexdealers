@@ -16,7 +16,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
 import bus.MessageBus;
-import bus.MessageListener;
+import bus.Systems;
 import bus.RenderSysMessage;
 import ecs.AbstractSystem;
 import ecs.EntityController;
@@ -76,9 +76,9 @@ public class RenderSystem extends AbstractSystem {
 	
 	public void update() {
 		super.timeMarkStart();
-		// work message queue
+		// message queue
 		RenderSysMessage message;
-		while((message = (RenderSysMessage) messageBus.getNextMessage(MessageListener.RENDER_SYSTEM)) != null) {
+		while((message = (RenderSysMessage) messageBus.getNextMessage(Systems.RENDER_SYSTEM)) != null) {
 			switch(message.getOP()) {
 			case SYS_RENDER_WIREFRAME_ON: GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
 				break;

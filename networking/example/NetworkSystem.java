@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import bus.MessageBus;
-import bus.MessageListener;
+import bus.Systems;
 import bus.NetworkSysMessage;
 import ecs.AbstractSystem;
 import ecs.Component;
@@ -67,7 +67,7 @@ public class NetworkSystem extends AbstractSystem implements Runnable{
 		
 		// message queue 
 		NetworkSysMessage message;
-		while((message = (NetworkSysMessage) messageBus.getNextMessage(MessageListener.NETWORK_SYSTEM)) != null) {
+		while((message = (NetworkSysMessage) messageBus.getNextMessage(Systems.NETWORK_SYSTEM)) != null) {
 			switch(message.getOP()) {
 			case SYS_NETWORK_DISCONNECT: disconnectFromServer();
 				break;
