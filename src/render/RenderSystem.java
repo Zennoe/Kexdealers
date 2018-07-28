@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.joml.Vector3f;
+import org.lwjgl.assimp.Assimp;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
@@ -39,6 +40,7 @@ public class RenderSystem extends AbstractSystem {
 	private final LineRenderer lineRenderer;
 	
 	private HashMap<String, HashSet<Transformable>> entitiesToRender = new HashMap<>(); // All the currently active transforms for one asset
+	private HashMap<String, HashSet<Transformable>> entitiesToRenderAssimp = new HashMap<>(); // All the currently active transforms for one asset
 	
 	// state tracking
 	private boolean drawDebugLines = false;
@@ -145,7 +147,13 @@ public class RenderSystem extends AbstractSystem {
 		for(String dataSet : renderableData){
 			int eID = BlueprintLoader.extractEID(dataSet);
 			frags = BlueprintLoader.getDataFragments(dataSet);
-			materialize(eID, frags[0]);
+			// ASSIMP TESTING
+			if(frags[0].startsWith("assimp_")) {
+				materializeAssimp(eID, frags[0]);
+			} else {
+				// ASSIMP TESTING END
+				materialize(eID, frags[0]);
+			}
 		}
 		// - PointLightComponent
 		ArrayList<String> pointLightComponentData = BlueprintLoader.getAllLinesWith("POINTLIGHTCOMPONENT", blueprint);
@@ -186,6 +194,19 @@ public class RenderSystem extends AbstractSystem {
 		entitiesToRender.get(assetName).add(entityController.getTransformable(eID));
 	}
 	
+	public void materializeAssimp(int eID, String assetName){
+		// Generate a new Renderable for <eID>
+		entityController.addRenderable(eID);
+		entityController.getRenderable(eID).setAssetName(assetName);
+		// Sort in the new reference for instanced rendering
+		if(entitiesToRenderAssimp.get(assetName) == null){
+			entitiesToRenderAssimp.put(assetName, new HashSet<Transformable>());
+			// add +1 to pointer count for this asset
+			graphicsLoader.loadAssimpModel(assetName, Assimp.aiProcess_Triangulate);
+		}
+		entitiesToRenderAssimp.get(assetName).add(entityController.getTransformable(eID));
+	}
+	
 	public void dematerialize(int eID){
 		// Get <eID>'s Renderable to access the assetName. Use that as key to narrow down the search.
 		String assetName = entityController.getRenderable(eID).getAssetName();
@@ -218,6 +239,8 @@ public class RenderSystem extends AbstractSystem {
 		terrainRenderer.render(graphicsLoader, camera, entityController.getPointLightComponents());
 		
 		entityRenderer.render(graphicsLoader, camera, entitiesToRender, entityController.getPointLightComponents());
+		// ASSIMP TESTING
+		entityRenderer.renderAssimp(graphicsLoader, camera, entitiesToRender, entityController.getPointLightComponents());
 		
 		if (drawDebugLines) {
 			lineRenderer.render(camera, getDeltaTime());

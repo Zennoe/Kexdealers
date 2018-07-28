@@ -8,11 +8,14 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
+import assimp.Mesh;
+import assimp.Model;
 import ecs.FPPCameraComponent;
 import ecs.PointLightComponent;
 import ecs.Transformable;
 import example.AssetData;
 import loaders.GraphicsLoader;
+import textures.Material;
 
 public class EntityRenderer {
 
@@ -47,11 +50,43 @@ public class EntityRenderer {
 			unbindEntityAppearance(data);
 		}
 		
+		shader.stop();
+	}
+	
+	public void renderAssimp(GraphicsLoader graphicsLoader,
+			FPPCameraComponent camera,
+			HashMap<String, HashSet<Transformable>> entitiesToRender,
+			HashSet<PointLightComponent> pointLights){
+		
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		GL11.glDepthMask(true);
+		
+		shader.start();
+		shader.uploadViewPos(camera.getPosition());
+		shader.uploadDirectionalLight(graphicsLoader.getSun());
+		shader.uploadPointLights(pointLights);
+		
+		for(String appearance : entitiesToRender.keySet()){
+			Model model = graphicsLoader.getModel(appearance);
+			
+			HashSet<Transformable> transformations = entitiesToRender.get(appearance);
+			for(Transformable transformation : transformations){
+				shader.uploadMVP(transformation.getTransformation(), camera.getViewMatrix(), camera.getProjectionMatrix());				
+				
+				Mesh[] meshes = model.getMeshes();
+				Material[] materials = model.getMaterials();
+				for(int i = 0; i < model.getPartCount(); i++) {
+					bindModelPart(meshes[i], materials[i]);
+					GL11.glDrawElements(GL11.GL_TRIANGLES, meshes[0].getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
+					unbindModelPart();
+				}
+			}
+		}
 		
 		shader.stop();
 	}
 	
-	public void bindEntityAppearance(AssetData data){
+	private void bindEntityAppearance(AssetData data){
 		// Bind VAO
 		GL30.glBindVertexArray(data.getRawMesh().getVaoID());
 		GL20.glEnableVertexAttribArray(0);
@@ -63,10 +98,34 @@ public class EntityRenderer {
 		GL13.glActiveTexture(GL13.GL_TEXTURE1);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, data.getMaterial().getSpecularID());
 		// Upload Phong-Shading data
-		shader.uploadMaterial(data.getPhongSpecularExponent());
+		shader.uploadMaterial(0, 1, data.getPhongSpecularExponent());
 	}
 	
-	public void unbindEntityAppearance(AssetData data){
+	private void unbindEntityAppearance(AssetData data){
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+		
+		GL20.glDisableVertexAttribArray(0);
+		GL20.glDisableVertexAttribArray(1);
+		GL20.glDisableVertexAttribArray(2);
+		GL30.glBindVertexArray(0);
+	}
+	
+	private void bindModelPart(Mesh mesh, Material material){
+		// Bind VAO
+		GL30.glBindVertexArray(mesh.getVaoID());
+		GL20.glEnableVertexAttribArray(0);
+		GL20.glEnableVertexAttribArray(1);
+		GL20.glEnableVertexAttribArray(2);
+		// Bind textures
+		GL13.glActiveTexture(GL13.GL_TEXTURE0);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, material.getDiffuseID());
+		GL13.glActiveTexture(GL13.GL_TEXTURE1);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, material.getSpecularID());
+		// Upload Phong-Shading data
+		shader.uploadMaterial(0, 1, material.getShininess());
+	}
+	
+	private void unbindModelPart(){
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
 		
 		GL20.glDisableVertexAttribArray(0);

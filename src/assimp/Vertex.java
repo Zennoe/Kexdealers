@@ -7,7 +7,7 @@ public class Vertex {
 	
 	public static final int CONTINUOUS_LENGTH = 2 * 3 + 2;
 	public static final int POSITION_OFFSET = 0;
-	public static final int NORMAL_OFFSET = 3 * 4;
+	public static final int NORMAL_OFFSET = 3 * 4;// one float = 4 bytes
 	public static final int TEXCOORDS_OFFSET = 3 * 4 + NORMAL_OFFSET;
 	
 	private Vector3fc position;

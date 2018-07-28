@@ -18,33 +18,7 @@ import textures.Texture;
 
 public class MaterialLoader {
 	
-	private class Texture2D{
-		private int id;
-		private int width;
-		private int height;
-		
-		public Texture2D(int id, int width, int height){
-			this.id = id;
-			this.width = width;
-			this.height = height;
-		}
-
-		public int getID(){
-			return id;
-		}
-
-		public int getWidth(){
-			return width;
-		}
-
-		public int getHeight(){
-			return height;
-		}
-		
-		public void delete(){
-			GL11.glDeleteTextures(id);
-		}
-	}
+	
 	
 	private ArrayList<Integer> textures = new ArrayList<>();
 	
@@ -52,6 +26,11 @@ public class MaterialLoader {
 		Texture2D diffuse = loadTexture2D(filename +"_diffuse", true);
 		Texture2D specular = loadTexture2D(filename +"_specular", false);
 		return new Material(diffuse.getID(), specular.getID(), shininess, diffuse.getWidth(), diffuse.getHeight());
+	}
+	
+	public static int loadTexture2DbyID(String filename, String textureType, boolean gammaCorrect) {
+		Texture2D texture2D = loadTexture2D(filename +"_" +textureType, gammaCorrect);
+		return texture2D.getID();
 	}
 	
 	public MultiTexture loadMultiTexture(String defTexture, String rTex, String gTex, String bTex,
@@ -73,7 +52,7 @@ public class MaterialLoader {
 		return new Texture(loadTexture2D(filename, false).getID());
 	}
 	
-	private Texture2D loadTexture2D(String filename, boolean gammaCorrected){
+	private static Texture2D loadTexture2D(String filename, boolean gammaCorrected){
 		IntBuffer width = BufferUtils.createIntBuffer(1);
 		IntBuffer height = BufferUtils.createIntBuffer(1);
 		IntBuffer comp = BufferUtils.createIntBuffer(1);
@@ -90,7 +69,7 @@ public class MaterialLoader {
 		heightInt = height.get();
 		
 		textureID = GL11.glGenTextures();
-		textures.add(textureID);
+		// textures.add(textureID);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureID);
 		// Set texture wrapping
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
@@ -123,4 +102,32 @@ public class MaterialLoader {
 		}
 	}
 	
+}
+
+class Texture2D{
+	private int id;
+	private int width;
+	private int height;
+	
+	public Texture2D(int id, int width, int height){
+		this.id = id;
+		this.width = width;
+		this.height = height;
+	}
+
+	public int getID(){
+		return id;
+	}
+
+	public int getWidth(){
+		return width;
+	}
+
+	public int getHeight(){
+		return height;
+	}
+	
+	public void delete(){
+		GL11.glDeleteTextures(id);
+	}
 }

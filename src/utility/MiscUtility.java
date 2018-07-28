@@ -3,6 +3,8 @@ package utility;
 import java.lang.reflect.Array;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.util.Iterator;
+import java.util.List;
 
 import org.lwjgl.BufferUtils;
 
@@ -20,6 +22,26 @@ public class MiscUtility {
 		buffer.put(data);
 		buffer.flip();
 		return buffer;
+	}
+	
+	public static int[] toIntArray(List<Integer> integers) {
+		int[] ret = new int[integers.size()];
+	    Iterator<Integer> iterator = integers.iterator();
+	    for (int i = 0; i < ret.length; i++)
+	    {
+	        ret[i] = iterator.next().intValue();
+	    }
+	    return ret;
+	}
+	
+	public static float[] toFloatArray(List<Float> floats) {
+		float[] ret = new float[floats.size()];
+	    Iterator<Float> iterator = floats.iterator();
+	    for (int i = 0; i < ret.length; i++)
+	    {
+	        ret[i] = iterator.next().floatValue();
+	    }
+	    return ret;
 	}
 	
 	public static <T> T arrayConcatenation(T a, T b) {

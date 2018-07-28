@@ -1,6 +1,5 @@
 package assimp;
 
-import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import org.lwjgl.BufferUtils;
@@ -11,56 +10,65 @@ import org.lwjgl.opengl.GL30;
 
 public class Mesh {
 	
-	private Vertex[] vertices;
-	private Texture[] textures;
+	private float[] vertices;
+	private float[] textureCoords;
+	private float[] normals;
 	private int[] indices;
 	
-	private int VAO, VBO, EBO;
+	private int VAO, EBO;
+	private int vertexVBO, tcVBO, normalVBO;
 	
-	public Mesh(Vertex[] vertices, Texture[] textures, int[] indices) {
+	public Mesh(float[] vertices, float[] textureCoords, float[] normals, int[] indices) {
 		this.vertices = vertices;
-		this.textures = textures;
+		this.textureCoords = textureCoords;
+		this.normals = normals;
 		this.indices = indices;
-	}
-
-	public void delete() {
-		// TODO: implement Mesh deletion
+		
+		setupMesh();
 	}
 	
-	private void setupMesh() {
-		// Transform data into continuous float arrays
-		float[] verticesContinuous = new float[vertices.length * Vertex.CONTINUOUS_LENGTH];
-		for(int i = 0; i < vertices.length; i++) {
-			float[] contVertexData = vertices[i].getAsContinuousData();
-			System.arraycopy(contVertexData, 0, verticesContinuous, i * Vertex.CONTINUOUS_LENGTH, Vertex.CONTINUOUS_LENGTH);
-		}
-		
+	public int getVaoID() {
+		return VAO;
+	}
+	
+	public int getVertexCount() {
+		return vertices.length / 3;
+	}
+	
+	public void delete() {
+		GL30.glDeleteVertexArrays(VAO);
+		GL15.glDeleteBuffers(vertexVBO);
+		GL15.glDeleteBuffers(tcVBO);
+		GL15.glDeleteBuffers(normalVBO);
+		GL15.glDeleteBuffers(EBO);
+	}
+	
+	private void setupMesh() {		
 		// Create and bind VAO
 		VAO = GL30.glGenVertexArrays();
 		GL30.glBindVertexArray(VAO);
-		// Create, bind, and fill VBO
-		VBO = GL15.glGenBuffers();
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, VBO);
-		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, 
-				storeDataInFloatBuffer(verticesContinuous), GL15.GL_STATIC_DRAW);
+		// Create, bind, and fill VBOs
+		vertexVBO = storeInVBO(0, 3, vertices);
+		tcVBO = storeInVBO(1, 2, textureCoords);
+		normalVBO = storeInVBO(2, 3, normals);
 		// Create, bind, and fill EBO with index data
 		EBO = GL15.glGenBuffers();
 		GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, EBO);
 		GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, 
 				storeDataInIntBuffer(indices), GL15.GL_STATIC_DRAW);
 		
-		// Vertex Positions
-		GL20.glEnableVertexAttribArray(0);
-		GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, Vertex.CONTINUOUS_LENGTH, Vertex.POSITION_OFFSET);
-		// Vertex Normals
-		GL20.glEnableVertexAttribArray(1);
-		GL20.glVertexAttribPointer(1, 3, GL11.GL_FLOAT, false, Vertex.CONTINUOUS_LENGTH, Vertex.NORMAL_OFFSET); // # of floats times 4 bytes
-		// Vertex Texture Coords
-		GL20.glEnableVertexAttribArray(1);
-		GL20.glVertexAttribPointer(2, 2, GL11.GL_FLOAT, false, Vertex.CONTINUOUS_LENGTH, Vertex.TEXCOORDS_OFFSET);
-		
 		// Release VAO bind
 		GL30.glBindVertexArray(0);
+	}
+	
+	private int storeInVBO(int index, int coordSize, float[] vertices){
+		int vboID = GL15.glGenBuffers();
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
+		FloatBuffer buffer = storeDataInFloatBuffer(vertices);
+		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
+		GL20.glVertexAttribPointer(index, coordSize, GL11.GL_FLOAT, false, 0, 0);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+		return vboID;
 	}
 	
 	private FloatBuffer storeDataInFloatBuffer(float[] data){

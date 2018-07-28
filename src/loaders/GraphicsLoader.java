@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import org.joml.Vector3f;
 
+import assimp.Model;
 import example.AssetData;
 import example.DirectionalLight;
 import skybox.Skybox;
@@ -20,6 +21,8 @@ import wrapper.RawMesh;
  */
 public class GraphicsLoader {
 	
+	private static final String TEXTURE_DIRECTORY = "./res/texures/";
+	
 	private final MaterialLoader materialLoader;
 	private final CubeMapLoader cubeMapLoader;
 	
@@ -30,6 +33,9 @@ public class GraphicsLoader {
 	
 	private HashMap<String, Integer> pointerCounter3D = new HashMap<>();
 	private HashMap<String, AssetData> assets3D = new HashMap<>();
+	
+	private HashMap<String, Integer> pointerCounterAM = new HashMap<>();
+	private HashMap<String, Model> assimpModels = new HashMap<>();
 	
 	private Terrain terrain = null;
 	
@@ -44,6 +50,19 @@ public class GraphicsLoader {
 		modelLoader = new ModelLoader();
 		terrainMeshLoader = new TerrainMeshLoader(modelLoader);
 		objLoader = new OBJLoader();
+	}
+	
+	public Model getModel(String modelName) {
+		return assimpModels.get(modelName);
+	}
+	
+	public void loadAssimpModel(String modelName, int assimpFlags) {
+		if(!pointerCounterAM.containsKey(modelName) || pointerCounterAM.get(modelName) == 0) {
+			// load fresh from HDD
+			Model newModel = modelLoader.loadModelAssimp(modelName, TEXTURE_DIRECTORY, assimpFlags);
+			assimpModels.put(modelName, newModel);
+			pointerCounterAM.put(modelName, 1);
+		}
 	}
 	
 	public AssetData getRessource(String assetName){
@@ -82,7 +101,7 @@ public class GraphicsLoader {
 			pointerCounter3D.put(assetName, x--);
 		}
 	}
-
+	
 	// grab an already loaded Terrain
 	public Terrain getTerrain(){
 		return terrain;

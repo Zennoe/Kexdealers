@@ -5,7 +5,7 @@ SKYBOX{1200.0f/starfield}
 TERRAIN{1024/32/heightMap1024/blendMap1024/mud/planks/grass3/path}
 >c param: directionInverse - ambient - diffuse - specular
 SUN{-0.2/-1/-0.3/0.1/0.1/0.1/0.6/0.6/0.6/0.4/0.4/0.4}
-ENTITIES{0/1/2/3/4/5/6/7/8/9/10}
+ENTITIES{0/1/2/3/4/5/6/7/8/9}
 >c player
 >c param: position - rotation - scale
 TRANSFORMABLE{eID=0}{500/7/400/0/0/0/1}
@@ -37,12 +37,11 @@ PHYSICSCOMPONENT{eID=6}{10/true}
 TRANSFORMABLE{eID=7}{540/16.7/180/0/264/0/2.5}
 RENDERABLE{eID=7}{lowPolyTree}
 PHYSICSCOMPONENT{eID=7}{50/true}
->c woooo
-TRANSFORMABLE{eID=10}{457/6.45/510/0/0.2/0/1.8}
-RENDERABLE{eID=10}{lamp}
-PHYSICSCOMPONENT{eID=10}{100/false}
 >c audio test entity
 TRANSFORMABLE{eID=8}{450/20/350/0/0/0/1}
 POINTLIGHTCOMPONENT{eID=8}{450/20/350/1.5/10.0/1.9/1.5/10.0/1.9/1.5/10.0/1.9/10.0/0.01}
 >c param: assetName - gain - pitch - refDist - rolloff - maxDist
 AUDIOSOURCECOMPONENT{eID=8}{music/1.0/1.0/30.0/0.5/500.0/true}
+>c assimp testing model animated human
+TRANSFORMABLE{eID=9}{500/20/500/0/0/0/5}
+RENDERABLE{eID=9}{assimp_monster.obj}

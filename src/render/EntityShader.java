@@ -79,9 +79,9 @@ public class EntityShader extends ShaderProgram{
 		super.loadMatrix4f(location_projectionMatrix, projectionMatrix);
 	}
 	
-	public void uploadMaterial(float shininess){
-		super.loadInt(location_diffuseMap, 0);
-		super.loadInt(location_specularMap, 1);
+	public void uploadMaterial(int diffuseMapTextureBank, int specularMapTexureBank, float shininess){
+		super.loadInt(location_diffuseMap, diffuseMapTextureBank);
+		super.loadInt(location_specularMap, specularMapTexureBank);
 		super.loadFloat(location_shininess, shininess);
 	}
 	
