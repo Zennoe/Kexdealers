@@ -1,0 +1,36 @@
+RenderSystem
+	Renders things to screen.
+	
+	Message controlled operations:
+		- Draw debug lines
+		
+AudioSystem - NOT WORKING?
+	Plays audio files defined in AudioSourceComponents.
+	
+	Message controlled operations:
+		- Start/Stop audio file playback
+		
+TeleportationSystem
+	Checks if any entity has entered a teleportation area and teleports it.
+	
+	Message controlled operations:
+		- Teleport entity to specified location
+	
+PhysicsSystem - BROKEN DUE TO NO TERRAIN INTERACTION POSSIBLE
+	Handles collision and applies forces to entities (gravity, movement, other).
+	
+	Message controlled operations:
+		- Apply force to entity
+	
+NetworkSystem - NOT IN USE
+	Loads world from server and keeps the local and the remote instance in sync.
+	
+	Message controlled operations:
+		- Dis-/Connect to server
+		- Request to load a new world
+	
+InputSystem
+	Maps human input to message controlled operations and player movement.
+	
+	Message controlled operations:
+		- ???

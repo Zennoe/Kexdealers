@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
+
 import audio.AudioSystem;
 import bus.MessageBus;
 import bus.NetworkSysMessage;
@@ -17,10 +18,6 @@ import loaders.BlueprintLoader;
 import physics.PhysicsSystem;
 import render.RenderSystem;
 
-
-/*
- *  We're gonna lose FeelsGoodMan :clap:
- */
 public class LinkStart implements Runnable{
 
 	private Thread gameloop = null;
@@ -53,7 +50,7 @@ public class LinkStart implements Runnable{
 	public void run(){
 		
 		// Window creation
-		Display display = new Display(1920, 1080);//1280, 720
+		Display display = new Display(1920, 1080);
 		display.create();
 		
 		// Managers
@@ -179,17 +176,11 @@ public class LinkStart implements Runnable{
 			// Update
 			GLFW.glfwPollEvents();
 			
-			if(online) {
-				//networkSystem.sendPlayerData(playerID);
-			}
-			
 			player.update(playerID, timeDelta);
 			// Teleport
 			systems.get("TeleportationSystem").run();
-			// Gravity
-			//gravity(entityController, resourceLoader);
+			
 			// Physics
-			//systems.get("PhysicsSystem").run(timeDelta, resourceLoader.getTerrain());
 			
 			// Input
 			systems.get("InputSystem").run();

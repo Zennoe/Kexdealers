@@ -1,5 +1,6 @@
 package bus;
 
+// deprecated
 public enum Operation {
 	// EntityController
 	// ResourceLoader
