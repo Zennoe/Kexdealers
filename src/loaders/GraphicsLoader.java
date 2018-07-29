@@ -22,6 +22,7 @@ import wrapper.RawMesh;
 public class GraphicsLoader {
 	
 	private static final String TEXTURE_DIRECTORY = "./res/texures/";
+	private static final String MODEL_DIRECTORY = "./res/models/";
 	
 	private final MaterialLoader materialLoader;
 	private final CubeMapLoader cubeMapLoader;
@@ -33,9 +34,6 @@ public class GraphicsLoader {
 	
 	private HashMap<String, Integer> pointerCounter3D = new HashMap<>();
 	private HashMap<String, AssetData> assets3D = new HashMap<>();
-	
-	private HashMap<String, Integer> pointerCounterAM = new HashMap<>();
-	private HashMap<String, Model> assimpModels = new HashMap<>();
 	
 	private Terrain terrain = null;
 	
@@ -50,19 +48,6 @@ public class GraphicsLoader {
 		modelLoader = new ModelLoader();
 		terrainMeshLoader = new TerrainMeshLoader(modelLoader);
 		objLoader = new OBJLoader();
-	}
-	
-	public Model getModel(String modelName) {
-		return assimpModels.get(modelName);
-	}
-	
-	public void loadAssimpModel(String modelName, int assimpFlags) {
-		if(!pointerCounterAM.containsKey(modelName) || pointerCounterAM.get(modelName) == 0) {
-			// load fresh from HDD
-			Model newModel = modelLoader.loadModelAssimp(modelName, TEXTURE_DIRECTORY, assimpFlags);
-			assimpModels.put(modelName, newModel);
-			pointerCounterAM.put(modelName, 1);
-		}
 	}
 	
 	public AssetData getRessource(String assetName){
