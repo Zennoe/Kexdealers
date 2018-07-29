@@ -25,14 +25,14 @@ public class PhysicsSystem extends AbstractSystem {
 
 		// update :)
 		update();
-		
+
 		// cleanUp on program exit
 		// cleanUp();
 	}
-	
+
 	public void update() {
 		super.timeMarkStart();
-		
+
 		// process all physics components
 		for (PhysicsComponent currentComp : entityController.getPhysicsComponents()) {
 			Transformable currTrans = entityController.getTransformable(currentComp.getEID());
@@ -50,7 +50,7 @@ public class PhysicsSystem extends AbstractSystem {
 			} else {
 				currentComp.setOnGround(false);
 			}
-			
+
 			if (currentComp.isAffectedByPhysics()) {
 				// update gravity
 				if (currentComp.isAffectedByGravity()) {
@@ -58,7 +58,7 @@ public class PhysicsSystem extends AbstractSystem {
 				} else {
 					currentComp.removeForce("gravity");
 				}
-				
+
 				// update acceleration
 				Vector3f resultingForce = new Vector3f();
 				for (Vector3f currForce : currentComp.getAppliedForces()) {
@@ -70,7 +70,7 @@ public class PhysicsSystem extends AbstractSystem {
 					final float frictionFactor = 0.2f;
 					Vector3f frictionForce = new Vector3f(currentComp.getVelocity());
 					frictionForce.y = 0;
-					frictionForce.mul(-1.0f/frictionFactor);
+					frictionForce.mul(-1.0f / frictionFactor);
 					resultingForce.add(frictionForce);
 				}
 				Vector3f newAccel = resultingForce.div(currentComp.getWeight());
@@ -84,24 +84,30 @@ public class PhysicsSystem extends AbstractSystem {
 				currTrans.increasePosition(newVeloc.mul(super.getDeltaTime()));
 			}
 		}
-		
+
 		super.timeMarkEnd();
 	}
-	
+
 	public void cleanUp() {
-		
+
 	}
-	
+
 	public void loadBlueprint(ArrayList<String> blueprint) {
 		// - PhysicsComponent
 		ArrayList<String> physicsComponentData = BlueprintLoader.getAllLinesWith("PHYSICSCOMPONENT", blueprint);
 		String[] frags = null;
-		for(String dataSet : physicsComponentData) {
-			int eID = BlueprintLoader.extractEID(dataSet);
-			frags = BlueprintLoader.getDataFragments(dataSet);
-			entityController.addPhysicsComponent(eID)
-				.setWeight(Float.valueOf(frags[0]))
-				.setAffectedByGravity(Boolean.valueOf(frags[1]));
+		for (String dataSet : physicsComponentData) {
+			try {
+				int eID = BlueprintLoader.extractEID(dataSet);
+				if (eID < 0) {
+					continue;
+				}
+				frags = BlueprintLoader.getDataFragments(dataSet);
+				entityController.addPhysicsComponent(eID).setWeight(Float.valueOf(frags[0]))
+						.setAffectedByGravity(Boolean.valueOf(frags[1]));
+			} catch (NullPointerException | IllegalArgumentException e) {
+				System.err.println("Couldn't parse line of AudiosourceComponent.");
+			}
 		}
 	}
 }

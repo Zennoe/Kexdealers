@@ -73,7 +73,7 @@ public class AudioSystem extends AbstractSystem {
 		update();
 		
 		// cleanUp on program exit
-		// cleanUp();
+		cleanUp();
 	}
 	
 	public void update() {
@@ -137,15 +137,23 @@ public class AudioSystem extends AbstractSystem {
 				BlueprintLoader.getAllLinesWith("AUDIOSOURCECOMPONENT", blueprint);
 		String[] frags = null;
 		for(String dataSet : audioSourceComponentData) {
-			int eID = BlueprintLoader.extractEID(dataSet);
-			frags = BlueprintLoader.getDataFragments(dataSet);
-			attachAudioSource(eID, frags[0], 
-					Float.valueOf(frags[1]), 
-					Float.valueOf(frags[2]), 
-					Float.valueOf(frags[3]), 
-					Float.valueOf(frags[4]), 
-					Float.valueOf(frags[5]), 
-					Boolean.valueOf(frags[6]));
+			try {
+				int eID = BlueprintLoader.extractEID(dataSet);
+				if (eID < 0) {
+					continue;
+				}
+				
+				frags = BlueprintLoader.getDataFragments(dataSet);
+				attachAudioSource(eID, frags[0], 
+						Float.valueOf(frags[1]), 
+						Float.valueOf(frags[2]), 
+						Float.valueOf(frags[3]), 
+						Float.valueOf(frags[4]), 
+						Float.valueOf(frags[5]), 
+						Boolean.valueOf(frags[6]));
+			} catch (NullPointerException|IllegalArgumentException e) {
+				System.err.println("Couldn't parse line of AudiosourceComponent.");
+			}
 		}
 	}
 	

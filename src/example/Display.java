@@ -69,7 +69,7 @@ public class Display {
 		glfwShowWindow(window);
 		// Bad stuff happening without this
 		GL.createCapabilities();
-		GLUtil.setupDebugMessageCallback(System.err);
+		//GLUtil.setupDebugMessageCallback(System.err);
 		// Define viewport
 		IntBuffer w = BufferUtils.createIntBuffer(1);
 		IntBuffer h = BufferUtils.createIntBuffer(1);
