@@ -40,7 +40,10 @@ public class Player {
 	
 	public void update(int eID, double delta){
 		Transformable transformable = entityController.getTransformable(eID);
-		PhysicsComponent physics = entityController.getPhysicsComponent(eID);
+		// TODO uncomment original once physics system runs again
+		//PhysicsComponent physics = entityController.getPhysicsComponent(eID);
+		PhysicsComponent physics = new PhysicsComponent(eID);
+		physics.setOnGround(true);
 		
 		//-- Poll input
 		float yaw = (float) Math.toRadians(Display.getMouseX() * cameraTurnSpeed * delta);

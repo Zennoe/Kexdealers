@@ -44,4 +44,4 @@ POINTLIGHTCOMPONENT{eID=8}{450/20/350/1.5/10.0/1.9/1.5/10.0/1.9/1.5/10.0/1.9/10.
 AUDIOSOURCECOMPONENT{eID=8}{music/1.0/1.0/30.0/0.5/500.0/true}
 >c assimp testing model animated human
 TRANSFORMABLE{eID=9}{500/20/500/0/0/0/5}
-RENDERABLE{eID=9}{assimp_monster.obj}
+RENDERABLE{eID=9}{assimp_monster}

@@ -73,7 +73,7 @@ public class AudioSystem extends AbstractSystem {
 		update();
 		
 		// cleanUp on program exit
-		cleanUp();
+		//cleanUp();
 	}
 	
 	public void update() {
