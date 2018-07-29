@@ -49,12 +49,5 @@
 			<attribute name="javadoc_location" value="jar:platform:/resource/Kexdealers_zennoesfork/lib/docs/joml-1.9.9-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/jars/lwjgl-assimp.jar">
-		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="Kexdealers/lib/natives"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="lib/natives/lwjgl-assimp-natives-linux.jar"/>
-	<classpathentry kind="lib" path="lib/natives/lwjgl-assimp-natives-windows.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

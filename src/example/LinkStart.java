@@ -59,11 +59,9 @@ public class LinkStart implements Runnable{
 		// Message Bus
 		MessageBus messageBus = MessageBus.getInstance();
 
-		// Systems
+		// Systems - Create a System here if you want to use it :)
 		systems.put("RenderSystem", new RenderSystem(messageBus, entityController));
-		systems.put("AudioSystem", new AudioSystem(messageBus, entityController));
 		systems.put("TeleportationSystem", new TeleportationSystem(messageBus, entityController));
-		systems.put("PhysicsSystem", new PhysicsSystem(messageBus, entityController));
 		systems.put("NetworkSystem", new NetworkSystem(messageBus, entityController));
 		systems.put("InputSystem", new InputSystem(messageBus, entityController));
 		
@@ -162,11 +160,6 @@ public class LinkStart implements Runnable{
 		
 		int playerID = 0; //look into file to choose the correct one :S
 		Player player = new Player(entityController);
-		
-		messageBus.messageRenderSys(Operation.SYS_RENDER_DEBUGLINES_ON);
-		messageBus.messageRenderSys(Operation.SYS_RENDER_DEBUGLINES_ADDNEWLINE, new Vector3f(0,0,0), new Vector3f(1024,15,1024), new Vector3f(0.68f, 0.14f, 0.74f), 5.0f);
-		messageBus.messageRenderSys(Operation.SYS_RENDER_DEBUGLINES_ADDNEWLINE, new Vector3f(1024,0,20), new Vector3f(0,5,0), new Vector3f(1,1,1), 3.0f);
-		messageBus.messageRenderSys(Operation.SYS_RENDER_DEBUGLINES_ADDNEWLINE, new Vector3f(1024,0,20), new Vector3f(0,55,2000), new Vector3f(0.86f, 0.16f, 0), 10.0f);
 		
 		// < The Loop >
 		double frameBegin;
