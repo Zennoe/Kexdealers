@@ -14,6 +14,7 @@ import bus.Operation;
 import ecs.AbstractSystem;
 import ecs.EntityController;
 import loaders.BlueprintLoader;
+import physics.PhysicsSystem;
 import render.RenderSystem;
 
 public class LinkStart implements Runnable{
@@ -62,6 +63,7 @@ public class LinkStart implements Runnable{
 		systems.put("TeleportationSystem", new TeleportationSystem(messageBus, entityController));
 		systems.put("NetworkSystem", new NetworkSystem(messageBus, entityController));
 		systems.put("InputSystem", new InputSystem(messageBus, entityController));
+		systems.put("PhysicsSystem", new PhysicsSystem(messageBus, entityController));
 		
 		// Local mode: Load a local instance
 		// Online mode: Connect to a server and request an instance from there.
@@ -177,7 +179,6 @@ public class LinkStart implements Runnable{
 			systems.get("InputSystem").run();
 			
 			// Audio
-			systems.get("AudioSystem").run();
 			
 			// Render
 			systems.get("RenderSystem").run();
