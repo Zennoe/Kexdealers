@@ -4,7 +4,6 @@ import java.util.HashMap;
 
 import org.joml.Vector3f;
 
-import assimp.Model;
 import example.AssetData;
 import example.DirectionalLight;
 import skybox.Skybox;
@@ -32,6 +31,10 @@ public class GraphicsLoader {
 	
 	private final OBJLoader objLoader;
 	
+	// NEW OBJ LOADER STUFF
+	private HashMap<String, Model> models = new HashMap<>();
+	// ---
+	
 	private HashMap<String, Integer> pointerCounter3D = new HashMap<>();
 	private HashMap<String, AssetData> assets3D = new HashMap<>();
 	
@@ -50,6 +53,25 @@ public class GraphicsLoader {
 		objLoader = new OBJLoader();
 	}
 	
+	public Model getModel(String ressourceName) {
+		return models.get(ressourceName);
+	}
+	
+	public void loadModel(String ressourceName) {
+		Model model = null; // load with call to new OBJLoader
+		model.refCountUp();
+	}
+	
+	public void unloadModel(String ressourceName) {
+		Model model = models.get(ressourceName);
+		if(model != null) {
+			boolean alive = model.refCountDown();
+			if(!alive) {
+				models.put(ressourceName, null);
+			}
+		}
+	}
+	
 	public AssetData getRessource(String assetName){
 		return assets3D.get(assetName);
 	}
@@ -59,9 +81,9 @@ public class GraphicsLoader {
 			// load fresh from HDD
 			ModelData modelData = objLoader.loadOBJ(assetName);
 			RawMesh rawMesh = modelLoader.loadToVAO(
-					modelData.getVertices(), 
-					modelData.getIndices(), 
-					modelData.getTextureCoords(), 
+					modelData.getVertices(),
+					modelData.getIndices(),
+					modelData.getTextureCoords(),
 					modelData.getNormals());
 			// random hardcoded default value for shininess = 1
 			Material material = materialLoader.loadMaterial(assetName, 1.0f);
@@ -81,6 +103,7 @@ public class GraphicsLoader {
 			pointerCounter3D.put(assetName, x--);
 			//unload completely
 			// TODO Clean up on sound deletion
+			// ^ what does this mean? :S
 			assets3D.put(assetName, null);
 		}else{
 			pointerCounter3D.put(assetName, x--);
