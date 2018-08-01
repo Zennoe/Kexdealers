@@ -65,6 +65,7 @@ public class LinkStart implements Runnable{
 		systems.put("NetworkSystem", new NetworkSystem(messageBus, entityController));
 		systems.put("InputSystem", new InputSystem(messageBus, entityController));
 		systems.put("AudioSystem", new AudioSystem(messageBus, entityController));
+		//systems.put("PhysicsSystem", new PhysicsSystem(messageBus, entityController));
 		
 		// Local mode: Load a local instance
 		// Online mode: Connect to a server and request an instance from there.
@@ -175,6 +176,7 @@ public class LinkStart implements Runnable{
 			systems.get("TeleportationSystem").run();
 			
 			// Physics
+			//system.get("PhysicsSystem").run();
 			
 			// Input
 			systems.get("InputSystem").run();
