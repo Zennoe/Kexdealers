@@ -200,8 +200,14 @@ public class AudioSystem extends AbstractSystem {
 
 	public void attachAudioSource(int eID, String assetName, float gain, float pitch, float refDist, float rollOff,
 			float maxDist, boolean looping) {
-		entityController.addAudioSourceComponent(eID).setAudioSourceFileName(assetName).setGain(gain).setPitch(pitch)
-				.setReferenceDistance(refDist).setRolloffFactor(rollOff).setMaxDistance(maxDist).setLooping(looping);
+		entityController.addAudioSourceComponent(eID)
+			.setAudioSourceFileName(assetName)
+			.setGain(gain)
+			.setPitch(pitch)
+			.setReferenceDistance(refDist)
+			.setRolloffFactor(rollOff)
+			.setMaxDistance(maxDist)
+			.setLooping(looping);
 		audioLoader.loadSound(assetName);
 
 	}

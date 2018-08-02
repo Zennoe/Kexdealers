@@ -27,8 +27,11 @@ public class Player {
 
 	// -- state tracking
 	/*
-	 * // cameraDirective indicates how the camera is supposed to be updated // 0:
-	 * don't update 1: follow player (FP) 2: look at player // 3: follow player (TP)
+	 * cameraDirective indicates how the camera is supposed to be updated 
+	 * 0: don't update
+	 * 1: follow player (FP)
+	 * 2: look at player 
+	 * 3: follow player (TP)
 	 * private int cameraDirective = 1;
 	 */
 	// TODO suggestion: rename FPPCameraComponent to CameraComponent
