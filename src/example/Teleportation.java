@@ -30,5 +30,11 @@ public class Teleportation {
 		Vector3f _destination = new Vector3f(destination);
 		return _destination;
 	}
+	
+	@Override
+	public String toString() {
+		return String.format("Name: %s Destination %s TriggerLocation: %s TriggerRadius: %f",
+				name, destination.toString(), triggerLocation.toString(), triggerRadius);
+	}
 
 }

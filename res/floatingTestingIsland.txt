@@ -43,3 +43,7 @@ POINTLIGHTCOMPONENT{eID=8}{450/20/350/1.5/10.0/1.9/1.5/10.0/1.9/1.5/10.0/1.9/10.
 >c param: assetName - gain - pitch - refDist - rolloff - maxDist
 AUDIOSOURCECOMPONENT{eID=8}{music/1.0/1.0/30.0/0.5/500.0/true}
 AUDIOSOURCECOMPONENT{eID=2}{music/1.0/1.0/30.0/0.5/500.0/true
+>c teleportations
+>c param: name - destination vec3 - trigger location vec3 - trigger radius
+TELEPORTATION{tp00/100.0f/0/100.0f/660/0/500/30}
+TELEPORTATION{tp01/560/0/400/0/0/0/30}

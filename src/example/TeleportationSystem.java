@@ -13,6 +13,7 @@ import ecs.AbstractSystem;
 import ecs.EntityController;
 import ecs.FPPCameraComponent;
 import ecs.Transformable;
+import loaders.BlueprintLoader;
 
 public class TeleportationSystem extends AbstractSystem {
 	
@@ -21,20 +22,7 @@ public class TeleportationSystem extends AbstractSystem {
 	public TeleportationSystem(MessageBus messageBus, EntityController entityController) {
 		super(messageBus, entityController);
 		
-		// some tps
-		Teleportation tp00 = new Teleportation("tp00", 
-				new Vector3f(100.0f, 0.0f, 100.0f), 
-				new Vector3f(660.0f, 0.0f, 500.0f), 
-				30.0f);
-		Teleportation tp01 = new Teleportation("tp00", 
-				new Vector3f(560.0f, 0.0f, 400.0f), 
-				new Vector3f(0.0f, 0.0f, 0.0f), 
-				30.0f);
-		
-		
 		teleportations = new HashMap<>();
-		teleportations.put("tp00", tp00);
-		teleportations.put("tp01", tp01);
 	}
 
 	public void run() {
@@ -78,7 +66,26 @@ public class TeleportationSystem extends AbstractSystem {
 	}
 	
 	public void loadBlueprint(ArrayList<String> blueprint) {
+		ArrayList<String> teleLines = BlueprintLoader.getAllLinesWith("TELEPORTER", blueprint);
 		
+		for (String teleLine : teleLines) {
+						int eID = -1;
+
+			try {
+			// extract data and add teleportation
+				String[] frags = BlueprintLoader.getDataFragments(teleLine);
+				teleportations.put(frags[0], new Teleportation(frags[0], // name
+						new Vector3f(Float.valueOf(frags[1]), Float.valueOf(frags[2]), Float.valueOf(frags[3])), // destination
+						new Vector3f(Float.valueOf(frags[4]), Float.valueOf(frags[5]), Float.valueOf(frags[6])), // triggerLocation
+						Float.valueOf(frags[7]))); // triggerradius
+				
+			} catch (NullPointerException | IndexOutOfBoundsException e) {
+				System.err.println("Teleportations: couldn't load teleportation. Too few arguments.");
+			} catch (IllegalArgumentException e) {
+				System.err.printf("Teleportations: couldn't load teleportation. %s%n", eID, e.toString());
+			}
+	
+		}
 	}
 	
 	public Set<String> getAllTeleportations() {
@@ -89,6 +96,8 @@ public class TeleportationSystem extends AbstractSystem {
 		// > fancy effects <
 		// wheeeeeee~~~
 		entityController.getTransformable(targetEID).setPosition(destination);
-		entityController.getPhysicsComponent(targetEID).resetVelocity();
+		if (entityController.getPhysicsComponent(targetEID) != null) {
+			entityController.getPhysicsComponent(targetEID).resetVelocity();
+		}
 	}
 }
