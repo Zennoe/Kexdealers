@@ -126,7 +126,7 @@ public class BlueprintLoader {
 		}
 
 		// add last fragment
-		fragments.add(currFrag.toString());
+		fragments.add(currFrag.toString().trim());
 
 		return fragments.toArray(new String[fragments.size()]);
 	}
