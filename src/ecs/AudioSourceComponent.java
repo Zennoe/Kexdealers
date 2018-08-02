@@ -6,7 +6,7 @@ public class AudioSourceComponent extends Component{
 	
 	private String assetName = "default";
 	
-	private int sourceID;
+	private int sourceID = -1;
 	
 	private float gain = 1.0f;
 	private float pitch = 1.0f;

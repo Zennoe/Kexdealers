@@ -125,6 +125,12 @@ public class AudioSystem extends AbstractSystem {
 
 	public void cleanUp() {
 		// Delete all sound buffers
+		while (!entityController.getAudioSourceComponents().isEmpty()) {
+			AudioSourceComponent comp = entityController.getAudioSourceComponents().iterator().next();
+			String assetName = comp.getAudioSourceFileName();
+			entityController.getAudioSourceComponents().remove(comp);
+			audioLoader.unloadSound(assetName);
+		}
 
 		// Close OpenAL
 		ALC10.alcMakeContextCurrent(alContext);
@@ -152,7 +158,7 @@ public class AudioSystem extends AbstractSystem {
 						Float.valueOf(frags[3]), Float.valueOf(frags[4]), Float.valueOf(frags[5]),
 						Boolean.valueOf(frags[6]));
 				
-			} catch (NullPointerException | IndexOutOfBoundsException e) {
+			} catch (IndexOutOfBoundsException e) {
 				System.err.printf("Audio: couldn't load component for entity %d. Too few arguments.%n", eID);
 			} catch (IllegalArgumentException e) {
 				System.err.printf("Audio: couldn't load component for entity %d. %s%n", eID, e.toString());
@@ -200,6 +206,7 @@ public class AudioSystem extends AbstractSystem {
 
 	public void attachAudioSource(int eID, String assetName, float gain, float pitch, float refDist, float rollOff,
 			float maxDist, boolean looping) {
+		audioLoader.loadSound(assetName);
 		entityController.addAudioSourceComponent(eID)
 			.setAudioSourceFileName(assetName)
 			.setGain(gain)
@@ -207,9 +214,8 @@ public class AudioSystem extends AbstractSystem {
 			.setReferenceDistance(refDist)
 			.setRolloffFactor(rollOff)
 			.setMaxDistance(maxDist)
-			.setLooping(looping);
-		audioLoader.loadSound(assetName);
-
+			.setLooping(looping)
+			.setSourceID(audioLoader.getSound(assetName).getSourceID());
 	}
 
 	public void detachAudioSource(int eID) {

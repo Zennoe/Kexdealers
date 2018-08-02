@@ -171,6 +171,7 @@ public class LinkStart implements Runnable{
 		Player player = new Player(entityController);
 		
 		messageBus.messageRenderSys(bus.Operation.SYS_RENDER_DEBUGLINES_ON);
+		((AudioSystem) systems.get("AudioSystem")).playEntitySound(8);
 		
 		// < The Loop >
 		double frameBegin;

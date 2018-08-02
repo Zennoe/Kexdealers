@@ -8,39 +8,39 @@ import audio.AudioResource;
  * SFX Sounds & BGM
  */
 public class AudioLoader {
-	
+
 	private HashMap<String, Integer> pointerCounterSound = new HashMap<>();
 	private HashMap<String, AudioResource> assetsSound = new HashMap<>();
-	
+
 	public AudioLoader() {
-		// Initialize keys
-		assetsSound.put("music", null);
-		pointerCounterSound.put("music", 0);
-		
-	}	
-	
+	}
+
 	public void loadSound(String assetName) {
-		int x = pointerCounterSound.get(assetName);
-		if( x == 0) {
+		Integer x = pointerCounterSound.get(assetName);
+		if (x == null || x.equals(0)) {
 			// load fresh from HDD
-			AudioResource audioResource = new AudioResource("res/" +assetName +".wav");
+			AudioResource audioResource = new AudioResource("res/" + assetName + ".wav");
 			assetsSound.put(assetName, audioResource);
-			pointerCounterSound.put(assetName, x++);
+			pointerCounterSound.put(assetName, 1);
 		}
 	}
-	
+
 	public void unloadSound(String assetName) {
-		int x = pointerCounterSound.get(assetName);
-		if(x == 1) {
-			pointerCounterSound.put(assetName, x--);
+		Integer x = pointerCounterSound.get(assetName);
+		if (x == null) {
+			return;
+		}
+
+		if (x.equals(1)) {
+			pointerCounterSound.put(assetName, x.intValue() - 1);
 			// unload completely
 			assetsSound.get(assetName).destroy();
-			assetsSound.put(assetName, null);			
+			assetsSound.put(assetName, null);
 		} else {
-			pointerCounterSound.put(assetName, x--);
+			pointerCounterSound.put(assetName, x.intValue() - 1);
 		}
 	}
-	
+
 	public AudioResource getSound(String assetName) {
 		return assetsSound.get(assetName);
 	}
