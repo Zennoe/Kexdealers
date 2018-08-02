@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 
-import com.sun.xml.internal.txw2.IllegalAnnotationException;
-
 public class BlueprintLoader {
 
 	public static ArrayList<String> loadFromFile(String filePath) {
@@ -41,15 +39,11 @@ public class BlueprintLoader {
 		int idBeg = input.indexOf("eID=") + "eID=".length();
 		int idEnd = input.indexOf("}");
 
-		if (idBeg > 0) {
-			String subStr;
-			if (idEnd > idBeg) {
-				subStr = input.substring(idBeg, idEnd);
-			} else {
-				subStr = input.substring(idBeg);
-			}
+		if (idBeg > "eID=".length() && idEnd > idBeg) {
+			String subStr = input.substring(idBeg, idEnd);
 			return Integer.valueOf(subStr);
 		} else {
+			System.err.println("Syntax Error while parsing eID.");
 			return -1;
 		}
 	}
@@ -74,25 +68,66 @@ public class BlueprintLoader {
 	}
 
 	public static String[] getDataFragments(String line) throws IllegalArgumentException {
-		// -1 to cut away the trailing "}"
-		String inner = line.substring(line.lastIndexOf("{") + 1, line.length() - 1);
+		// extract last bracket pair substring
+		String inner = line.substring(line.lastIndexOf('{') + 1, line.lastIndexOf('}'));
 
-		if (inner == null || line.charAt(line.length() - 1) != '}') {
-			throw new IllegalArgumentException("Syntax error in line with contents: " + line);
-		}
-
-		// split inner at "/
-		String[] split = inner.split("/");
-		LinkedList<String> ret = new LinkedList<>();
-		ret.add(split[0]);
-		for (int i = 1; i < split.length; i++) {
-			if (split[i - 1].charAt(split[i - 1].length() - 1) == '\\') {
-				ret.set(ret.size() - 1, ret.getLast() + split[i]);
-			} else {
-				ret.add(split[i]);
+		// split inner into fragments separated by '/'.
+		// an '/' inside '"' is not a separator.
+		// if the '"' is prepended by a '\' it is considered escaped and part of
+		// fragment.
+		// if the fragment is not inside '"' the list of escapable chars has to be
+		// considered.
+		final char[] escapableChars = { '"', '\\', '/' };
+		LinkedList<String> fragments = new LinkedList<>();
+		boolean insideQuote = false;
+		StringBuilder currFrag = new StringBuilder();
+		for (int i = 0; i < inner.length(); i++) {
+			switch (inner.charAt(i)) {
+			case '/':
+				// standard separator
+				if (!insideQuote) {
+					// end of frag reached
+					fragments.add(currFrag.toString().trim());
+					currFrag = new StringBuilder();
+				} else {
+					currFrag.append(inner.charAt(i));
+				}
+				break;
+			case '"':
+				// quoted fragment
+				if (i <= 0 || inner.charAt(i - 1) != '\\') {
+					insideQuote = !insideQuote;
+					break;
+				}
+			case '\\':
+				// escaped character. ('\' has to be escaped as well)
+				if (i < inner.length() - 1) { // check if end of string
+					if (insideQuote) {
+						// inside quotations: only '"' needs to be escaped
+						if (inner.charAt(i + 1) == '"') {
+							currFrag.append('"');
+							i++;
+						}
+					} else {
+						// not inside quotations
+						for (char c : escapableChars) {
+							if (inner.charAt(i + 1) == c) {
+								currFrag.append(c);
+								i++;
+							}
+						}
+					}
+					break;
+				}
+			default:
+				// normal char of frag
+				currFrag.append(inner.charAt(i));
 			}
 		}
 
-		return ret.toArray(split);
+		// add last fragment
+		fragments.add(currFrag.toString());
+
+		return fragments.toArray(new String[fragments.size()]);
 	}
 }

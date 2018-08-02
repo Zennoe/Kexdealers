@@ -97,16 +97,24 @@ public class PhysicsSystem extends AbstractSystem {
 		ArrayList<String> physicsComponentData = BlueprintLoader.getAllLinesWith("PHYSICSCOMPONENT", blueprint);
 		String[] frags = null;
 		for (String dataSet : physicsComponentData) {
+				int eID = -1;
+
 			try {
-				int eID = BlueprintLoader.extractEID(dataSet);
-				if (eID < 0) {
+				eID = BlueprintLoader.extractEID(dataSet);
+				if (!entityController.isEntity(eID)) {
+					System.err.printf("Physics: couldn't load component. %d is not a valid eID.%n", eID);
 					continue;
 				}
+				
+				// extract data and add component
 				frags = BlueprintLoader.getDataFragments(dataSet);
 				entityController.addPhysicsComponent(eID).setWeight(Float.valueOf(frags[0]))
 						.setAffectedByGravity(Boolean.valueOf(frags[1]));
-			} catch (NullPointerException | IllegalArgumentException e) {
-				System.err.println("Couldn't parse line of AudiosourceComponent.");
+				
+			} catch (NullPointerException | IndexOutOfBoundsException e) {
+				System.err.printf("Physics: couldn't load component for entity %d. Too few arguments.%n", eID);
+			} catch (IllegalArgumentException e) {
+				System.err.printf("Physics: couldn't load component for entity %d. %s%n", eID, e.toString());
 			}
 		}
 	}

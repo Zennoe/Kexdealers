@@ -5,7 +5,7 @@ SKYBOX{1200.0f/starfield}
 TERRAIN{1024/32/heightMap1024/blendMap1024/mud/planks/grass3/path}
 >c param: directionInverse - ambient - diffuse - specular
 SUN{-0.2/-1/-0.3/0.1/0.1/0.1/0.6/0.6/0.6/0.4/0.4/0.4}
-ENTITIES{0/1/2/3/4/5/6/7/8}
+ENTITIES{0/1/2/3/4/5/6/7/8/9/10}
 >c player
 >c param: position - rotation - scale
 TRANSFORMABLE{eID=0}{500/7/400/0/0/0/1}
@@ -14,7 +14,7 @@ FPPCAMERACOMPONENT{eID=0}
 PHYSICSCOMPONENT{eID=0}{60/true}
 >c lamp
 TRANSFORMABLE{eID=1}{660/6.45/500/0/0/0/1.8}
-RENDERABLE{eID=1}{lamp}
+RENDERABLE{eID=1}{"lamp"}
 >c param: position - ambient - diffuse - specular - radius - cutoff
 POINTLIGHTCOMPONENT{eID=1}{660/21/500/1.5/1.0/10.9/1.5/1.0/10.9/1.5/1.0/10.9/25.5/0.01}
 PHYSICSCOMPONENT{eID=1}{300/true}
@@ -42,3 +42,4 @@ TRANSFORMABLE{eID=8}{450/20/350/0/0/0/1}
 POINTLIGHTCOMPONENT{eID=8}{450/20/350/1.5/10.0/1.9/1.5/10.0/1.9/1.5/10.0/1.9/10.0/0.01}
 >c param: assetName - gain - pitch - refDist - rolloff - maxDist
 AUDIOSOURCECOMPONENT{eID=8}{music/1.0/1.0/30.0/0.5/500.0/true}
+AUDIOSOURCECOMPONENT{eID=2}{music/1.0/1.0/30.0/0.5/500.0/true

@@ -26,6 +26,8 @@ public class LinkStart implements Runnable{
 	// online == false -> run in local mode
 	private boolean online = false;
 	
+	private boolean headless = false;
+	
 	private static int targetFPS = 60;
 	public static double timeDelta = 1 / targetFPS;
 	
@@ -50,8 +52,11 @@ public class LinkStart implements Runnable{
 	public void run(){
 		
 		// Window creation
-		Display display = new Display(1920, 1080);
-		display.create();
+		Display display = null;
+		if (!headless) {
+			display = new Display(1920, 1080);
+			display.create();
+		}
 		
 		// Managers
 		EntityController entityController = new EntityController();
@@ -60,7 +65,9 @@ public class LinkStart implements Runnable{
 		MessageBus messageBus = MessageBus.getInstance();
 
 		// Systems - Create a System here if you want to use it :)
-		systems.put("RenderSystem", new RenderSystem(messageBus, entityController));
+		if (!headless) {
+			systems.put("RenderSystem", new RenderSystem(messageBus, entityController));
+		}
 		systems.put("TeleportationSystem", new TeleportationSystem(messageBus, entityController));
 		systems.put("NetworkSystem", new NetworkSystem(messageBus, entityController));
 		systems.put("InputSystem", new InputSystem(messageBus, entityController));
@@ -181,15 +188,18 @@ public class LinkStart implements Runnable{
 			// Input
 			systems.get("InputSystem").run();
 			
-			// Audio
-			systems.get("AudioSystem").run();
-			
-			// Render
-			systems.get("RenderSystem").run();
-			
-			if(GLFW.glfwWindowShouldClose(Display.window)){
-				running = false;
+			if (!headless) {
+				// Audio
+				systems.get("AudioSystem").run();
+				
+				// Render
+				systems.get("RenderSystem").run();
+				
+				if(GLFW.glfwWindowShouldClose(Display.window)){
+					running = false;
+				}
 			}
+			
 			
 			timeDelta = glfwGetTime() - frameBegin;
 			
@@ -199,7 +209,9 @@ public class LinkStart implements Runnable{
 			tickCounter++;
 		}
 		
-		display.destroy();
+		if (!headless) {
+			display.destroy();
+		}
 		if(online) {
 			messageBus.messageNetworkSys(bus.Operation.SYS_NETWORK_DISCONNECT, null);
 		}

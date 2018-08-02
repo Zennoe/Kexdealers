@@ -27,16 +27,16 @@ import loaders.AudioLoader;
 import loaders.BlueprintLoader;
 
 public class AudioSystem extends AbstractSystem {
-	
+
 	private final AudioLoader audioLoader;
-	
+
 	// OpenAL context
 	private long alDevice;
 	private long alContext;
 
 	public AudioSystem(MessageBus messageBus, EntityController entityController) {
 		super(messageBus, entityController);
-		
+
 		// Initialize OpenAL
 		alDevice = ALC10.alcOpenDevice((ByteBuffer) null);
 		if (alDevice == MemoryUtil.NULL) {
@@ -62,7 +62,7 @@ public class AudioSystem extends AbstractSystem {
 		AL10.alDistanceModel(EXTLinearDistance.AL_LINEAR_DISTANCE_CLAMPED);
 		AL10.alListener3f(AL10.AL_VELOCITY, 0.0f, 0.0f, 0.0f);
 		// Initialization done
-		
+
 		audioLoader = new AudioLoader();
 	}
 
@@ -71,15 +71,16 @@ public class AudioSystem extends AbstractSystem {
 
 		// update :)
 		update();
-		
+
 		// cleanUp on program exit
-		//cleanUp();
+		// cleanUp();
 	}
-	
+
 	public void update() {
 		super.timeMarkStart();
-		
-		// Assumes that there is only one FPP camera component so the first one found is used.
+
+		// Assumes that there is only one FPP camera component so the first one found is
+		// used.
 		Set<FPPCameraComponent> fppCamComps = entityController.getFPPCameraComponents();
 		FPPCameraComponent camera = fppCamComps.iterator().next();
 		int listenerEID = camera.getEID();
@@ -101,7 +102,7 @@ public class AudioSystem extends AbstractSystem {
 		} else {
 			AL10.alListener3f(AL10.AL_VELOCITY, 0, 0, 0);
 		}
-	
+
 		for (AudioSourceComponent comp : entityController.getAudioSourceComponents()) {
 			if (AL10.alGetSourcei(comp.getSourceID(), AL10.AL_SOURCE_STATE) == AL10.AL_PLAYING) {
 				Vector3fc pos = entityController.getTransformable(comp.getEID()).getPosition();
@@ -118,10 +119,10 @@ public class AudioSystem extends AbstractSystem {
 				}
 			}
 		}
-		
+
 		super.timeMarkEnd();
 	}
-	
+
 	public void cleanUp() {
 		// Delete all sound buffers
 
@@ -130,66 +131,77 @@ public class AudioSystem extends AbstractSystem {
 		ALC10.alcDestroyContext(alContext);
 		ALC10.alcCloseDevice(alDevice);
 	}
-	
+
 	public void loadBlueprint(ArrayList<String> blueprint) {
 		// - AudioSourceComponent
-		ArrayList<String> audioSourceComponentData = 
-				BlueprintLoader.getAllLinesWith("AUDIOSOURCECOMPONENT", blueprint);
+		ArrayList<String> audioSourceComponentData = BlueprintLoader.getAllLinesWith("AUDIOSOURCECOMPONENT", blueprint);
 		String[] frags = null;
-		for(String dataSet : audioSourceComponentData) {
+		for (String dataSet : audioSourceComponentData) {
+			int eID = -1;
+
 			try {
-				int eID = BlueprintLoader.extractEID(dataSet);
-				if (eID < 0) {
+				eID = BlueprintLoader.extractEID(dataSet);
+				if (!entityController.isEntity(eID)) {
+					System.err.printf("Audio: couldn't load component. %d is not a valid eID.%n", eID);
 					continue;
 				}
 				
+				// extract data and add component
 				frags = BlueprintLoader.getDataFragments(dataSet);
-				attachAudioSource(eID, frags[0], 
-						Float.valueOf(frags[1]), 
-						Float.valueOf(frags[2]), 
-						Float.valueOf(frags[3]), 
-						Float.valueOf(frags[4]), 
-						Float.valueOf(frags[5]), 
+				attachAudioSource(eID, frags[0], Float.valueOf(frags[1]), Float.valueOf(frags[2]),
+						Float.valueOf(frags[3]), Float.valueOf(frags[4]), Float.valueOf(frags[5]),
 						Boolean.valueOf(frags[6]));
-			} catch (NullPointerException|IllegalArgumentException e) {
-				System.err.println("Couldn't parse line of AudiosourceComponent.");
+				
+			} catch (NullPointerException | IndexOutOfBoundsException e) {
+				System.err.printf("Audio: couldn't load component for entity %d. Too few arguments.%n", eID);
+			} catch (IllegalArgumentException e) {
+				System.err.printf("Audio: couldn't load component for entity %d. %s%n", eID, e.toString());
 			}
 		}
 	}
-	
-	public void playEntitySound(int eID) {
-		AudioSourceComponent comp = entityController.getAudioSourceComponent(eID);
 
+	public void playEntitySound(int eID) {
 		AL10.alGetError();
 
+		AudioSourceComponent comp = entityController.getAudioSourceComponent(eID);
 		AL10.alSourcePlay(comp.getSourceID());
 
 		int err = AL10.alGetError();
 		if (err != AL10.AL_NO_ERROR) {
-			System.out.println("oh no " + err);
+			System.err.println("Audio: error while playing " + eID + ": " + err);
 		}
 
 	}
 
 	public void pauseEntitySound(int eID) {
+		AL10.alGetError();
+
 		AudioSourceComponent comp = entityController.getAudioSourceComponent(eID);
 		AL10.alSourcePause(comp.getSourceID());
+
+		int err = AL10.alGetError();
+		if (err != AL10.AL_NO_ERROR) {
+			System.err.println("Audio: error while playing " + eID + ": " + err);
+		}
 	}
 
 	public void stopEntitySound(int eID) {
+		AL10.alGetError();
+
 		AudioSourceComponent comp = entityController.getAudioSourceComponent(eID);
 		AL10.alSourceStop(comp.getSourceID());
 		AL10.alSourceRewind(comp.getSourceID());
+
+		int err = AL10.alGetError();
+		if (err != AL10.AL_NO_ERROR) {
+			System.err.println("Audio: error while playing " + eID + ": " + err);
+		}
 	}
 
 	public void attachAudioSource(int eID, String assetName, float gain, float pitch, float refDist, float rollOff,
 			float maxDist, boolean looping) {
-		entityController.addAudioSourceComponent(eID)
-			.setAudioSourceFileName(assetName)
-			.setGain(gain).setPitch(pitch)
-			.setReferenceDistance(refDist).setRolloffFactor(rollOff)
-			.setMaxDistance(maxDist)
-			.setLooping(looping);
+		entityController.addAudioSourceComponent(eID).setAudioSourceFileName(assetName).setGain(gain).setPitch(pitch)
+				.setReferenceDistance(refDist).setRolloffFactor(rollOff).setMaxDistance(maxDist).setLooping(looping);
 		audioLoader.loadSound(assetName);
 
 	}
