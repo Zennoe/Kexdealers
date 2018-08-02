@@ -86,7 +86,7 @@ public class RenderSystem extends AbstractSystem {
 				break;
 			case SYS_RENDER_DEBUGLINES_ON: drawDebugLines = true;
 				break;
-			case SYS_RENDER_DEBUGLINES_OFF: drawDebugLines = false;
+			case SYS_RENDER_DEBUGLINES_OFF: drawDebugLines = false; lineRenderer.clearLines();
 				break;
 			case SYS_RENDER_DEBUGLINES_ADDNEWLINE:
 				lineRenderer.addLine(message.getPosBegin(), message.getPosEnd(), message.getColour(), message.getTime());
