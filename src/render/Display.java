@@ -1,0 +1,68 @@
+package render;
+
+import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
+import static org.lwjgl.glfw.GLFW.*; // allows us to create windows
+import static org.lwjgl.opengl.GL11.*; // gives us access to things like "GL_TRUE" which we'll need 
+import static org.lwjgl.system.MemoryUtil.*; // allows us to use 'NULL' in our code, note this is slightly different from java's 'null'
+
+import java.nio.IntBuffer;
+
+import org.lwjgl.BufferUtils;
+import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.opengl.GL;
+
+import input.InputSystem;
+
+public class Display {
+	
+	public long window = 0;
+	
+	private int width;
+	private int height;
+	
+	private boolean isInitialised = false;
+
+	public Display(int width, int height) {
+		this.width = width;
+		this.height = height;
+	}
+
+	public void create(InputSystem insys) {
+		// Set error output
+		GLFWErrorCallback.createPrint(System.err).set();
+		// Initialize GLFW
+		if (glfwInit() != true) {
+			System.err.println("GLFW initialization failed!");
+		}
+		// Set window properties
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+		
+		// setup input callbacks
+		glfwSetKeyCallback(window, insys::keyClbk);
+		glfwSetMouseButtonCallback(window, insys::mouseBtnClbk);
+		glfwSetCursorPosCallback(window, insys::mousePosClbk);
+		glfwSetScrollCallback(window, insys::mouseScrollClbk);
+		
+		// Create window
+		window = glfwCreateWindow(width, height, "Game Loop", NULL, NULL);
+		if (window == NULL) {
+			System.err.println("Could not create Window");
+		}
+		glfwSetWindowPos(window, 1, 20);
+		glfwShowWindow(window);
+
+		isInitialised = true;
+	}
+	
+	public void destroy() {
+		glfwFreeCallbacks(window);
+		glfwDestroyWindow(window);
+		glfwTerminate();
+		glfwSetErrorCallback(null).free();
+	}
+
+}

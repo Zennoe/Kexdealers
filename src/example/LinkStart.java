@@ -14,8 +14,12 @@ import bus.NetworkSysMessage;
 import bus.Operation;
 import ecs.AbstractSystem;
 import ecs.EntityController;
+import input.InputSystem;
+import input.InputSystem_old;
 import loaders.BlueprintLoader;
 import physics.PhysicsSystem;
+import render.Display;
+import render.Display_old;
 import render.RenderSystem;
 
 public class LinkStart implements Runnable{
@@ -52,9 +56,9 @@ public class LinkStart implements Runnable{
 	public void run(){
 		
 		// Window creation
-		Display display = null;
+		Display_old display = null;
 		if (!headless) {
-			display = new Display(1920, 1080);
+			display = new Display_old(1920, 1080);
 			display.create();
 		}
 		
@@ -70,7 +74,7 @@ public class LinkStart implements Runnable{
 		}
 		systems.put("TeleportationSystem", new TeleportationSystem(messageBus, entityController));
 		systems.put("NetworkSystem", new NetworkSystem(messageBus, entityController));
-		systems.put("InputSystem", new InputSystem(messageBus, entityController));
+		systems.put("InputSystem", new InputSystem_old(messageBus, entityController));
 		systems.put("AudioSystem", new AudioSystem(messageBus, entityController));
 		//systems.put("PhysicsSystem", new PhysicsSystem(messageBus, entityController));
 		
@@ -198,7 +202,7 @@ public class LinkStart implements Runnable{
 				// Render
 				systems.get("RenderSystem").run();
 				
-				if(GLFW.glfwWindowShouldClose(Display.window)){
+				if(GLFW.glfwWindowShouldClose(Display_old.window)){
 					running = false;
 				}
 			}

@@ -36,9 +36,15 @@ public class BlueprintLoader {
 	}
 
 	public static int extractEID(String input) {
+		// expected syntax is {eID=2}
+		// indexOf("eID=") has to return at least 1 if correct syntax
 		int idBeg = input.indexOf("eID=") + "eID=".length();
 		int idEnd = input.indexOf("}");
 
+		// check if eID was found and if eID is encapsuled in {}
+		// idBeg is bigger than the length of the prefix by at least 1 for correct
+		// syntax
+		// idEnd is of course bigger than idBeg if an eID and a } is present
 		if (idBeg > "eID=".length() && idEnd > idBeg) {
 			String subStr = input.substring(idBeg, idEnd);
 			return Integer.valueOf(subStr);
@@ -72,59 +78,35 @@ public class BlueprintLoader {
 		String inner = line.substring(line.lastIndexOf('{') + 1, line.lastIndexOf('}'));
 
 		// split inner into fragments separated by '/'.
-		// an '/' inside '"' is not a separator.
-		// if the '"' is prepended by a '\' it is considered escaped and part of
-		// fragment.
-		// if the fragment is not inside '"' the list of escapable chars has to be
-		// considered.
-		final char[] escapableChars = { '"', '\\', '/' };
+		// if the '/' is escaped. it will not be treated as a separator
+		final char[] escapableChars = { '\\', '/' };
 		LinkedList<String> fragments = new LinkedList<>();
 		boolean insideQuote = false;
 		StringBuilder currFrag = new StringBuilder();
 		for (int i = 0; i < inner.length(); i++) {
 			switch (inner.charAt(i)) {
 			case '/':
-				// standard separator
-				if (!insideQuote) {
-					// end of frag reached
-					fragments.add(currFrag.toString().trim());
-					currFrag = new StringBuilder();
-				} else {
-					currFrag.append(inner.charAt(i));
-				}
+				// separator reached
+				fragments.add(currFrag.toString().trim());
+				currFrag = new StringBuilder();
 				break;
-			case '"':
-				// quoted fragment
-				if (i <= 0 || inner.charAt(i - 1) != '\\') {
-					insideQuote = !insideQuote;
-					break;
-				}
 			case '\\':
-				// escaped character. ('\' has to be escaped as well)
+				// escaped character reached.
 				if (i < inner.length() - 1) { // check if end of string
-					if (insideQuote) {
-						// inside quotations: only '"' needs to be escaped
-						if (inner.charAt(i + 1) == '"') {
-							currFrag.append('"');
+					for (char c : escapableChars) {
+						if (inner.charAt(i + 1) == c) {
+							// if the following char is an escapable char, it is added
+							currFrag.append(c);
 							i++;
-						}
-					} else {
-						// not inside quotations
-						for (char c : escapableChars) {
-							if (inner.charAt(i + 1) == c) {
-								currFrag.append(c);
-								i++;
-							}
+							break;
 						}
 					}
-					break;
 				}
 			default:
 				// normal char of frag
 				currFrag.append(inner.charAt(i));
 			}
 		}
-
 		// add last fragment
 		fragments.add(currFrag.toString().trim());
 

@@ -8,6 +8,7 @@ import ecs.EntityController;
 import ecs.FPPCameraComponent;
 import ecs.PhysicsComponent;
 import ecs.Transformable;
+import render.Display_old;
 
 public class Player {
 
@@ -50,10 +51,10 @@ public class Player {
 		// -- workaround END
 
 		// -- Poll input
-		float yaw = (float) Math.toRadians(Display.getMouseX() * cameraTurnSpeed * delta);
-		float pitch = (float) Math.toRadians(Display.getMouseY() * cameraTurnSpeed * delta);
+		float yaw = (float) Math.toRadians(Display_old.getMouseX() * cameraTurnSpeed * delta);
+		float pitch = (float) Math.toRadians(Display_old.getMouseY() * cameraTurnSpeed * delta);
 		Vector2f inputDir = pollMoveInputDir();
-		boolean jumping = (Display.pressedKeys[GLFW.GLFW_KEY_SPACE]);
+		boolean jumping = (Display_old.pressedKeys[GLFW.GLFW_KEY_SPACE]);
 
 		// -- Update player velocity and rotation
 		transformable.rotateRadians(0.0f, -yaw, 0.0f);
@@ -86,7 +87,7 @@ public class Player {
 			newCamPos.add(cameraOffset, newCamPos);
 			// newCamPos.y = 0.0f;
 			camera.setPosition(newCamPos);
-			camera.changeFOV((float) (100.0f * Display.getMouseScroll() * delta));
+			camera.changeFOV((float) (100.0f * Display_old.getMouseScroll() * delta));
 		}
 	}
 
@@ -96,16 +97,16 @@ public class Player {
 		// Input is polled from AWSD input.
 		Vector2f inputDirVec = new Vector2f(); // forward: +y, left: +x
 
-		if (Display.pressedKeys[GLFW.GLFW_KEY_W]) {
+		if (Display_old.pressedKeys[GLFW.GLFW_KEY_W]) {
 			inputDirVec.y += 1;
 		}
-		if (Display.pressedKeys[GLFW.GLFW_KEY_S]) {
+		if (Display_old.pressedKeys[GLFW.GLFW_KEY_S]) {
 			inputDirVec.y -= 1;
 		}
-		if (Display.pressedKeys[GLFW.GLFW_KEY_A]) {
+		if (Display_old.pressedKeys[GLFW.GLFW_KEY_A]) {
 			inputDirVec.x += 1;
 		}
-		if (Display.pressedKeys[GLFW.GLFW_KEY_D]) {
+		if (Display_old.pressedKeys[GLFW.GLFW_KEY_D]) {
 			inputDirVec.x -= 1;
 		}
 

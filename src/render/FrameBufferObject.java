@@ -7,8 +7,6 @@ import org.lwjgl.opengl.GL14;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL32;
 
-import example.Display;
-
 public class FrameBufferObject {
 	
 	public static void bindFrameBufferObject(int fbo, int width, int height){

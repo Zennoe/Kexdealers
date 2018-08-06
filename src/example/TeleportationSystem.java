@@ -85,6 +85,8 @@ public class TeleportationSystem extends AbstractSystem {
 				System.err.printf("Teleportations: couldn't load teleportation. %s%n", e.toString());
 			}
 		}
+		
+		System.out.println(teleportations.toString());
 	}
 
 	public Set<String> getAllTeleportations() {

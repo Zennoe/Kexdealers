@@ -22,7 +22,6 @@ import ecs.AbstractSystem;
 import ecs.EntityController;
 import ecs.FPPCameraComponent;
 import ecs.Transformable;
-import example.Display;
 import loaders.BlueprintLoader;
 import loaders.GraphicsLoader;
 import skybox.SkyboxRenderer;
@@ -224,6 +223,6 @@ public class RenderSystem extends AbstractSystem {
 		}
 		
 		// Swap buffer to make changes visible
-		GLFW.glfwSwapBuffers(Display.window);
+		GLFW.glfwSwapBuffers(Display_old.window);
 	}
 }

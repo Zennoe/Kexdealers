@@ -10,6 +10,7 @@ import loaders.MaterialLoader;
 import loaders.ModelLoader;
 import loaders.OBJLoader;
 import loaders.TerrainMeshLoader;
+import render.DirectionalLight;
 import skybox.Skybox;
 import terrain.Terrain;
 import terrain.TerrainMesh;
