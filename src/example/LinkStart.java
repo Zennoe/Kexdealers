@@ -8,13 +8,16 @@ import java.util.HashMap;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 
+import audio.AudioSystem;
 import bus.MessageBus;
 import bus.NetworkSysMessage;
 import bus.Operation;
 import ecs.AbstractSystem;
 import ecs.EntityController;
+import input.InputSystem_old;
 import loaders.BlueprintLoader;
 import physics.PhysicsSystem;
+import render.Display_old;
 import render.RenderSystem;
 
 public class LinkStart implements Runnable{
@@ -24,6 +27,8 @@ public class LinkStart implements Runnable{
 	
 	// online == false -> run in local mode
 	private boolean online = false;
+	
+	private boolean headless = false;
 	
 	private static int targetFPS = 60;
 	public static double timeDelta = 1 / targetFPS;
@@ -49,8 +54,11 @@ public class LinkStart implements Runnable{
 	public void run(){
 		
 		// Window creation
-		Display display = new Display(1920, 1080);
-		display.create();
+		Display_old display = null;
+		if (!headless) {
+			display = new Display_old(1920, 1080);
+			display.create();
+		}
 		
 		// Managers
 		EntityController entityController = new EntityController();
@@ -59,11 +67,14 @@ public class LinkStart implements Runnable{
 		MessageBus messageBus = MessageBus.getInstance();
 
 		// Systems - Create a System here if you want to use it :)
-		systems.put("RenderSystem", new RenderSystem(messageBus, entityController));
+		if (!headless) {
+			systems.put("RenderSystem", new RenderSystem(messageBus, entityController));
+		}
 		systems.put("TeleportationSystem", new TeleportationSystem(messageBus, entityController));
 		systems.put("NetworkSystem", new NetworkSystem(messageBus, entityController));
-		systems.put("InputSystem", new InputSystem(messageBus, entityController));
-		systems.put("PhysicsSystem", new PhysicsSystem(messageBus, entityController));
+		systems.put("InputSystem", new InputSystem_old(messageBus, entityController));
+		systems.put("AudioSystem", new AudioSystem(messageBus, entityController));
+		//systems.put("PhysicsSystem", new PhysicsSystem(messageBus, entityController));
 		
 		// Local mode: Load a local instance
 		// Online mode: Connect to a server and request an instance from there.
@@ -161,6 +172,9 @@ public class LinkStart implements Runnable{
 		int playerID = 0; //look into file to choose the correct one :S
 		Player player = new Player(entityController);
 		
+		messageBus.messageRenderSys(bus.Operation.SYS_RENDER_DEBUGLINES_ON);
+		((AudioSystem) systems.get("AudioSystem")).playEntitySound(8);
+		
 		// < The Loop >
 		double frameBegin;
 		while(running){
@@ -174,18 +188,23 @@ public class LinkStart implements Runnable{
 			systems.get("TeleportationSystem").run();
 			
 			// Physics
+			//system.get("PhysicsSystem").run();
 			
 			// Input
 			systems.get("InputSystem").run();
 			
-			// Audio
-			
-			// Render
-			systems.get("RenderSystem").run();
-			
-			if(GLFW.glfwWindowShouldClose(Display.window)){
-				running = false;
+			if (!headless) {
+				// Audio
+				systems.get("AudioSystem").run();
+				
+				// Render
+				systems.get("RenderSystem").run();
+				
+				if(GLFW.glfwWindowShouldClose(Display_old.window)){
+					running = false;
+				}
 			}
+			
 			
 			timeDelta = glfwGetTime() - frameBegin;
 			
@@ -195,7 +214,9 @@ public class LinkStart implements Runnable{
 			tickCounter++;
 		}
 		
-		display.destroy();
+		if (!headless) {
+			display.destroy();
+		}
 		if(online) {
 			messageBus.messageNetworkSys(bus.Operation.SYS_NETWORK_DISCONNECT, null);
 		}

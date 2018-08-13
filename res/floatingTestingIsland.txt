@@ -5,7 +5,7 @@ SKYBOX{1200.0f/starfield}
 TERRAIN{1024/32/heightMap1024/blendMap1024/mud/planks/grass3/path}
 >c param: directionInverse - ambient - diffuse - specular
 SUN{-0.2/-1/-0.3/0.1/0.1/0.1/0.6/0.6/0.6/0.4/0.4/0.4}
-ENTITIES{0/1/2/3/4/5/6/7/8}
+ENTITIES{0/1/2/3/4/5/6/7/8/9/10}
 >c player
 >c param: position - rotation - scale
 TRANSFORMABLE{eID=0}{500/7/400/0/0/0/1}
@@ -16,29 +16,33 @@ PHYSICSCOMPONENT{eID=0}{60/true}
 TRANSFORMABLE{eID=1}{660/6.45/500/0/0/0/1.8}
 RENDERABLE{eID=1}{lamp}
 >c param: position - ambient - diffuse - specular - radius - cutoff
-POINTLIGHTCOMPONENT{eID=1}{660/21/500/1.5/1.0/10.9/1.5/1.0/10.9/1.5/1.0/10.9/25.5/0.01}
+POINTLIGHTCOMPONENT{eID=1}{660/21/500 /1.5/1.0/10.9 /1.5/1.0/10.9 /1.5/1.0/10.9 /25.5 /0.01}
 PHYSICSCOMPONENT{eID=1}{300/true}
 >c trees
-TRANSFORMABLE{eID=2}{723/16.7/554/0/120/0/2.5}
+TRANSFORMABLE{eID=2}{723/16.7/554 /0/120/0 /2.5}
 RENDERABLE{eID=2}{lowPolyTree}
 PHYSICSCOMPONENT{eID=2}{50/true}
-TRANSFORMABLE{eID=3}{720/16.7/310/0/-30/0/2.5}
+TRANSFORMABLE{eID=3}{720/16.7/310 /0/-30/0 /2.5}
 RENDERABLE{eID=3}{lowPolyTree}
 PHYSICSCOMPONENT{eID=3}{50/true}
-TRANSFORMABLE{eID=4}{500/250.0/682/0/8/0/2.5}
+TRANSFORMABLE{eID=4}{500/250.0/682 /0/8/0 /2.5}
 RENDERABLE{eID=4}{lowPolyTree}
 PHYSICSCOMPONENT{eID=4}{50/true}
-TRANSFORMABLE{eID=5}{250/16.7/295/0/0/0/2.5}
+TRANSFORMABLE{eID=5}{250/16.7/295 /0/0/0 /2.5}
 RENDERABLE{eID=5}{lowPolyTree}
 PHYSICSCOMPONENT{eID=5}{50/false}
-TRANSFORMABLE{eID=6}{242/16.7/544/0/40/0/2.5}
+TRANSFORMABLE{eID=6}{242/16.7/544 /0/40/0 /2.5}
 RENDERABLE{eID=6}{lowPolyTree}
 PHYSICSCOMPONENT{eID=6}{10/true}
-TRANSFORMABLE{eID=7}{540/16.7/180/0/264/0/2.5}
+TRANSFORMABLE{eID=7}{540/16.7/180 /0/264/0 /2.5}
 RENDERABLE{eID=7}{lowPolyTree}
 PHYSICSCOMPONENT{eID=7}{50/true}
 >c audio test entity
-TRANSFORMABLE{eID=8}{450/20/350/0/0/0/1}
-POINTLIGHTCOMPONENT{eID=8}{450/20/350/1.5/10.0/1.9/1.5/10.0/1.9/1.5/10.0/1.9/10.0/0.01}
->c param: assetName - gain - pitch - refDist - rolloff - maxDist
-AUDIOSOURCECOMPONENT{eID=8}{music/1.0/1.0/30.0/0.5/500.0/true}
+TRANSFORMABLE{eID=8}{450/20/350 /0/0/0 /1}
+POINTLIGHTCOMPONENT{eID=8}{450/20/350 /1.5/10.0/1.9 /1.5/10.0/1.9 /1.5/10.0/1.9 /10.0 /0.01}
+>c param: assetName - gain - pitch - refDist - rolloff - maxDist - looping
+AUDIOSOURCECOMPONENT{eID=8}{music/10.0/1.0/50.0/0.5/500.0/true}
+>c teleportations
+>c param: name - destination vec3 - trigger location vec3 - trigger radius
+TELEPORTATION{tp00 /100.0f/0/100.0f /660/0/500 /30}
+TELEPORTATION{tp01 /560/0 /400/0/0/0 /30}

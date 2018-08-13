@@ -7,7 +7,6 @@ import org.joml.Matrix4fc;
 import org.joml.Vector3f;
 
 import ecs.PointLightComponent;
-import example.DirectionalLight;
 
 public class EntityShader extends ShaderProgram{
 	

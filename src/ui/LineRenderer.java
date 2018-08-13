@@ -78,6 +78,10 @@ public class LineRenderer {
 	public void addLine(Vector3fc begin, Vector3fc end, Vector3fc colour, double lifeTimeSecs) {
 		addLine(begin, end, colour, colour, lifeTimeSecs);
 	}
+	
+	public void clearLines() {
+		lineObjs.clear();
+	}
 
 	private void addLineObjToCurrLines(double deltaTime) {
 		for (int i = 0; i < lineObjs.size(); i++) {

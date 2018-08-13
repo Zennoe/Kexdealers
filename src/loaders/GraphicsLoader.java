@@ -5,7 +5,7 @@ import java.util.HashMap;
 import org.joml.Vector3f;
 
 import example.AssetData;
-import example.DirectionalLight;
+import render.DirectionalLight;
 import skybox.Skybox;
 import terrain.Terrain;
 import terrain.TerrainMesh;

@@ -9,7 +9,7 @@
         <jar destfile="${dir.jarfile}/kekzdealer.jar">
             <manifest>
                 <attribute name="Main-Class" value="example.LinkStart"/>
-                <attribute name="Class-Path" value=". kekzdealer_lib/lwjgl.jar kekzdealer_lib/lwjgl-glfw.jar kekzdealer_lib/lwjgl-openal.jar kekzdealer_lib/lwjgl-opengl.jar kekzdealer_lib/lwjgl-glfw-natives-windows.jar kekzdealer_lib/lwjgl-natives-windows.jar kekzdealer_lib/lwjgl-openal-natives-windows.jar kekzdealer_lib/lwjgl-opengl-natives-windows.jar kekzdealer_lib/lwjgl-stb.jar kekzdealer_lib/lwjgl-stb-natives-windows.jar kekzdealer_lib/lwjgl-glfw-natives-linux.jar kekzdealer_lib/lwjgl-glfw-natives-macos.jar kekzdealer_lib/lwjgl-natives-linux.jar kekzdealer_lib/lwjgl-natives-macos.jar kekzdealer_lib/lwjgl-openal-natives-linux.jar kekzdealer_lib/lwjgl-openal-natives-macos.jar kekzdealer_lib/lwjgl-opengl-natives-linux.jar kekzdealer_lib/lwjgl-opengl-natives-macos.jar kekzdealer_lib/lwjgl-stb-natives-linux.jar kekzdealer_lib/lwjgl-stb-natives-macos.jar kekzdealer_lib/lwjgl-assimp.jar kekzdealer_lib/joml-1.9.9.jar"/>
+                <attribute name="Class-Path" value=". kekzdealer_lib/lwjgl.jar kekzdealer_lib/lwjgl-glfw.jar kekzdealer_lib/lwjgl-openal.jar kekzdealer_lib/lwjgl-opengl.jar kekzdealer_lib/lwjgl-glfw-natives-windows.jar kekzdealer_lib/lwjgl-natives-windows.jar kekzdealer_lib/lwjgl-openal-natives-windows.jar kekzdealer_lib/lwjgl-opengl-natives-windows.jar kekzdealer_lib/lwjgl-stb.jar kekzdealer_lib/lwjgl-stb-natives-windows.jar kekzdealer_lib/lwjgl-glfw-natives-linux.jar kekzdealer_lib/lwjgl-glfw-natives-macos.jar kekzdealer_lib/lwjgl-natives-linux.jar kekzdealer_lib/lwjgl-natives-macos.jar kekzdealer_lib/lwjgl-openal-natives-linux.jar kekzdealer_lib/lwjgl-openal-natives-macos.jar kekzdealer_lib/lwjgl-opengl-natives-linux.jar kekzdealer_lib/lwjgl-opengl-natives-macos.jar kekzdealer_lib/lwjgl-stb-natives-linux.jar kekzdealer_lib/lwjgl-stb-natives-macos.jar kekzdealer_lib/joml-1.9.9.jar"/>
             </manifest>
             <fileset dir="${dir.jarfile}"/>
         </jar>
@@ -35,7 +35,6 @@
         <copy file="${dir.buildfile}/lib/natives/lwjgl-opengl-natives-macos.jar" todir="${dir.jarfile}/kekzdealer_lib"/>
         <copy file="${dir.buildfile}/lib/natives/lwjgl-stb-natives-linux.jar" todir="${dir.jarfile}/kekzdealer_lib"/>
         <copy file="${dir.buildfile}/lib/natives/lwjgl-stb-natives-macos.jar" todir="${dir.jarfile}/kekzdealer_lib"/>
-        <copy file="${dir.buildfile}/lib/jars/lwjgl-assimp.jar" todir="${dir.jarfile}/kekzdealer_lib"/>
         <copy file="${dir.buildfile}/lib/jars/joml-1.9.9.jar" todir="${dir.jarfile}/kekzdealer_lib"/>
     </target>
 </project>

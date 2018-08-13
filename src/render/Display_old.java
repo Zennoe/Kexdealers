@@ -1,4 +1,4 @@
-package example;
+package render;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*; // allows us to create windows
@@ -11,7 +11,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
-public class Display {
+public class Display_old {
 
 	public static long window = NULL;
 	
@@ -31,9 +31,9 @@ public class Display {
 	private static double oldMouseX = 0;
 	private static double oldMouseY = 0;
 	
-	public Display(int width, int height){
-		Display.width = width;
-		Display.height = height;
+	public Display_old(int width, int height){
+		Display_old.width = width;
+		Display_old.height = height;
 	}
 	
 	public void create(){

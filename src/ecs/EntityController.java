@@ -248,6 +248,10 @@ public class EntityController {
 		return entities.get(eID);
 	}
 	
+	public boolean isEntity(int eID) {
+		return entities.containsKey(eID);
+	}
+	
 	// --- EXCHANGE ---
 	
 	public Entity emitEntity(int eID) {

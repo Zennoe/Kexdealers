@@ -22,7 +22,6 @@ import ecs.AbstractSystem;
 import ecs.EntityController;
 import ecs.FPPCameraComponent;
 import ecs.Transformable;
-import example.Display;
 import loaders.BlueprintLoader;
 import loaders.GraphicsLoader;
 import skybox.SkyboxRenderer;
@@ -86,7 +85,7 @@ public class RenderSystem extends AbstractSystem {
 				break;
 			case SYS_RENDER_DEBUGLINES_ON: drawDebugLines = true;
 				break;
-			case SYS_RENDER_DEBUGLINES_OFF: drawDebugLines = false;
+			case SYS_RENDER_DEBUGLINES_OFF: drawDebugLines = false; lineRenderer.clearLines();
 				break;
 			case SYS_RENDER_DEBUGLINES_ADDNEWLINE:
 				lineRenderer.addLine(message.getPosBegin(), message.getPosEnd(), message.getColour(), message.getTime());
@@ -224,6 +223,6 @@ public class RenderSystem extends AbstractSystem {
 		}
 		
 		// Swap buffer to make changes visible
-		GLFW.glfwSwapBuffers(Display.window);
+		GLFW.glfwSwapBuffers(Display_old.window);
 	}
 }

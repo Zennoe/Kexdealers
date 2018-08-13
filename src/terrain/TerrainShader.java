@@ -7,7 +7,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import ecs.PointLightComponent;
-import example.DirectionalLight;
+import render.DirectionalLight;
 import render.ShaderProgram;
 
 public class TerrainShader extends ShaderProgram{
