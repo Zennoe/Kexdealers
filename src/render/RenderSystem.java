@@ -12,6 +12,7 @@ import java.util.Set;
 
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
@@ -29,6 +30,8 @@ import terrain.TerrainRenderer;
 import ui.LineRenderer;
 
 public class RenderSystem extends AbstractSystem {
+	
+	private final Display display;
 
 	private final GraphicsLoader graphicsLoader;
 	
@@ -46,8 +49,13 @@ public class RenderSystem extends AbstractSystem {
 	 * TODO: Make separate ResourceLoaders for separate types of resources. 
 	 * Let the loaders needed for each system be created in their own code.
 	 */
-	public RenderSystem(MessageBus messageBus, EntityController entityController) {
+	public RenderSystem(MessageBus messageBus, EntityController entityController, Display display) {
 		super(messageBus, entityController);
+		this.display = display;
+		GLFW.glfwMakeContextCurrent(display.window);
+		GL.createCapabilities();
+		
+		GL11.glViewport(0, 0, display.getWidth(), display.getHeight());
 		
 		// Back-face culling
 		GL11.glEnable(GL11.GL_CULL_FACE);
@@ -223,6 +231,6 @@ public class RenderSystem extends AbstractSystem {
 		}
 		
 		// Swap buffer to make changes visible
-		GLFW.glfwSwapBuffers(Display_old.window);
+		display.submitFrame();
 	}
 }

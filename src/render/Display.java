@@ -11,8 +11,6 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
-import input.InputSystem;
-
 public class Display {
 	
 	public long window = 0;
@@ -20,6 +18,13 @@ public class Display {
 	private int width;
 	private int height;
 	
+	public int getWidth() {
+		return width;
+	}
+	public int getHeight() {
+		return height;
+	}
+
 	private boolean isInitialised = false;
 
 	public Display(int width, int height) {
@@ -27,7 +32,7 @@ public class Display {
 		this.height = height;
 	}
 
-	public void create(InputSystem insys) {
+	public void create() {
 		// Set error output
 		GLFWErrorCallback.createPrint(System.err).set();
 		// Initialize GLFW
@@ -41,12 +46,6 @@ public class Display {
 		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 		
-		// setup input callbacks
-		glfwSetKeyCallback(window, insys::keyClbk);
-		glfwSetMouseButtonCallback(window, insys::mouseBtnClbk);
-		glfwSetCursorPosCallback(window, insys::mousePosClbk);
-		glfwSetScrollCallback(window, insys::mouseScrollClbk);
-		
 		// Create window
 		window = glfwCreateWindow(width, height, "Game Loop", NULL, NULL);
 		if (window == NULL) {
@@ -54,15 +53,28 @@ public class Display {
 		}
 		glfwSetWindowPos(window, 1, 20);
 		glfwShowWindow(window);
+		IntBuffer w = BufferUtils.createIntBuffer(1);
+		IntBuffer h = BufferUtils.createIntBuffer(1);
+		glfwGetWindowSize(window, w, h);
+		width = w.get(0);
+		height = h.get(0);
 
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		
 		isInitialised = true;
 	}
 	
+	public void submitFrame() {
+		glfwSwapBuffers(window);
+	}
+	
 	public void destroy() {
-		glfwFreeCallbacks(window);
-		glfwDestroyWindow(window);
-		glfwTerminate();
-		glfwSetErrorCallback(null).free();
+		if (isInitialised) {
+			glfwFreeCallbacks(window);
+			glfwDestroyWindow(window);
+			glfwTerminate();
+			glfwSetErrorCallback(null).free();
+		}
 	}
 
 }

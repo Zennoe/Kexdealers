@@ -14,10 +14,10 @@ import bus.NetworkSysMessage;
 import bus.Operation;
 import ecs.AbstractSystem;
 import ecs.EntityController;
-import input.InputSystem_old;
+import input.InputMapper;
 import loaders.BlueprintLoader;
 import physics.PhysicsSystem;
-import render.Display_old;
+import render.Display;
 import render.RenderSystem;
 
 public class LinkStart implements Runnable{
@@ -54,9 +54,10 @@ public class LinkStart implements Runnable{
 	public void run(){
 		
 		// Window creation
-		Display_old display = null;
+		//Display_old display = null;
+		Display display = null;
 		if (!headless) {
-			display = new Display_old(1920, 1080);
+			display = new Display(1920, 1080);
 			display.create();
 		}
 		
@@ -68,13 +69,13 @@ public class LinkStart implements Runnable{
 
 		// Systems - Create a System here if you want to use it :)
 		if (!headless) {
-			systems.put("RenderSystem", new RenderSystem(messageBus, entityController));
+			systems.put("RenderSystem", new RenderSystem(messageBus, entityController, display));
 		}
 		systems.put("TeleportationSystem", new TeleportationSystem(messageBus, entityController));
 		systems.put("NetworkSystem", new NetworkSystem(messageBus, entityController));
-		systems.put("InputSystem", new InputSystem_old(messageBus, entityController));
 		systems.put("AudioSystem", new AudioSystem(messageBus, entityController));
 		//systems.put("PhysicsSystem", new PhysicsSystem(messageBus, entityController));
+		InputMapper inputMapper = new InputMapper(display, messageBus);
 		
 		// Local mode: Load a local instance
 		// Online mode: Connect to a server and request an instance from there.
@@ -170,7 +171,7 @@ public class LinkStart implements Runnable{
 		}
 		
 		int playerID = 0; //look into file to choose the correct one :S
-		Player player = new Player(entityController);
+		Player player = new Player(messageBus, entityController);
 		
 		messageBus.messageRenderSys(bus.Operation.SYS_RENDER_DEBUGLINES_ON);
 		((AudioSystem) systems.get("AudioSystem")).playEntitySound(8);
@@ -180,18 +181,14 @@ public class LinkStart implements Runnable{
 		while(running){
 			frameBegin = GLFW.glfwGetTime();
 			
-			// Update
-			GLFW.glfwPollEvents();
-			
+			// World update
+			inputMapper.pollEvents();
 			player.update(playerID, timeDelta);
 			// Teleport
 			systems.get("TeleportationSystem").run();
 			
 			// Physics
 			//system.get("PhysicsSystem").run();
-			
-			// Input
-			systems.get("InputSystem").run();
 			
 			if (!headless) {
 				// Audio
@@ -200,7 +197,7 @@ public class LinkStart implements Runnable{
 				// Render
 				systems.get("RenderSystem").run();
 				
-				if(GLFW.glfwWindowShouldClose(Display_old.window)){
+				if(GLFW.glfwWindowShouldClose(display.window)){
 					running = false;
 				}
 			}
