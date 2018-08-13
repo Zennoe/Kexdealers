@@ -36,8 +36,8 @@ public class BlueprintLoader {
 	}
 
 	public static int extractEID(String input) {
-		// expected syntax is {eID=2}
-		// indexOf("eID=") has to return at least 1 if correct syntax
+		// expected syntax is: COMPONENT{eID=2}
+		// indexOf("eID=") has to return at least 2 if correct syntax
 		int idBeg = input.indexOf("eID=") + "eID=".length();
 		int idEnd = input.indexOf("}");
 
