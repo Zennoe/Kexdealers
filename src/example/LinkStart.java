@@ -182,7 +182,7 @@ public class LinkStart implements Runnable{
 			frameBegin = GLFW.glfwGetTime();
 			
 			// World update
-			inputMapper.pollEvents();
+			inputMapper.updateInput();
 			player.update(playerID, timeDelta);
 			// Teleport
 			systems.get("TeleportationSystem").run();

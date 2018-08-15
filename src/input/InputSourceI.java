@@ -3,6 +3,8 @@ package input;
 import org.joml.Vector2f;
 
 public interface InputSourceI {
+	
+	default boolean sourceConnectionClosed() { return false; }
 
 	//-- actions
 	
