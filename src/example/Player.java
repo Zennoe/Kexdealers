@@ -23,7 +23,6 @@ public class Player {
 	private final float walkSpeed = 32.5f;
 	private final Vector3f jumpForce = new Vector3f(0, 90_000.0f, 0);
 	private final Vector3f cameraOffset = new Vector3f(0.0f, 10.0f, 0.0f);
-	private final float cameraTurnSpeed = 0.5f;
 	/*
 	 * private final Vector3f cameraFPoffset = new Vector3f(0.0f, 10.0f, 0.0f);
 	 * private final Vector3f cameraTPoffset = new Vector3f(0.0f, 10.0f, 0.0f);
@@ -85,7 +84,7 @@ public class Player {
 			inputMoveDir.normalize(-1);
 		}
 		Vector2f lookRot = new Vector2f(inputLookDir);
-		lookRot.mul((float) (cameraTurnSpeed * delta));
+		lookRot.mul((float) delta);
 		
 		// TODO remove me
 		if (inputInteract) {

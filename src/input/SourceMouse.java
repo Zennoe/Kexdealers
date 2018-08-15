@@ -21,6 +21,11 @@ public class SourceMouse implements InputSourceI {
 		this.display = disp;
 		this.bus = bus;
 	}
+	
+	@Override
+	public float getLookSensitivity() {
+		return 0.04f;
+	}
 
 	@Override
 	public Vector2f pollLookMove() {

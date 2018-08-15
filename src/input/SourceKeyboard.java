@@ -7,7 +7,7 @@ import bus.MessageBus;
 import render.Display;
 
 public class SourceKeyboard implements InputSourceI {
-
+	
 	private boolean dojump = false;
 	private boolean dointeract = false;
 	private boolean doteleport = false;
@@ -21,6 +21,11 @@ public class SourceKeyboard implements InputSourceI {
 		this.bus = bus;
 	}
 
+	@Override
+	public float getLookSensitivity() {
+		return 0.25f;
+	}
+	
 	@Override
 	public Vector2f pollMoveDirection() {
 		Vector2f ret = new Vector2f();
@@ -87,6 +92,7 @@ public class SourceKeyboard implements InputSourceI {
 		
 		return ret;
 	}
+	
 
 	@Override
 	public boolean doInteract() {

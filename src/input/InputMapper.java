@@ -21,6 +21,10 @@ public class InputMapper {
 	private List<InputSourceI> inputSources = new ArrayList<>();
 
 	public InputMapper(Display disp, MessageBus bus) {
+		if (!disp.isInitialised()) {
+			throw new IllegalStateException("Display not initialised!");
+		}
+		
 		this.disp = disp;
 		this.bus = bus;
 		// TODO detect if future input libs present
@@ -53,7 +57,7 @@ public class InputMapper {
 		}
 
 		// look
-		bus.messagePlayer(Operation.PLAYER_LOOK, is.pollLookMove());
+		bus.messagePlayer(Operation.PLAYER_LOOK, is.pollLookMove().mul(is.getLookSensitivity()));
 
 		// action
 		if (is.doInteract()) { // interacting with world
