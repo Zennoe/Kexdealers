@@ -2,7 +2,7 @@ package render;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*; // allows us to create windows
-import static org.lwjgl.opengl.GL11.*; // gives us access to things like "GL_TRUE" which we'll need 
+import static org.lwjgl.opengl.GL11C.*; // gives us access to things like "GL_TRUE" which we'll need 
 import static org.lwjgl.system.MemoryUtil.*; // allows us to use 'NULL' in our code, note this is slightly different from java's 'null'
 
 import java.nio.IntBuffer;

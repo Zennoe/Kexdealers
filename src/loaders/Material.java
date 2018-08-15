@@ -1,7 +1,7 @@
 package loaders;
 
 import org.joml.Vector3f;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11C;
 
 public class Material {
 	
@@ -64,9 +64,9 @@ public class Material {
 	 * Don't forget that you still need to dereference this Material instance :) 
 	 */
 	public void destroyMaterial() {
-		GL11.glDeleteTextures(diffuseMap);
-		GL11.glDeleteTextures(specularMap);
-		GL11.glDeleteTextures(normalMap);
+		GL11C.glDeleteTextures(diffuseMap);
+		GL11C.glDeleteTextures(specularMap);
+		GL11C.glDeleteTextures(normalMap);
 	}
 	
 	private static int loadMappingToVideoMemory(String name, boolean gammaCorrected) {

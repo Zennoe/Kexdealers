@@ -6,10 +6,10 @@ import java.util.ArrayList;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.EXTTextureFilterAnisotropic;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL14;
-import org.lwjgl.opengl.GL21;
-import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.GL11C;
+import org.lwjgl.opengl.GL14C;
+import org.lwjgl.opengl.GL21C;
+import org.lwjgl.opengl.GL30C;
 import org.lwjgl.stb.STBImage;
 
 import textures.Material;
@@ -42,7 +42,7 @@ public class MaterialLoader {
 		}
 		
 		public void delete(){
-			GL11.glDeleteTextures(id);
+			GL11C.glDeleteTextures(id);
 		}
 	}
 	
@@ -89,37 +89,37 @@ public class MaterialLoader {
 		widthInt = width.get();
 		heightInt = height.get();
 		
-		textureID = GL11.glGenTextures();
+		textureID = GL11C.glGenTextures();
 		// textures.add(textureID);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureID);
+		GL11C.glBindTexture(GL11C.GL_TEXTURE_2D, textureID);
 		// Set texture wrapping
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
+		GL11C.glTexParameteri(GL11C.GL_TEXTURE_2D, GL11C.GL_TEXTURE_WRAP_S, GL11C.GL_REPEAT);
+		GL11C.glTexParameteri(GL11C.GL_TEXTURE_2D, GL11C.GL_TEXTURE_WRAP_T, GL11C.GL_REPEAT);
 		// Set texture filtering
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+		GL11C.glTexParameteri(GL11C.GL_TEXTURE_2D, GL11C.GL_TEXTURE_MIN_FILTER, GL11C.GL_LINEAR);
+		GL11C.glTexParameteri(GL11C.GL_TEXTURE_2D, GL11C.GL_TEXTURE_MAG_FILTER, GL11C.GL_LINEAR);
 		// Write buffer to buffer bound to GL_TEXTURE_2D
 		if(gammaCorrected){
-			GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL21.GL_SRGB, widthInt, heightInt, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, data);
+			GL11C.glTexImage2D(GL11C.GL_TEXTURE_2D, 0, GL21C.GL_SRGB, widthInt, heightInt, 0, GL11C.GL_RGBA, GL11C.GL_UNSIGNED_BYTE, data);
 		}else{
-			GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGB, widthInt, heightInt, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, data);
+			GL11C.glTexImage2D(GL11C.GL_TEXTURE_2D, 0, GL11C.GL_RGB, widthInt, heightInt, 0, GL11C.GL_RGBA, GL11C.GL_UNSIGNED_BYTE, data);
 		}
 		// Generate Mipmaps
-		GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
-		GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL14.GL_TEXTURE_LOD_BIAS, -1.0f);
+		GL30C.glGenerateMipmap(GL11C.GL_TEXTURE_2D);
+		GL11C.glTexParameteri(GL11C.GL_TEXTURE_2D, GL11C.GL_TEXTURE_MIN_FILTER, GL11C.GL_LINEAR_MIPMAP_LINEAR);
+		GL11C.glTexParameterf(GL11C.GL_TEXTURE_2D, GL14C.GL_TEXTURE_LOD_BIAS, -1.0f);
 		// Anisotropic Filtering - Availability not checked. May not be supported.
-		float amount = Math.min(4f, GL11.glGetFloat(EXTTextureFilterAnisotropic.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT));
-		GL11.glTexParameterf(GL11.GL_TEXTURE_2D, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT, amount);
+		float amount = Math.min(4f, GL11C.glGetFloat(EXTTextureFilterAnisotropic.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT));
+		GL11C.glTexParameterf(GL11C.GL_TEXTURE_2D, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT, amount);
 		// Un-bind Texture
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+		GL11C.glBindTexture(GL11C.GL_TEXTURE_2D, 0);
 		
 		return new Texture2D(textureID, widthInt, heightInt);
 	}
 	
 	public void cleanUp(){
 		for(int texture : textures){
-			GL11.glDeleteTextures(texture);
+			GL11C.glDeleteTextures(texture);
 		}
 	}
 	

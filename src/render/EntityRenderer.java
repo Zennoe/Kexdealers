@@ -3,10 +3,10 @@ package render;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
-import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.GL11C;
+import org.lwjgl.opengl.GL13C;
+import org.lwjgl.opengl.GL20C;
+import org.lwjgl.opengl.GL30C;
 
 import ecs.FPPCameraComponent;
 import ecs.PointLightComponent;
@@ -27,8 +27,8 @@ public class EntityRenderer {
 			HashMap<String, HashSet<Transformable>> entitiesToRender,
 			HashSet<PointLightComponent> pointLights){
 		
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
-		GL11.glDepthMask(true);
+		GL11C.glEnable(GL11C.GL_DEPTH_TEST);
+		GL11C.glDepthMask(true);
 		
 		shader.start();
 		shader.uploadViewPos(camera.getPosition());
@@ -42,7 +42,7 @@ public class EntityRenderer {
 			HashSet<Transformable> transformations = entitiesToRender.get(appearance);
 			for(Transformable transformation : transformations){
 				shader.uploadMVP(transformation.getTransformation(), camera.getViewMatrix(), camera.getProjectionMatrix());
-				GL11.glDrawElements(GL11.GL_TRIANGLES, data.getRawMesh().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
+				GL11C.glDrawElements(GL11C.GL_TRIANGLES, data.getRawMesh().getVertexCount(), GL11C.GL_UNSIGNED_INT, 0);
 			}
 			unbindEntityAppearance(data);
 		}
@@ -52,26 +52,26 @@ public class EntityRenderer {
 	
 	private void bindEntityAppearance(AssetData data){
 		// Bind VAO
-		GL30.glBindVertexArray(data.getRawMesh().getVaoID());
-		GL20.glEnableVertexAttribArray(0);
-		GL20.glEnableVertexAttribArray(1);
-		GL20.glEnableVertexAttribArray(2);
+		GL30C.glBindVertexArray(data.getRawMesh().getVaoID());
+		GL20C.glEnableVertexAttribArray(0);
+		GL20C.glEnableVertexAttribArray(1);
+		GL20C.glEnableVertexAttribArray(2);
 		// Bind textures
-		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, data.getMaterial().getDiffuseID());
-		GL13.glActiveTexture(GL13.GL_TEXTURE1);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, data.getMaterial().getSpecularID());
+		GL13C.glActiveTexture(GL13C.GL_TEXTURE0);
+		GL11C.glBindTexture(GL11C.GL_TEXTURE_2D, data.getMaterial().getDiffuseID());
+		GL13C.glActiveTexture(GL13C.GL_TEXTURE1);
+		GL11C.glBindTexture(GL11C.GL_TEXTURE_2D, data.getMaterial().getSpecularID());
 		// Upload Phong-Shading data
 		shader.uploadMaterial(0, 1, data.getPhongSpecularExponent());
 	}
 	
 	private void unbindEntityAppearance(AssetData data){
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+		GL11C.glBindTexture(GL11C.GL_TEXTURE_2D, 0);
 		
-		GL20.glDisableVertexAttribArray(0);
-		GL20.glDisableVertexAttribArray(1);
-		GL20.glDisableVertexAttribArray(2);
-		GL30.glBindVertexArray(0);
+		GL20C.glDisableVertexAttribArray(0);
+		GL20C.glDisableVertexAttribArray(1);
+		GL20C.glDisableVertexAttribArray(2);
+		GL30C.glBindVertexArray(0);
 	}
 	
 }

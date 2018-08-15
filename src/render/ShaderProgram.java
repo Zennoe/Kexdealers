@@ -15,7 +15,7 @@ import org.joml.Vector3f;
 import org.joml.Vector3fc;
 import org.joml.Vector4f;
 import org.joml.Vector4fc;
-import org.lwjgl.opengl.GL20;
+import org.lwjgl.opengl.GL20C;
 
 public  abstract class ShaderProgram{
 
@@ -33,34 +33,34 @@ public  abstract class ShaderProgram{
 		int fShaderID;
 		int shaderProgramID;
 		// CREATE VERTEX SHADER
-		vShaderID = GL20.glCreateShader(GL20.GL_VERTEX_SHADER);
-		GL20.glShaderSource(vShaderID, readShaderFile(vShader));
-		GL20.glCompileShader(vShaderID);
-		if(GL20.glGetShaderi(vShaderID, GL20.GL_COMPILE_STATUS) != 1){
-			System.err.println(GL20.glGetShaderInfoLog(vShaderID));
+		vShaderID = GL20C.glCreateShader(GL20C.GL_VERTEX_SHADER);
+		GL20C.glShaderSource(vShaderID, readShaderFile(vShader));
+		GL20C.glCompileShader(vShaderID);
+		if(GL20C.glGetShaderi(vShaderID, GL20C.GL_COMPILE_STATUS) != 1){
+			System.err.println(GL20C.glGetShaderInfoLog(vShaderID));
 			System.exit(1);
 		}
 		
 		// CREATE FRAGMENT SHADER
-		fShaderID = GL20.glCreateShader(GL20.GL_FRAGMENT_SHADER);
-		GL20.glShaderSource(fShaderID, readShaderFile(fShader));
-		GL20.glCompileShader(fShaderID);
-		if(GL20.glGetShaderi(fShaderID, GL20.GL_COMPILE_STATUS) != 1){
-			System.err.println(GL20.glGetShaderInfoLog(fShaderID));
+		fShaderID = GL20C.glCreateShader(GL20C.GL_FRAGMENT_SHADER);
+		GL20C.glShaderSource(fShaderID, readShaderFile(fShader));
+		GL20C.glCompileShader(fShaderID);
+		if(GL20C.glGetShaderi(fShaderID, GL20C.GL_COMPILE_STATUS) != 1){
+			System.err.println(GL20C.glGetShaderInfoLog(fShaderID));
 			System.exit(1);
 		}
 		
 		// LINK SHADER PROGRAM
-		shaderProgramID = GL20.glCreateProgram();
-		GL20.glAttachShader(shaderProgramID, vShaderID);
-		GL20.glAttachShader(shaderProgramID, fShaderID);
-		GL20.glLinkProgram(shaderProgramID);
-		if(GL20.glGetProgrami(shaderProgramID, GL20.GL_LINK_STATUS) != 1){
-			System.err.println(GL20.glGetProgramInfoLog(shaderProgramID));
+		shaderProgramID = GL20C.glCreateProgram();
+		GL20C.glAttachShader(shaderProgramID, vShaderID);
+		GL20C.glAttachShader(shaderProgramID, fShaderID);
+		GL20C.glLinkProgram(shaderProgramID);
+		if(GL20C.glGetProgrami(shaderProgramID, GL20C.GL_LINK_STATUS) != 1){
+			System.err.println(GL20C.glGetProgramInfoLog(shaderProgramID));
 			System.exit(1);
 		}
-		GL20.glDeleteShader(vShaderID);
-		GL20.glDeleteShader(fShaderID);
+		GL20C.glDeleteShader(vShaderID);
+		GL20C.glDeleteShader(fShaderID);
 		return shaderProgramID;
 	}
 	
@@ -85,49 +85,49 @@ public  abstract class ShaderProgram{
 	protected abstract void getAllUniformLocations();
 	
 	protected int getUniformLocation(String uniformName){
-		return GL20.glGetUniformLocation(programID, uniformName);
+		return GL20C.glGetUniformLocation(programID, uniformName);
 	}
 	
 	protected void bindAttribute(int attribute, String variableName){
-		GL20.glBindAttribLocation(programID, attribute, variableName);
+		GL20C.glBindAttribLocation(programID, attribute, variableName);
 	}
 	
 	public void start(){
-		GL20.glUseProgram(programID);
+		GL20C.glUseProgram(programID);
 	}
 	
 	public void stop(){
-		GL20.glUseProgram(0);
+		GL20C.glUseProgram(0);
 	}
 	
 	protected void loadInt(int location, int value){
-		GL20.glUniform1i(location, value);
+		GL20C.glUniform1i(location, value);
 	}
 	
 	protected void loadFloat(int location, float value){
-		GL20.glUniform1f(location, value);
+		GL20C.glUniform1f(location, value);
 	}
 	
 	protected void loadVector2f(int location, Vector2fc vector){
-		GL20.glUniform2f(location, vector.x(), vector.y());
+		GL20C.glUniform2f(location, vector.x(), vector.y());
 	}
 	
 	protected void loadVector3f(int location, Vector3fc vector){
-		GL20.glUniform3f(location, vector.x(), vector.y(), vector.z());
+		GL20C.glUniform3f(location, vector.x(), vector.y(), vector.z());
 	}
 	
 	protected void loadVector4f(int location, Vector4fc vector){
-		GL20.glUniform4f(location, vector.x(), vector.y(), vector.z(), vector.w());
+		GL20C.glUniform4f(location, vector.x(), vector.y(), vector.z(), vector.w());
 	}
 	
 	protected void loadMatrix3f(int location, Matrix3fc matrix){
 		matrixBuffer3f = matrix.get(matrixBuffer3f);
-		GL20.glUniformMatrix3fv(location, false, matrixBuffer3f);
+		GL20C.glUniformMatrix3fv(location, false, matrixBuffer3f);
 	}
 	
 	protected void loadMatrix4f(int location, Matrix4fc matrix){
 		matrixBuffer4f = matrix.get(matrixBuffer4f);
-		GL20.glUniformMatrix4fv(location, false, matrixBuffer4f);
+		GL20C.glUniformMatrix4fv(location, false, matrixBuffer4f);
 	}
 	
 }

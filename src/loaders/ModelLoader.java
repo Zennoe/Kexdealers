@@ -3,10 +3,10 @@ package loaders;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL15;
-import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.GL11C;
+import org.lwjgl.opengl.GL15C;
+import org.lwjgl.opengl.GL20C;
+import org.lwjgl.opengl.GL30C;
 
 import utility.MiscUtility;
 import wrapper.RawMesh;
@@ -60,43 +60,43 @@ public class ModelLoader {
 	}
 	
 	private int createVAO(){
-		int vaoID = GL30.glGenVertexArrays();
+		int vaoID = GL30C.glGenVertexArrays();
 		vaos.add(vaoID);
-		GL30.glBindVertexArray(vaoID);
+		GL30C.glBindVertexArray(vaoID);
 		return vaoID;
 	}
 	
 	private void unbindVAO(){
-		GL30.glBindVertexArray(0);
+		GL30C.glBindVertexArray(0);
 	}
 	
 	private void storeInVBO(int index, int coordSize, float[] vertices){
-		int vboID = GL15.glGenBuffers();
+		int vboID = GL15C.glGenBuffers();
 		vbos.add(vboID);
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
+		GL15C.glBindBuffer(GL15C.GL_ARRAY_BUFFER, vboID);
 		FloatBuffer buffer = MiscUtility.storeDataInFloatBuffer(vertices);
-		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
-		GL20.glVertexAttribPointer(index, coordSize, GL11.GL_FLOAT, false, 0, 0);
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+		GL15C.glBufferData(GL15C.GL_ARRAY_BUFFER, buffer, GL15C.GL_STATIC_DRAW);
+		GL20C.glVertexAttribPointer(index, coordSize, GL11C.GL_FLOAT, false, 0, 0);
+		GL15C.glBindBuffer(GL15C.GL_ARRAY_BUFFER, 0);
 	}
 	
 	private void storeInEBO(int[] indices){
-		int eboID = GL15.glGenBuffers();
+		int eboID = GL15C.glGenBuffers();
 		ebos.add(eboID);
-		GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, eboID);
+		GL15C.glBindBuffer(GL15C.GL_ELEMENT_ARRAY_BUFFER, eboID);
 		IntBuffer buffer = MiscUtility.storeDataInIntBuffer(indices);
-		GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
+		GL15C.glBufferData(GL15C.GL_ELEMENT_ARRAY_BUFFER, buffer, GL15C.GL_STATIC_DRAW);
 	}
 	
 	public void cleanUp(){
 		for(int i : vaos){
-			GL30.glDeleteVertexArrays(i);
+			GL30C.glDeleteVertexArrays(i);
 		}
 		for(int i : vbos){
-			GL15.glDeleteBuffers(i);
+			GL15C.glDeleteBuffers(i);
 		}
 		for(int i : ebos){
-			GL15.glDeleteBuffers(i);
+			GL15C.glDeleteBuffers(i);
 		}
 	}
 	

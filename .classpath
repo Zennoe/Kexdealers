@@ -53,5 +53,16 @@
 			<attribute name="javadoc_location" value="jar:platform:/resource/Kexdealers_zennoesfork/lib/docs/joml-1.9.9-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="lib/docs/joml-1.9.9-javadoc.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/docs/lwjgl-glfw-javadoc.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/docs/lwjgl-javadoc.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/docs/lwjgl-openal-javadoc.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/docs/lwjgl-opengl-javadoc.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/docs/lwjgl-openvr-javadoc.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/docs/lwjgl-stb-javadoc.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jars/lwjgl-openvr.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/natives/lwjgl-openvr-natives-linux.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/natives/lwjgl-openvr-natives-macos.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/natives/lwjgl-openvr-natives-windows.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

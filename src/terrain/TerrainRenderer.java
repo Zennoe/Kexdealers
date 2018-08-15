@@ -2,10 +2,10 @@ package terrain;
 
 import java.util.HashSet;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
-import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.GL11C;
+import org.lwjgl.opengl.GL13C;
+import org.lwjgl.opengl.GL20C;
+import org.lwjgl.opengl.GL30C;
 import ecs.FPPCameraComponent;
 import ecs.PointLightComponent;
 import loaders.GraphicsLoader;
@@ -28,8 +28,8 @@ public class TerrainRenderer {
 			FPPCameraComponent camera,
 			HashSet<PointLightComponent> pointLights){
 		
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
-		GL11.glDepthMask(true);
+		GL11C.glEnable(GL11C.GL_DEPTH_TEST);
+		GL11C.glDepthMask(true);
 		
 		shader.start();
 		shader.uploadDirectionalLight(graphicsLoader.getSun());
@@ -40,7 +40,7 @@ public class TerrainRenderer {
 		prepareTerrain(terrain);
 		
 		shader.uploadMVP(terrain.getModelMatrix(), camera.getViewMatrix(), camera.getProjectionMatrix());
-		GL11.glDrawElements(GL11.GL_TRIANGLES, terrain.getRawMesh().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
+		GL11C.glDrawElements(GL11C.GL_TRIANGLES, terrain.getRawMesh().getVertexCount(), GL11C.GL_UNSIGNED_INT, 0);
 		
 		unbindTerrain();
 	}
@@ -48,34 +48,34 @@ public class TerrainRenderer {
 	private void prepareTerrain(Terrain terrain){
 		// bind RawMesh
 		RawMesh rawMesh = terrain.getRawMesh();
-		GL30.glBindVertexArray(rawMesh.getVaoID());
-		GL20.glEnableVertexAttribArray(0);
-		GL20.glEnableVertexAttribArray(1);
-		GL20.glEnableVertexAttribArray(2);
+		GL30C.glBindVertexArray(rawMesh.getVaoID());
+		GL20C.glEnableVertexAttribArray(0);
+		GL20C.glEnableVertexAttribArray(1);
+		GL20C.glEnableVertexAttribArray(2);
 		
 		// bind MultiTexture
 		MultiTexture multiTexture = terrain.getMultiTexture();
-		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, multiTexture.getDefaultID());
-		GL13.glActiveTexture(GL13.GL_TEXTURE1);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, multiTexture.getRID());
-		GL13.glActiveTexture(GL13.GL_TEXTURE2);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, multiTexture.getGID());
-		GL13.glActiveTexture(GL13.GL_TEXTURE3);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, multiTexture.getBID());
+		GL13C.glActiveTexture(GL13C.GL_TEXTURE0);
+		GL11C.glBindTexture(GL11C.GL_TEXTURE_2D, multiTexture.getDefaultID());
+		GL13C.glActiveTexture(GL13C.GL_TEXTURE1);
+		GL11C.glBindTexture(GL11C.GL_TEXTURE_2D, multiTexture.getRID());
+		GL13C.glActiveTexture(GL13C.GL_TEXTURE2);
+		GL11C.glBindTexture(GL11C.GL_TEXTURE_2D, multiTexture.getGID());
+		GL13C.glActiveTexture(GL13C.GL_TEXTURE3);
+		GL11C.glBindTexture(GL11C.GL_TEXTURE_2D, multiTexture.getBID());
 		// bind blendMap
 		Texture blendMap = terrain.getBlendMap();
-		GL13.glActiveTexture(GL13.GL_TEXTURE4);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, blendMap.getTextureID());
+		GL13C.glActiveTexture(GL13C.GL_TEXTURE4);
+		GL11C.glBindTexture(GL11C.GL_TEXTURE_2D, blendMap.getTextureID());
 	}
 	
 	private void unbindTerrain(){
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+		GL11C.glBindTexture(GL11C.GL_TEXTURE_2D, 0);
 		
-		GL20.glDisableVertexAttribArray(0);
-		GL20.glDisableVertexAttribArray(1);
-		GL20.glDisableVertexAttribArray(2);
-		GL30.glBindVertexArray(0);
+		GL20C.glDisableVertexAttribArray(0);
+		GL20C.glDisableVertexAttribArray(1);
+		GL20C.glDisableVertexAttribArray(2);
+		GL30C.glBindVertexArray(0);
 	}
 	
 	
