@@ -51,6 +51,11 @@ public class RenderSystem extends AbstractSystem {
 	 */
 	public RenderSystem(MessageBus messageBus, EntityController entityController, Display display) {
 		super(messageBus, entityController);
+		
+		if (!display.isInitialised()) {
+			throw new IllegalStateException("Display not initialised!");
+		}
+		
 		this.display = display;
 		GLFW.glfwMakeContextCurrent(display.window);
 		GL.createCapabilities();

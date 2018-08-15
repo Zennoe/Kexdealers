@@ -12,12 +12,12 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
 public class Display {
-	
+
 	public long window = 0;
-	
+
 	private int width;
 	private int height;
-	
+
 	public int getWidth() {
 		return width;
 	}
@@ -26,6 +26,10 @@ public class Display {
 	}
 
 	private boolean isInitialised = false;
+
+	public boolean isInitialised() {
+		return isInitialised;
+	}
 
 	public Display(int width, int height) {
 		this.width = width;
@@ -37,7 +41,7 @@ public class Display {
 		GLFWErrorCallback.createPrint(System.err).set();
 		// Initialize GLFW
 		if (glfwInit() != true) {
-			System.err.println("GLFW initialization failed!");
+			throw new RuntimeException("GLFW initialization failed!");
 		}
 		// Set window properties
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -45,11 +49,11 @@ public class Display {
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-		
+
 		// Create window
 		window = glfwCreateWindow(width, height, "Game Loop", NULL, NULL);
 		if (window == NULL) {
-			System.err.println("Could not create Window");
+			throw new RuntimeException("Could not create Window");
 		}
 		glfwSetWindowPos(window, 1, 20);
 		glfwShowWindow(window);
@@ -60,21 +64,27 @@ public class Display {
 		height = h.get(0);
 
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-		
+
 		isInitialised = true;
 	}
-	
+
 	public void submitFrame() {
+		if (!isInitialised()) {
+			throw new IllegalStateException("Display not initialised!");
+		}
+
 		glfwSwapBuffers(window);
 	}
-	
+
 	public void destroy() {
-		if (isInitialised) {
-			glfwFreeCallbacks(window);
-			glfwDestroyWindow(window);
-			glfwTerminate();
-			glfwSetErrorCallback(null).free();
+		if (!isInitialised()) {
+			throw new IllegalStateException("Display not initialised!");
 		}
+
+		glfwFreeCallbacks(window);
+		glfwDestroyWindow(window);
+		glfwTerminate();
+		glfwSetErrorCallback(null).free();
 	}
 
 }
