@@ -7,20 +7,24 @@ public interface InputSourceI {
 	//-- actions
 	
 	// system
-	public boolean closeGame();
+	default boolean closeGame() { return false; }
 	
 	// movement
-	public Vector2f pollMoveDirection(); // negative x: left, positive y: forward
-	public boolean doJump();
+	default Vector2f pollMoveDirection() { // negative x: left, positive y: forward
+		return new Vector2f();
+	}
+	default public boolean doJump() { return false; }
 	
 	// look
-	public Vector2f pollLookMove(); // negative x: left, positive y: up
+	default Vector2f pollLookMove() { // negative x: left, positive y: up
+		return new Vector2f();
+	}
 	
 	// action
-	public boolean doInteract(); // interacting with world
+	default boolean doInteract() {return false; } // interacting with world
 	
 	// debug
-	public boolean isActivatingGravitySuck();
-	public boolean doTeleport();
-	public boolean toggleWireframe();
+	default boolean isActivatingGravitySuck() { return false; }
+	default boolean doTeleport() { return false; }
+	default boolean toggleWireframe() { return false; }
 }

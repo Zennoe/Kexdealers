@@ -23,32 +23,17 @@ public class SourceMouse implements InputSourceI {
 	}
 
 	@Override
-	public boolean closeGame() {
-		return false;
-	}
-
-	@Override
-	public Vector2f pollMoveDirection() {
-		return new Vector2f();
-	}
-
-	@Override
-	public boolean doJump() {
-		return false;
-	}
-
-	@Override
 	public Vector2f pollLookMove() {
 		DoubleBuffer b1 = BufferUtils.createDoubleBuffer(1);
 		DoubleBuffer b2 = BufferUtils.createDoubleBuffer(1);
 		GLFW.glfwGetCursorPos(display.window, b1, b2);
-		
+
 		Vector2f ret = new Vector2f((float) b1.get(0), (float) b2.get(0));
 		ret.sub(prevMousePos);
 		ret.mul(new Vector2f(1, -1));
-		
+
 		prevMousePos.set((float) b1.get(0), (float) b2.get(0));
-		
+
 		return ret;
 	}
 
@@ -71,20 +56,4 @@ public class SourceMouse implements InputSourceI {
 
 		return false;
 	}
-
-	@Override
-	public boolean isActivatingGravitySuck() {
-		return false;
-	}
-
-	@Override
-	public boolean doTeleport() {
-		return false;
-	}
-
-	@Override
-	public boolean toggleWireframe() {
-		return false;
-	}
-
 }
