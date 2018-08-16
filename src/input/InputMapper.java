@@ -51,7 +51,7 @@ public class InputMapper {
 	}
 
 	public void updateInput() {
-		// check for new devices
+		GLFW.glfwPollEvents();
 
 		// remove source if connection closed
 		Iterator<InputSourceI> iter = inputSources.iterator();
@@ -61,8 +61,7 @@ public class InputMapper {
 			}
 		}
 
-		// poll and process events
-		GLFW.glfwPollEvents();
+		// process events
 		for (InputSourceI is : inputSources) {
 			handleActions(is);
 		}
@@ -76,7 +75,6 @@ public class InputMapper {
 
 		// movement
 		bus.messagePlayer(Operation.PLAYER_MOVE, is.pollMoveDirection());
-
 		if (is.doJump()) {
 			bus.messagePlayer(Operation.PLAYER_JUMP);
 		}
