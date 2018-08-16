@@ -68,6 +68,10 @@ public class InputMapper {
 	}
 
 	private void handleActions(InputSourceI is) {
+		if (is.sourceConnectionClosed()) { // skip if source inactive
+			return;
+		}
+		
 		// system
 		if (is.closeGame()) {
 			GLFW.glfwSetWindowShouldClose(disp.window, true);
