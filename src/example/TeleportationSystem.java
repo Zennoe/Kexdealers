@@ -25,6 +25,7 @@ public class TeleportationSystem extends AbstractSystem {
 		teleportations = new HashMap<>();
 	}
 
+	@Override
 	public void run() {
 		// control update rate here
 
@@ -34,6 +35,7 @@ public class TeleportationSystem extends AbstractSystem {
 		// cleanUp();
 	}
 
+	@Override
 	protected void update() {
 		super.timeMarkStart();
 
@@ -63,10 +65,12 @@ public class TeleportationSystem extends AbstractSystem {
 		super.timeMarkEnd();
 	}
 
+	@Override
 	protected void cleanUp() {
 
 	}
 
+	@Override
 	public void loadBlueprint(ArrayList<String> blueprint) {
 		ArrayList<String> teleLines = BlueprintLoader.getAllLinesWith("TELEPORTATION", blueprint);
 

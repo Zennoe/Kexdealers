@@ -1,6 +1,7 @@
 package loaders;
 
 import java.util.HashMap;
+import java.util.List;
 
 import audio.AudioResource;
 
@@ -11,8 +12,11 @@ public class AudioLoader {
 
 	private HashMap<String, Integer> pointerCounterSound = new HashMap<>();
 	private HashMap<String, AudioResource> assetsSound = new HashMap<>();
+	
+	private List<Integer> alSourceIDs;
 
-	public AudioLoader() {
+	public AudioLoader(List<Integer> alSourceIDs) {
+		this.alSourceIDs = alSourceIDs;
 	}
 
 	public void loadSound(String assetName) {
@@ -34,7 +38,7 @@ public class AudioLoader {
 		if (x.equals(1)) {
 			pointerCounterSound.put(assetName, x.intValue() - 1);
 			// unload completely
-			assetsSound.get(assetName).destroy();
+			assetsSound.get(assetName).destroy(alSourceIDs.iterator());
 			assetsSound.put(assetName, null);
 		} else {
 			pointerCounterSound.put(assetName, x.intValue() - 1);
