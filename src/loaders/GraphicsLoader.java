@@ -1,8 +1,20 @@
 package loaders;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 
 import org.joml.Vector3f;
+
+import com.mokiat.data.front.parser.IMTLParser;
+import com.mokiat.data.front.parser.IOBJParser;
+import com.mokiat.data.front.parser.MTLLibrary;
+import com.mokiat.data.front.parser.MTLMaterial;
+import com.mokiat.data.front.parser.MTLParser;
+import com.mokiat.data.front.parser.OBJModel;
+import com.mokiat.data.front.parser.OBJParser;
 
 import example.AssetData;
 import render.DirectionalLight;
@@ -20,7 +32,7 @@ import wrapper.RawMesh;
  */
 public class GraphicsLoader {
 	
-	private static final String TEXTURE_DIRECTORY = "./res/texures/";
+	private static final String MATERIAL_DIRECTORY = "./res/texures/";
 	private static final String MODEL_DIRECTORY = "./res/models/";
 	
 	private final MaterialLoader materialLoader;
@@ -30,9 +42,11 @@ public class GraphicsLoader {
 	private final TerrainMeshLoader terrainMeshLoader;
 	
 	private final OBJLoader objLoader;
+	private final DataFrontLoader dataFrontLoader;
 	
 	// NEW OBJ LOADER STUFF
 	private HashMap<String, Model> models = new HashMap<>();
+	private HashMap<String, Material> materials = new HashMap<>();
 	// ---
 	
 	private HashMap<String, Integer> pointerCounter3D = new HashMap<>();
@@ -43,7 +57,7 @@ public class GraphicsLoader {
 	private Skybox skybox = null;
 	
 	private DirectionalLight sun = new DirectionalLight();
-
+	
 	public GraphicsLoader() {
 		// create tools
 		materialLoader = new MaterialLoader();
@@ -51,15 +65,44 @@ public class GraphicsLoader {
 		modelLoader = new ModelLoader();
 		terrainMeshLoader = new TerrainMeshLoader(modelLoader);
 		objLoader = new OBJLoader();
+		dataFrontLoader = new DataFrontLoader();
 	}
 	
 	public Model getModel(String ressourceName) {
 		return models.get(ressourceName);
 	}
 	
-	public void loadModel(String ressourceName) {
-		Model model = null; // load with call to new OBJLoader
-		model.refCountUp();
+	public void loadModel(String resourceName) {
+		
+		final IOBJParser objParser = new OBJParser();
+		final IMTLParser mtlParser = new MTLParser();
+		
+		try (InputStream inputStream = new FileInputStream(resourceName)) {
+			// parse model
+			final OBJModel model = objParser.parse(inputStream);
+			
+			// extract all the materials used by this model
+			for(String libraryReference : model.getMaterialLibraries()) {
+				final InputStream mtlStream = new FileInputStream(libraryReference);
+				MTLLibrary mtlLibrary = mtlParser.parse(mtlStream);
+				for(MTLMaterial mtlMaterial : mtlLibrary.getMaterials()) {
+					// check if a material has been loaded already
+					if(materials.containsKey(mtlMaterial.getName())) {
+						continue;
+					} else {
+						Material material = materialLoader.loadMaterial(mtlMaterial);
+						materials.put(libraryReference, material);
+					}
+				}
+			}
+		}
+		catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		//model.refCountUp();
 	}
 	
 	public void unloadModel(String ressourceName) {

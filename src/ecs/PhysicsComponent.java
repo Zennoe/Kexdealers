@@ -131,11 +131,7 @@ public class PhysicsComponent extends Component {
 		return this;
 	}
 
-	public void setForce(String forceName, Vector3f force) {
-		listOfAppliedForces.get(forceName).set(force);
-	}
-
-public boolean isAffectedByPhysics() {
+	public boolean isAffectedByPhysics() {
 		return isAffectedByPhysics;
 	}
 
