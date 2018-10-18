@@ -74,14 +74,15 @@ public class AudioSystem extends AbstractSystem {
 				throw new IllegalStateException("Failed to create OpenAL source");
 			}
 		}
+		
+		audioLoader = new AudioLoader(alSourceIDs);
 
-		// Initialization done
+		// Initialisation done
 		int err = AL10.alGetError();
 		if (err != AL10.AL_NO_ERROR) {
 			throw new IllegalStateException("OpenAL error " + err);
 		}
 
-		audioLoader = new AudioLoader(alSourceIDs);
 	}
 
 	@Override
@@ -133,7 +134,7 @@ public class AudioSystem extends AbstractSystem {
 		for (AudioSourceComponent comp : entityController.getAudioSourceComponents()) {
 			updateEntitySound(comp.getEID());
 		}
-
+		
 		super.timeMarkEnd();
 	}
 
@@ -201,7 +202,7 @@ public class AudioSystem extends AbstractSystem {
 				comp.setSourceID(currSource);
 			}
 		}
-
+		
 		if (comp.getSourceID() != AL10.AL_NONE) {
 			// check if valid start position
 			if (Float.compare(comp.getStartPos(), 0) >= 0 || Float.compare(comp.getStartPos(),
@@ -209,6 +210,8 @@ public class AudioSystem extends AbstractSystem {
 
 				AL11.alSourcef(comp.getSourceID(), AL11.AL_SEC_OFFSET, comp.getStartPos());
 				AL10.alSourcePlay(comp.getSourceID());
+			} else {
+				System.out.println("Audio Warning: invalid start position");
 			}
 
 		} else {

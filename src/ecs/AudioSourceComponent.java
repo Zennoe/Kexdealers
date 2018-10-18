@@ -15,7 +15,7 @@ public class AudioSourceComponent extends Component{
 	private float rolloffFactor = 1.0f;
 	private float maxDistance = 50.0f;
 	
-	private float startPos = 0.0f; // in percent from 0.0 to 1.0
+	private float startPos = 0.0f; // in seconds
 	
 	public AudioSourceComponent(int eID) {
 		this.eID = eID;
@@ -49,13 +49,14 @@ public class AudioSourceComponent extends Component{
 		StringBuilder s = new StringBuilder();
 		s.append("AudioSourceComponent<").append(eID).append(">");
 		s.append("(");
-		s.append(" RES: ").append(assetName);
+		s.append(" Name: ").append(assetName);
 		s.append(" sID: ").append(sourceID);
 		s.append(" Gain: ").append(gain);
 		s.append(" Pitch: ").append(pitch);
 		s.append(" RefDist: ").append(referenceDistance);
 		s.append(" Rolloff: ").append(rolloffFactor);
 		s.append(" MaxDist: ").append(maxDistance);
+		s.append(" StartPos: ").append(startPos);
 		s.append(" )");
 		return s.toString();
 	}
