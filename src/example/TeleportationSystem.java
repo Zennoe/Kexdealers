@@ -86,7 +86,7 @@ public class TeleportationSystem extends AbstractSystem {
 			}
 		}
 		
-		System.out.println(teleportations.toString());
+		//System.out.println(teleportations.toString());
 	}
 
 	public Set<String> getAllTeleportations() {

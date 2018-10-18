@@ -2,6 +2,7 @@ package bus;
 
 import java.util.LinkedList;
 
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
 
@@ -14,6 +15,7 @@ public class MessageBus {
 	private LinkedList<Message> audioSystemQueue = new LinkedList<>();
 	private LinkedList<Message> networkSystemQueue = new LinkedList<>();
 	private LinkedList<Message> teleportationSystemQueue = new LinkedList<>();
+	private LinkedList<Message> playerQueue = new LinkedList<>();
 	
 	private MessageBus() {
 		// - / -
@@ -33,6 +35,7 @@ public class MessageBus {
 		case AUDIO_SYSTEM: nextMessage = (audioSystemQueue.isEmpty() ? null : audioSystemQueue.removeLast()); break;
 		case NETWORK_SYSTEM: nextMessage = (networkSystemQueue.isEmpty() ? null : networkSystemQueue.removeLast()); break;
 		case TELEPORTATION_SYSTEM: nextMessage = (teleportationSystemQueue.isEmpty() ? null : teleportationSystemQueue.removeLast()); break;
+		case PLAYER: nextMessage = (playerQueue.isEmpty() ? null : playerQueue.removeLast()); break;
 		default: return null;
 		}
 		return nextMessage;
@@ -74,6 +77,18 @@ public class MessageBus {
 	public Message messageTeleportationSys(Operation op, int targetEID, Vector3f destination) {
 		Message msg = new TeleportationSysMessage(op, targetEID, destination);
 		teleportationSystemQueue.addFirst(msg);
+		return msg;
+	}
+	
+	public Message messagePlayer(Operation op) {
+		Message msg = new PlayerMessage(op);
+		playerQueue.addFirst(msg);
+		return msg;
+	}
+	
+	public Message messagePlayer(Operation op, Vector2f vec) {
+		Message msg = new PlayerMessage(op, vec);
+		playerQueue.addFirst(msg);
 		return msg;
 	}
 }

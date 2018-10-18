@@ -8,10 +8,10 @@ import java.util.List;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL15;
-import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.GL11C;
+import org.lwjgl.opengl.GL15C;
+import org.lwjgl.opengl.GL20C;
+import org.lwjgl.opengl.GL30C;
 
 import ecs.FPPCameraComponent;
 
@@ -50,8 +50,8 @@ public class LineRenderer {
 
 	public void render(FPPCameraComponent camera, double deltaTime) {
 
-		GL11.glDisable(GL11.GL_DEPTH_TEST);
-		GL11.glDepthMask(false);
+		GL11C.glDisable(GL11C.GL_DEPTH_TEST);
+		GL11C.glDepthMask(false);
 
 		addLineObjToCurrLines(deltaTime);
 		updateBuffers();
@@ -59,16 +59,16 @@ public class LineRenderer {
 		shader.start();
 		shader.loadProjectionMatrix(camera.getProjectionMatrix());
 		shader.loadViewMatrix(camera.getViewMatrix());
-		GL30.glBindVertexArray(vaoID);
-		GL20.glEnableVertexAttribArray(0);
-		GL20.glEnableVertexAttribArray(1);
-		GL11.glDrawArrays(GL11.GL_LINES, 0, vertCount);
+		GL30C.glBindVertexArray(vaoID);
+		GL20C.glEnableVertexAttribArray(0);
+		GL20C.glEnableVertexAttribArray(1);
+		GL11C.glDrawArrays(GL11C.GL_LINES, 0, vertCount);
 		shader.stop();
 
-		GL20.glDisableVertexAttribArray(0);
-		GL20.glDisableVertexAttribArray(1);
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
-		GL30.glBindVertexArray(0);
+		GL20C.glDisableVertexAttribArray(0);
+		GL20C.glDisableVertexAttribArray(1);
+		GL15C.glBindBuffer(GL15C.GL_ARRAY_BUFFER, 0);
+		GL30C.glBindVertexArray(0);
 	}
 
 	public void addLine(Vector3fc begin, Vector3fc end, Vector3fc colourBegin, Vector3fc colourEnd, double lifeTimeSecs) {
@@ -103,21 +103,21 @@ public class LineRenderer {
 		// we allocate a new buffer every frame because the line count may change.
 
 		if (vboVertsID > 0) {
-			GL15.glDeleteBuffers(vboVertsID);
+			GL15C.glDeleteBuffers(vboVertsID);
 		}
 		if (vboColoursID > 0) {
-			GL15.glDeleteBuffers(vboColoursID);
+			GL15C.glDeleteBuffers(vboColoursID);
 		}
 		if (vaoID > 0) {
-			GL30.glDeleteVertexArrays(vaoID);
+			GL30C.glDeleteVertexArrays(vaoID);
 		}
 
 		// alloc and bind new buffers
-		vaoID = GL30.glGenVertexArrays();
-		GL30.glBindVertexArray(vaoID);
+		vaoID = GL30C.glGenVertexArrays();
+		GL30C.glBindVertexArray(vaoID);
 
-		vboVertsID = GL15.glGenBuffers();
-		vboColoursID = GL15.glGenBuffers();
+		vboVertsID = GL15C.glGenBuffers();
+		vboColoursID = GL15C.glGenBuffers();
 
 		// generate float buffers
 		float[] vertexArray = new float[currLineVertices.size() * 3];
@@ -141,16 +141,16 @@ public class LineRenderer {
 		vertCount = currLineVertices.size();
 
 		// upload data
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboVertsID);
-		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, vertexBuffer, GL15.GL_STATIC_DRAW);
-		GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, 0, 0);
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboColoursID);
-		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, colourBuffer, GL15.GL_STATIC_DRAW);
-		GL20.glVertexAttribPointer(1, 3, GL11.GL_FLOAT, false, 0, 0);
+		GL15C.glBindBuffer(GL15C.GL_ARRAY_BUFFER, vboVertsID);
+		GL15C.glBufferData(GL15C.GL_ARRAY_BUFFER, vertexBuffer, GL15C.GL_STATIC_DRAW);
+		GL20C.glVertexAttribPointer(0, 3, GL11C.GL_FLOAT, false, 0, 0);
+		GL15C.glBindBuffer(GL15C.GL_ARRAY_BUFFER, vboColoursID);
+		GL15C.glBufferData(GL15C.GL_ARRAY_BUFFER, colourBuffer, GL15C.GL_STATIC_DRAW);
+		GL20C.glVertexAttribPointer(1, 3, GL11C.GL_FLOAT, false, 0, 0);
 
 		// clean up
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
-		GL30.glBindVertexArray(0);
+		GL15C.glBindBuffer(GL15C.GL_ARRAY_BUFFER, 0);
+		GL30C.glBindVertexArray(0);
 		currLineVertices.clear();
 		currLineColours.clear();
 	}

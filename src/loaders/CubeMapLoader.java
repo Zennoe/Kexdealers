@@ -4,9 +4,9 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
-import org.lwjgl.opengl.GL13;
+import org.lwjgl.opengl.GL11C;
+import org.lwjgl.opengl.GL12C;
+import org.lwjgl.opengl.GL13C;
 import org.lwjgl.stb.STBImage;
 
 public class CubeMapLoader {
@@ -18,19 +18,19 @@ public class CubeMapLoader {
 		int widthInt;
 		int heightInt;
 		
-		int textureID = GL11.glGenTextures();
-		//GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, textureID);
-		GL11.glTexParameteri(GL13.GL_TEXTURE_CUBE_MAP, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
-		GL11.glTexParameteri(GL13.GL_TEXTURE_CUBE_MAP, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
+		int textureID = GL11C.glGenTextures();
+		//GL13C.glActiveTexture(GL13C.GL_TEXTURE0);
+		GL11C.glBindTexture(GL13C.GL_TEXTURE_CUBE_MAP, textureID);
+		GL11C.glTexParameteri(GL13C.GL_TEXTURE_CUBE_MAP, GL11C.GL_TEXTURE_WRAP_S, GL12C.GL_CLAMP_TO_EDGE);
+		GL11C.glTexParameteri(GL13C.GL_TEXTURE_CUBE_MAP, GL11C.GL_TEXTURE_WRAP_T, GL12C.GL_CLAMP_TO_EDGE);
 		// Set texture filtering
-		GL11.glTexParameteri(GL13.GL_TEXTURE_CUBE_MAP, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
-		GL11.glTexParameteri(GL13.GL_TEXTURE_CUBE_MAP, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+		GL11C.glTexParameteri(GL13C.GL_TEXTURE_CUBE_MAP, GL11C.GL_TEXTURE_MIN_FILTER, GL11C.GL_LINEAR);
+		GL11C.glTexParameteri(GL13C.GL_TEXTURE_CUBE_MAP, GL11C.GL_TEXTURE_MAG_FILTER, GL11C.GL_LINEAR);
 		for(int i = 0; i < rltBoBaF.length; i++){
 			ByteBuffer data = stbImageLoad(rltBoBaF[i], width, height, comp);
 			widthInt = width.get();
 			heightInt = height.get();
-			GL11.glTexImage2D(GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL11.GL_RGBA, widthInt, heightInt, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, data);
+			GL11C.glTexImage2D(GL13C.GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL11C.GL_RGBA, widthInt, heightInt, 0, GL11C.GL_RGBA, GL11C.GL_UNSIGNED_BYTE, data);
 			
 			width.clear();
 			height.clear();
@@ -38,7 +38,7 @@ public class CubeMapLoader {
 		}
 		
 		// Un-bind Texture
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+		GL11C.glBindTexture(GL11C.GL_TEXTURE_2D, 0);
 		
 		return textureID;
 	}

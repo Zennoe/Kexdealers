@@ -1,9 +1,9 @@
 package render;
 
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.glClear;
-import static org.lwjgl.opengl.GL11.glClearColor;
+import static org.lwjgl.opengl.GL11C.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11C.GL_DEPTH_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11C.glClear;
+import static org.lwjgl.opengl.GL11C.glClearColor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,7 +12,8 @@ import java.util.Set;
 
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GL11C;
 import org.lwjgl.opengl.GL30;
 
 import bus.MessageBus;
@@ -29,6 +30,8 @@ import terrain.TerrainRenderer;
 import ui.LineRenderer;
 
 public class RenderSystem extends AbstractSystem {
+	
+	private final Display display;
 
 	private final GraphicsLoader graphicsLoader;
 	
@@ -46,14 +49,24 @@ public class RenderSystem extends AbstractSystem {
 	 * TODO: Make separate ResourceLoaders for separate types of resources. 
 	 * Let the loaders needed for each system be created in their own code.
 	 */
-	public RenderSystem(MessageBus messageBus, EntityController entityController) {
+	public RenderSystem(MessageBus messageBus, EntityController entityController, Display display) {
 		super(messageBus, entityController);
 		
+		if (!display.isInitialised()) {
+			throw new IllegalStateException("Display not initialised!");
+		}
+		
+		this.display = display;
+		GLFW.glfwMakeContextCurrent(display.window);
+		GL.createCapabilities();
+		
+		GL11C.glViewport(0, 0, display.getWidth(), display.getHeight());
+		
 		// Back-face culling
-		GL11.glEnable(GL11.GL_CULL_FACE);
-		GL11.glCullFace(GL11.GL_BACK);
+		GL11C.glEnable(GL11C.GL_CULL_FACE);
+		GL11C.glCullFace(GL11C.GL_BACK);
 		// Automatic Gamma-correction
-		GL11.glEnable(GL30.GL_FRAMEBUFFER_SRGB);
+		GL11C.glEnable(GL30.GL_FRAMEBUFFER_SRGB);
 		
 		graphicsLoader = new GraphicsLoader();
 		
@@ -79,9 +92,9 @@ public class RenderSystem extends AbstractSystem {
 		RenderSysMessage message;
 		while((message = (RenderSysMessage) messageBus.getNextMessage(Systems.RENDER_SYSTEM)) != null) {
 			switch(message.getOP()) {
-			case SYS_RENDER_WIREFRAME_ON: GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
+			case SYS_RENDER_WIREFRAME_ON: GL11C.glPolygonMode(GL11C.GL_FRONT_AND_BACK, GL11C.GL_LINE);
 				break;
-			case SYS_RENDER_WIREFRAME_OFF: GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
+			case SYS_RENDER_WIREFRAME_OFF: GL11C.glPolygonMode(GL11C.GL_FRONT_AND_BACK, GL11C.GL_FILL);
 				break;
 			case SYS_RENDER_DEBUGLINES_ON: drawDebugLines = true;
 				break;
@@ -203,8 +216,8 @@ public class RenderSystem extends AbstractSystem {
 	}
 	
 	private void prepareForRendering(){
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
-		GL11.glDepthMask(true);
+		GL11C.glEnable(GL11C.GL_DEPTH_TEST);
+		GL11C.glDepthMask(true);
 		glClearColor(0.529f, 0.807f, 0.95f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
@@ -223,6 +236,6 @@ public class RenderSystem extends AbstractSystem {
 		}
 		
 		// Swap buffer to make changes visible
-		GLFW.glfwSwapBuffers(Display_old.window);
+		display.submitFrame();
 	}
 }

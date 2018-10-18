@@ -1,7 +1,7 @@
 package textures;
 
 import org.joml.Vector4f;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11C;
 
 public class Material {
 
@@ -60,8 +60,8 @@ public class Material {
 	}
 	
 	public void delete(){
-		GL11.glDeleteTextures(diffuseID);
-		GL11.glDeleteTextures(specularID);
+		GL11C.glDeleteTextures(diffuseID);
+		GL11C.glDeleteTextures(specularID);
 	}
 	
 }

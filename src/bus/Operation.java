@@ -18,5 +18,10 @@ public enum Operation {
 	// TeleportationSystem
 	SYS_TELEPORTATION_TARGETCOORDS,
 	// CharacterSheetSystem
-	SYS_CHARSHEET_LVLUP
+	SYS_CHARSHEET_LVLUP,
+	// Player
+	PLAYER_MOVE,
+	PLAYER_LOOK,
+	PLAYER_JUMP,
+	PLAYER_INTERACT,
 }
