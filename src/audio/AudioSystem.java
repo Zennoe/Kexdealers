@@ -51,7 +51,7 @@ public class AudioSystem extends AbstractSystem {
 		ALCCapabilities deviceCaps = ALC.createCapabilities(alDevice);
 		if (!deviceCaps.OpenALC10) {
 			ALC10.alcCloseDevice(alDevice); // close previously opened alDevice
-			throw new IllegalStateException("Failed to laod audio capabilities");
+			throw new IllegalStateException("Failed to load audio capabilities");
 		}
 
 		String defaultDeviceSpecifier = ALC10.alcGetString(MemoryUtil.NULL, ALC10.ALC_DEFAULT_DEVICE_SPECIFIER);
