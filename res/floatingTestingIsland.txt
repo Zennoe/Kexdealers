@@ -41,7 +41,7 @@ PHYSICSCOMPONENT{eID=7}{50/true}
 TRANSFORMABLE{eID=8}{450/20/350 /0/0/0 /1}
 POINTLIGHTCOMPONENT{eID=8}{450/20/350 /1.5/10.0/1.9 /1.5/10.0/1.9 /1.5/10.0/1.9 /10.0 /0.01}
 >c param: assetName - gain - pitch - refDist - rolloff - maxDist - looping
-AUDIOSOURCECOMPONENT{eID=8}{music/10.0/1.0/50.0/0.5/500.0/true}
+AUDIOSOURCECOMPONENT{eID=8}{music/10.0/1.0/50.0/0.2/500.0/true}
 TRANSFORMABLE{eID=9}{0/0/0 /0/0/0 /512}
 >c RENDERABLE{eID=9}{heightmap1024}
 >c teleportations

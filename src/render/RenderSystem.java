@@ -76,6 +76,7 @@ public class RenderSystem extends AbstractSystem {
 		lineRenderer = new LineRenderer();
 	}
 	
+	@Override
 	public void run() {
 		// control update rate here
 		
@@ -86,6 +87,7 @@ public class RenderSystem extends AbstractSystem {
 		// cleanUp();
 	}
 	
+	@Override
 	public void update() {
 		super.timeMarkStart();
 		// message queue
@@ -119,10 +121,12 @@ public class RenderSystem extends AbstractSystem {
 		super.timeMarkEnd();
 	}
 	
+	@Override
 	public void cleanUp() {
-		// ???
+		// TODO ???
 	}
 	
+	@Override
 	public void loadBlueprint(ArrayList<String> blueprint) {
 		
 		// - Renderable

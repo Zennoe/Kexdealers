@@ -202,6 +202,9 @@ public class LinkStart implements Runnable{
 				}
 			}
 			
+			if (tickCounter == 200) {
+				//((AudioSystem) systems.get("AudioSystem")).playEntitySound(8);
+			}
 			
 			timeDelta = glfwGetTime() - frameBegin;
 			
