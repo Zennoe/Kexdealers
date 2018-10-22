@@ -16,6 +16,7 @@ public class Material {
 	// Textures
 	private int ambientID;
 	private int diffuseID;
+	private int normalID;
 	private int specularID;
 	private int specularExponentID;
 	private int dissolveID;
@@ -24,7 +25,7 @@ public class Material {
 	private float specularExponent;
 	
 	public Material(String name, Vector3f ambient, Vector3f diffuse, Vector3f specular, Vector3f transmission,
-			int ambientID, int diffuseID, int specularID, int specularExponentID, int dissolveID, float dissolve,
+			int ambientID, int normalID, int diffuseID, int specularID, int specularExponentID, int dissolveID, float dissolve,
 			float specularExponent) {
 		this.name = name;
 		this.ambient = ambient;
@@ -38,6 +39,7 @@ public class Material {
 		this.dissolveID = dissolveID;
 		this.dissolve = dissolve;
 		this.specularExponent = specularExponent;
+		this.normalID = normalID;
 	}
 
 	// old constructor
@@ -86,6 +88,10 @@ public class Material {
 		return dissolveID;
 	}
 
+	public int getNormalID() {
+		return normalID;
+	}
+
 	public float getDissolve() {
 		return dissolve;
 	}
@@ -93,13 +99,14 @@ public class Material {
 	public float getSpecularExponent() {
 		return specularExponent;
 	}
-
+	
 	public void delete(){
 		GL11C.glDeleteTextures(ambientID);
 		GL11C.glDeleteTextures(diffuseID);
 		GL11C.glDeleteTextures(specularID);
 		GL11C.glDeleteTextures(specularExponentID);
 		GL11C.glDeleteTextures(dissolveID);
+		GL11C.glDeleteTextures(normalID);
 	}
 	
 }

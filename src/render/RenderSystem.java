@@ -25,6 +25,7 @@ import ecs.FPPCameraComponent;
 import ecs.Transformable;
 import loaders.BlueprintLoader;
 import loaders.GraphicsLoader;
+import loaders.MaterialLoader;
 import skybox.SkyboxRenderer;
 import terrain.TerrainRenderer;
 import ui.LineRenderer;
@@ -128,6 +129,7 @@ public class RenderSystem extends AbstractSystem {
 	
 	@Override
 	public void loadBlueprint(ArrayList<String> blueprint) {
+		graphicsLoader.
 		
 		// - Renderable
 		String[] frags = null;

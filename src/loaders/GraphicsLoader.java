@@ -90,7 +90,7 @@ public class GraphicsLoader {
 					if(materials.containsKey(mtlMaterial.getName())) {
 						continue;
 					} else {
-						Material material = materialLoader.loadMaterial(mtlMaterial);
+						Material material = materialLoader.loadMaterial(mtlMaterial, "");
 						materials.put(libraryReference, material);
 					}
 				}

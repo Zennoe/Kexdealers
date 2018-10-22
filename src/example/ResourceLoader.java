@@ -42,58 +42,8 @@ public class ResourceLoader {
 	private DirectionalLight sun = new DirectionalLight();
 	
 	public ResourceLoader(){
-		/*
-		// Initialize keys
-		assets3D.put("lowPolyTree", null);
-		pointerCounter3D.put("lowPolyTree", 0);
-		
-		assets3D.put("player", null);
-		pointerCounter3D.put("player", 0);
-		
-		assets3D.put("lamp", null);
-		pointerCounter3D.put("lamp", 0);
-		
-		pointerCounterSound.put("music", 0);
-		*/
-		
-		// create tools
-		materialLoader = new MaterialLoader();
-		cubeMapLoader = new CubeMapLoader();
-		modelLoader = new ModelLoader();
-		terrainMeshLoader = new TerrainMeshLoader(modelLoader);
-		objLoader = new OBJLoader();
 	}
-	
-	public void load(String assetName){
-		int x = pointerCounter3D.get(assetName);
-		if(x == 0){
-			// load fresh from HDD
-			ModelData modelData = objLoader.loadOBJ(assetName);
-			RawMesh rawMesh = modelLoader.loadToVAO(
-					modelData.getVertices(), 
-					modelData.getIndices(), 
-					modelData.getTextureCoords(), 
-					modelData.getNormals());
-			// random hardcoded default value for shininess = 1
-			Material material = materialLoader.loadMaterial(assetName, 1.0f);
-			AssetData newAsset = new AssetData(rawMesh, material);
-			assets3D.put(assetName, newAsset);
-			pointerCounter3D.put(assetName, x++);
-		}
-	}
-	
-	public void unload(String assetName){
-		int x = pointerCounter3D.get(assetName);
-		if(x == 1){
-			pointerCounter3D.put(assetName, x--);
-			//unload completely
-			// TODO Clean up on sound deletion
-			assets3D.put(assetName, null);
-		}else{
-			pointerCounter3D.put(assetName, x--);
-		}
-	}
-	
+
 	public AssetData getRessource(String assetName){
 		return assets3D.get(assetName);
 	}

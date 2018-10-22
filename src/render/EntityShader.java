@@ -13,7 +13,7 @@ public class EntityShader extends ShaderProgram{
 	private static final String VERTEX_FILE = "entityVertexShader.txt";
 	private static final String FRAGMENT_FILE = "entityFragmentShader.txt";
 	
-	private static final int MAX_LIGHTS = 4; // Limit on how many lights can affect one point
+	private static final int MAX_POINTLIGHTS = 4; // Limit on how many lights can affect one point
 	
 	private int location_modelMatrix;
 	private int location_viewMatrix;
@@ -22,6 +22,7 @@ public class EntityShader extends ShaderProgram{
 	// Material struct attributes
 	private int location_diffuseMap;
 	private int location_specularMap;
+	private int location_normalMap;
 	private int location_shininess;
 	// Directional Light struct attributes
 	private int location_dirLightDirection;
@@ -49,6 +50,7 @@ public class EntityShader extends ShaderProgram{
 		// Material
 		location_diffuseMap = super.getUniformLocation("material.diffuse");
 		location_specularMap = super.getUniformLocation("material.specular");
+		location_normalMap = super.getUniformLocation("material.normal");
 		location_shininess = super.getUniformLocation("material.shininess");
 		// Directional Light
 		location_dirLightDirection = super.getUniformLocation("dirLight.direction");
@@ -56,13 +58,13 @@ public class EntityShader extends ShaderProgram{
 		location_dirLightDiffuse = super.getUniformLocation("dirLight.diffuse");
 		location_dirLightSpecular = super.getUniformLocation("dirLight.specular");
 		// Point Lights
-		location_lightPosition = new int[MAX_LIGHTS];
-		location_lightAmbient = new int[MAX_LIGHTS];
-		location_lightDiffuse = new int[MAX_LIGHTS];
-		location_lightSpecular = new int[MAX_LIGHTS];
-		location_lightRadius = new int[MAX_LIGHTS];
-		location_lightCutoff = new int[MAX_LIGHTS];
-		for(int i = 0; i < MAX_LIGHTS; i++){
+		location_lightPosition = new int[MAX_POINTLIGHTS];
+		location_lightAmbient = new int[MAX_POINTLIGHTS];
+		location_lightDiffuse = new int[MAX_POINTLIGHTS];
+		location_lightSpecular = new int[MAX_POINTLIGHTS];
+		location_lightRadius = new int[MAX_POINTLIGHTS];
+		location_lightCutoff = new int[MAX_POINTLIGHTS];
+		for(int i = 0; i < MAX_POINTLIGHTS; i++){
 			location_lightPosition[i] = super.getUniformLocation("pointLights[" +i +"].position");
 			location_lightAmbient[i] = super.getUniformLocation("pointLights[" +i +"].ambient");
 			location_lightDiffuse[i] = super.getUniformLocation("pointLights[" +i +"].diffuse");
@@ -78,9 +80,10 @@ public class EntityShader extends ShaderProgram{
 		super.loadMatrix4f(location_projectionMatrix, projectionMatrix);
 	}
 	
-	public void uploadMaterial(int diffuseMapTextureBank, int specularMapTexureBank, float shininess){
+	public void uploadMaterial(int diffuseMapTextureBank, int specularMapTexureBank, int normalMapTexureBank, float shininess){
 		super.loadInt(location_diffuseMap, diffuseMapTextureBank);
 		super.loadInt(location_specularMap, specularMapTexureBank);
+		super.loadInt(location_normalMap, normalMapTexureBank);
 		super.loadFloat(location_shininess, shininess);
 	}
 	
@@ -98,7 +101,7 @@ public class EntityShader extends ShaderProgram{
 	public void uploadPointLights(HashSet<PointLightComponent> pointLights){
 		PointLightComponent pointLight;
 		Iterator<PointLightComponent> plcIterator = pointLights.iterator();
-		for(int i = 0; i < MAX_LIGHTS; i++){
+		for(int i = 0; i < MAX_POINTLIGHTS; i++){
 			if(i < pointLights.size()){
 				pointLight = (PointLightComponent) plcIterator.next();
 				super.loadVector3f(location_lightPosition[i], pointLight.getPosition());

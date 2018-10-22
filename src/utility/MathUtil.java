@@ -13,4 +13,17 @@ public class MathUtil {
 		return l1 * p1.y + l2 * p2.y + l3 * p3.y;
 	}
 	
+	public static int clampInt(int in, int floor, int ceil) {
+		if (floor > ceil) {
+			throw new RuntimeException("Floor is bigger than ceiling!");
+		}
+		if (in < floor) {
+			return floor;
+		} else if (in > ceil) {
+			return ceil;
+		} else {
+			return in;
+		}
+	}
+	
 }

@@ -64,11 +64,13 @@
 	<classpathentry exported="true" kind="lib" path="lib/natives/lwjgl-openvr-natives-linux.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/natives/lwjgl-openvr-natives-macos.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/natives/lwjgl-openvr-natives-windows.jar"/>
-	<classpathentry kind="lib" path="lib/jars/com.mokiat.data.front-2.0.0.jar" sourcepath="lib/sources/com.mokiat.data.front-2.0.0-sources.jar">
+	<classpathentry exported="true" kind="lib" path="lib/jars/com.mokiat.data.front-2.0.0.jar" sourcepath="lib/sources/com.mokiat.data.front-2.0.0-sources.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="jar:platform:/resource/Kexdealers/lib/docs/com.mokiat.data.front-2.0.0-javadoc.jar!/"/>
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="Kexdealers/lib/natives"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="lib/docs/com.mokiat.data.front-2.0.0-javadoc.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/sources/com.mokiat.data.front-2.0.0-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
